@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Wishlist.module.css';
+import styles from './Error.module.css';
 
 const Error = () => {
     return (

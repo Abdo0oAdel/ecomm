@@ -1,0 +1,22 @@
+.btn {
+  border-radius: var(--btn-radius);
+  border: 1px solid transparent;
+  padding: var(--btn-padding);
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--btn-bg);
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+.btn:hover { border-color: var(--color-accent); }
+
+.logo {
+  height: 6rem;
+  padding: 1.5rem;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em var(--color-accent)aa);
+}
