@@ -1,0 +1,12 @@
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  line-height: 1.6;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.section {
+  margin-bottom: 1.5rem;
+}
