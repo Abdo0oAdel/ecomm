@@ -1,8 +1,6 @@
-import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicLayout from "../layout/PublicLayout";
 import ProtectedLayout from "../layout/ProtectedLayout";
-
 import Home from "../pages/Public/Home/Home";
 import About from "../pages/Public/About/About";
 import Contact from "../pages/Public/Contact/Contact";
@@ -12,7 +10,6 @@ import Privacy from "../pages/Public/Privacy/Privacy";
 import Login from "../pages/Public/Auth/Login";
 import SignUp from "../pages/Public/Auth/SignUp";
 import ProductDetails from "../pages/Public/ProductDetails/ProductDetails";
-
 import Cart from "../pages/Protected/Cart/Cart";
 import Wishlist from "../pages/Protected/Wishlist/Wishlist";
 import Checkout from "../pages/Protected/Checkout/Checkout";
@@ -20,31 +17,64 @@ import Account from "../pages/Protected/Account/Account";
 
 import Error from "../pages/Error/Error";
 
+import { useRoutes } from "react-router-dom";
+import App from "../App";
+
+const routes = [
+  {
+    element: <PublicLayout />,
+    children: [
+      { path: "/", element: <App /> },
+      { path: "/about", element: <About /> },
+      { path: "/contact", element: <Contact /> },
+      { path: "/products/:id", element: <ProductDetails /> },
+      { path: "/faq", element: <FAQ /> },
+      { path: "/terms", element: <Terms /> },
+      { path: "/privacy", element: <Privacy /> },
+      { path: "/login", element: <Login /> },
+      { path: "/signup", element: <SignUp /> },
+    ],
+  },
+  {
+    element: <ProtectedLayout />,
+    children: [
+      {
+        path: "/cart",
+        element: (
+          <ProtectedRoute>
+            <Cart />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/wishlist",
+        element: (
+          <ProtectedRoute>
+            <Wishlist />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/checkout",
+        element: (
+          <ProtectedRoute>
+            <Checkout />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/account",
+        element: (
+          <ProtectedRoute>
+            <Account />
+          </ProtectedRoute>
+        ),
+      },
+    ],
+  },
+  { path: "*", element: <Error /> },
+];
 export default function AppRoutes() {
-  return (
-    <Routes>
-      {/* Public Layout */}
-      <Route element={<PublicLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-      </Route>
-
-      {/* Protected Layout */}
-      <Route element={<ProtectedLayout />}>
-        <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
-        <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
-        <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-        <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
-      </Route>
-
-      <Route path="*" element={<Error />} />
-    </Routes>
-  );
+  const element = useRoutes(routes);
+  return element;
 }
