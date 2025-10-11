@@ -8,7 +8,9 @@ export default function PublicLayout() {
   return (
     <>
       <NavBar />
-      <Outlet />
+      <main>
+        <Outlet />
+      </main>
       <Footer />
     </>
   );
