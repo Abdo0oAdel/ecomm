@@ -4,6 +4,7 @@ import styles from './About.module.css';
 const About = () => {
     return (
         <>
+            <div>hello from about</div>
         </>
     )
 }

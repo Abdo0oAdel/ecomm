@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes.jsx";
 
 function App() {
   return (
-    <>
-      <div className="text-red-900 text-5xl ">hello from app</div>
-    </>
+    <BrowserRouter>
+        <AppRoutes />
+    </BrowserRouter>
   );
 }
 

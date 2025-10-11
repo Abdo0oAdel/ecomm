@@ -1,12 +1,15 @@
 import ProtectedRoute from "./ProtectedRoute";
+
 import PublicLayout from "../layout/PublicLayout";
 import ProtectedLayout from "../layout/ProtectedLayout";
+
 import Home from "../pages/Public/Home/Home";
 import About from "../pages/Public/About/About";
 import Contact from "../pages/Public/Contact/Contact";
 import FAQ from "../pages/Public/FAQ/FAQ";
 import Terms from "../pages/Public/Terms/Terms";
 import Privacy from "../pages/Public/Privacy/Privacy";
+
 import Login from "../pages/Public/Auth/Login";
 import SignUp from "../pages/Public/Auth/SignUp";
 import ProductDetails from "../pages/Public/ProductDetails/ProductDetails";
@@ -17,14 +20,13 @@ import Account from "../pages/Protected/Account/Account";
 
 import Error from "../pages/Error/Error";
 
-import { useRoutes } from "react-router-dom";
-import App from "../App";
+import {useRoutes} from "react-router-dom";
 
 const routes = [
   {
     element: <PublicLayout />,
     children: [
-      { path: "/", element: <App /> },
+      { path: "/", element: <Home /> },
       { path: "/about", element: <About /> },
       { path: "/contact", element: <Contact /> },
       { path: "/products/:id", element: <ProductDetails /> },
@@ -72,9 +74,12 @@ const routes = [
       },
     ],
   },
-  { path: "*", element: <Error /> },
+  {
+      path: "*",
+      element: <Error />
+  },
 ];
+
 export default function AppRoutes() {
-  const element = useRoutes(routes);
-  return element;
+    return useRoutes(routes);
 }
