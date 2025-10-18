@@ -20,7 +20,7 @@ import Account from "../pages/Protected/Account/Account";
 
 import Error from "../pages/Error/Error";
 
-import {useRoutes} from "react-router-dom";
+import { useRoutes } from "react-router-dom";
 
 const routes = [
   {
@@ -75,11 +75,11 @@ const routes = [
     ],
   },
   {
-      path: "*",
-      element: <Error />
+    path: "*",
+    element: <Error />,
   },
 ];
 
 export default function AppRoutes() {
-    return useRoutes(routes);
+  return useRoutes(routes);
 }
