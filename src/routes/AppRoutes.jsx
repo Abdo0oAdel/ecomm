@@ -10,12 +10,12 @@ import FAQ from "../pages/Public/FAQ/FAQ";
 import Terms from "../pages/Public/Terms/Terms";
 import Privacy from "../pages/Public/Privacy/Privacy";
 
-import Login from "../pages/Public/Auth/Login";
+import Login from "../pages/Public/Auth/LogIn";
 import SignUp from "../pages/Public/Auth/SignUp";
 import ProductDetails from "../pages/Public/ProductDetails/ProductDetails";
 import Cart from "../pages/Protected/Cart/Cart";
 import Wishlist from "../pages/Protected/Wishlist/Wishlist";
-import Checkout from "../pages/Protected/Checkout/Checkout";
+import Checkout from "../pages/Protected/CheckOut/CheckOut";
 import Account from "../pages/Protected/Account/Account";
 
 import Error from "../pages/Error/Error";

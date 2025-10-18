@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className={styles.footer}>
       <div className={styles.top}>
         <div className={styles.col}>
-          <h3 className={styles.title}>Exclusive</h3>
+          <h3 className={styles.title}>Zenon</h3>
           <h4 className={styles.subscribe}>Subscribe</h4>
           <p className={styles.subtext}>Get 10% off your first order</p>
           <form className={styles.subscribeForm} onSubmit={(e) => e.preventDefault()}>

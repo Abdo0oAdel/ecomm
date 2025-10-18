@@ -24,7 +24,7 @@ const NavBar = () => {
       <nav className={styles.navbar}>
         <div className={styles.navContainer}>
           <div className={styles.logo}>
-            <h1>Exclusive</h1>
+            <h1>Zenon</h1>
           </div>
           
           <ul className={styles.navLinks}>
