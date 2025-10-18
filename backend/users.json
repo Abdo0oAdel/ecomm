@@ -1,0 +1,129 @@
+[
+  {
+    "id": "1",
+    "username": "karimali",
+    "email": "karimali@example.com",
+    "password": "password123",
+    "firstName": "karim",
+    "lastName": "ali",
+    "phone": "+201222868979",
+    "address": {
+      "street": "123 Test Street",
+      "city": "Alexandria",
+      "state": "AL",
+      "zipCode": "12345",
+      "country": "Egypt"
+    },
+    "role": "admin",
+    "createdAt": "2025-10-18T10:30:00Z"
+  },
+  {
+    "id": "2",
+    "username": "abdoadel",
+    "email": "abdoadel@example.com",
+    "password": "password123",
+    "firstName": "Abdo",
+    "lastName": "Adel",
+    "phone": "+201286399279",
+    "address": {
+      "street": "123 Test Street",
+      "city": "Alexandria",
+      "state": "AL",
+      "zipCode": "12345",
+      "country": "Egypt"
+    },
+    "role": "admin",
+    "createdAt": "2025-10-18T10:30:00Z"
+  },
+  {
+    "id": "3",
+    "username": "beshoymilad",
+    "email": "beshoymilad@example.com",
+    "password": "password123",
+    "firstName": "Beshoy",
+    "lastName": "Milad",
+    "phone": "+201145968517",
+    "address": {
+      "street": "123 Test Street",
+      "city": "Cairo",
+      "state": "CA",
+      "zipCode": "12345",
+      "country": "Egypt"
+    },
+    "role": "customer",
+    "createdAt": "2025-10-18T10:30:00Z"
+  },
+  {
+    "id": "4",
+    "username": "samarfarag",
+    "email": "samarfarag@example.com",
+    "password": "password123",
+    "firstName": "Samar",
+    "lastName": "Farag",
+    "phone": "+201110851102",
+    "address": {
+      "street": "123 Test Street",
+      "city": "Cairo",
+      "state": "CA",
+      "zipCode": "12345",
+      "country": "Egypt"
+    },
+    "role": "customer",
+    "createdAt": "2025-10-18T10:30:00Z"
+  },
+  {
+    "id": "5",
+    "username": "samarkhaled",
+    "email": "samarkhaled@example.com",
+    "password": "password123",
+    "firstName": "Samar",
+    "lastName": "Khaled",
+    "phone": "+201025094232",
+    "address": {
+      "street": "123 Test Street",
+      "city": "Asyot",
+      "state": "AS",
+      "zipCode": "12345",
+      "country": "Egypt"
+    },
+    "role": "customer",
+    "createdAt": "2025-10-18T10:30:00Z"
+  },
+  {
+    "id": "6",
+    "username": "ahmedelsayed",
+    "email": "ahmedelsayed@example.com",
+    "password": "password123",
+    "firstName": "Ahmed",
+    "lastName": "Elsayed",
+    "phone": "+201067339285",
+    "address": {
+      "street": "123 Test Street",
+      "city": "Cairo",
+      "state": "CA",
+      "zipCode": "12345",
+      "country": "Egypt"
+    },
+    "role": "customer",
+    "createdAt": "2025-10-18T10:30:00Z"
+  },
+  {
+    "id": "7",
+    "username": "joulianoadel",
+    "email": "@example.com",
+    "password": "password123",
+    "firstName": "Jouliano",
+    "lastName": "Adel",
+    "phone": "+201098392016",
+    "address": {
+      "street": "123 Test Street",
+      "city": "Cairo",
+      "state": "CA",
+      "zipCode": "12345",
+      "country": "Egypt"
+    },
+    "role": "customer",
+    "createdAt": "2025-10-18T10:30:00Z"
+  }
+]
+
