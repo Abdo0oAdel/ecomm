@@ -4,6 +4,7 @@ import ImagClass from "../../../assets/imgs/image_Sec.jpg";
 import { Link } from "react-router-dom";
 import StatCard from "./StatCard";
 import TeamWork from "./TeamWork";
+import ServicesSection from "./ServicesSection";
 
 const About = () => {
   const statsData = [
@@ -49,7 +50,7 @@ const About = () => {
       </div>
       {/* start of about content */}
       <div
-        className={`${styles.texts} w-full flex flex-col md:flex-row items-center  justify-between gap-10 px-6 md:px-20 py-16 bg-white`}
+        className={`${styles.texts} w-full flex flex-col md:flex-row items-center  justify-between gap-6 px-6 md:px-20 py-16 bg-white`}
       >
         <div className="w-full md:w-[45%] max-w-[600px] px-6 md:px-16 py-12 md:py-24">
           <h2 className="text-5xl font-semibold text-gray-900 mb-6">
@@ -77,10 +78,8 @@ const About = () => {
         </div>
       </div>
       {/* iconSection */}
-      <div
-        className={`${styles.containers}  py-16  flex items-center justify-center`}
-      >
-        <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-6 md:px-10">
+      <div className={` py-16  flex items-center justify-center`}>
+        <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-16 px-6 md:px-10">
           {statsData.map((stat) => (
             <StatCard key={stat.id} {...stat} />
           ))}
@@ -88,6 +87,8 @@ const About = () => {
       </div>
       {/* teamWorkSection */}
       <TeamWork />
+      {/* ServesesSection */}
+      <ServicesSection />
     </section>
   );
 };
