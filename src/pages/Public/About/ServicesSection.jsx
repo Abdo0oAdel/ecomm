@@ -1,4 +1,4 @@
-import { Truck, Headphones, ShieldCheck } from "lucide-react";
+import React from "react";
 
 export default function ServicesSection() {
   const services = [
