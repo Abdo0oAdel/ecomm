@@ -125,7 +125,7 @@ const Footer = () => {
       {/* Copyright */}
       <div className={styles.copyright}>
         <div className={styles.copyrightContainer}>
-          <p>© Copyright Rimel 2022. All right reserved.</p>
+          <p>© Copyright Zenon 2025. All right reserved.</p>
         </div>
       </div>
 

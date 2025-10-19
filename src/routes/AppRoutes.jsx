@@ -36,6 +36,11 @@ const routes = [
       { path: "/login", element: <Login /> },
       { path: "/signup", element: <SignUp /> },
       { path: "/support", element: <Support /> },
+      // protected routes and should remove them after implement login
+      // { path: "/cart", element: <Cart /> },
+      // { path: "/wishlist", element: <Wishlist /> },
+      // { path: "/checkout", element: <Checkout /> },
+      // { path: "/account", element: <Account /> },
     ],
   },
   {
