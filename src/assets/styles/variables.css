@@ -1,18 +1,24 @@
 :root {
   --color-bg: #ffffff;
   --color-text: #213547;
-  --color-accent: black;
-  --color-accent-hover: #747bff;
-  --root-padding: 0rem;
-  --btn-radius: 8px;
+  --color-accent: #db4444;
+  --color-accent-hover: #c0392b;
+  --color-primary: #000000;
+  --color-secondary: #f5f5f5;
+  --color-success: #00ff6f;
+  --color-border: #e5e5e5;
+  --max-width: 1280px;
+  --root-padding: 2rem;
+  --btn-radius: 4px;
   --btn-padding: 0.6em 1.2em;
   --btn-bg: #f9f9f9;
+  --font-family: "Poppins", system-ui, sans-serif;
 }
 
 .dark {
   --color-bg: #242424;
   --color-text: rgba(255, 255, 255, 0.87);
-  --color-accent: black;
+  --color-accent: #646cff;
   --color-accent-hover: #535bf2;
   --btn-bg: #1a1a1a;
 }

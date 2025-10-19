@@ -1,59 +1,48 @@
 .topBanner {
-  background-color: #000000;
+  background: var(--color-primary);
   color: white;
-  padding: 8px 0; /* slightly smaller to reduce vertical space */
-  text-align: center;
-  font-size: 14px;
+  padding: 12px 0;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    width: 100vw;
-    height: 48px;
-  }
+  font-size: 14px;
+}
 
+.bannerContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex: 1;
+}
 
-.topBanner span {
+.bannerText {
+  margin: 0;
+}
+
+.shopNowLink {
+  color: white;
   text-decoration: underline;
-  margin-left: 8px;
-  cursor: pointer;
+  font-weight: 500;
 }
 
 .languageSelector {
-  position: absolute;
-  right: 48px; /* align with navbar container padding */
-}
-
-.languageSelector select {
-  background: transparent;
-  border: none;
-  color: white;
+  display: flex;
+  align-items: center;
+  gap: 4px;
   cursor: pointer;
-  outline: none;
 }
 
-.navbar {
-  background-color: white;
-  border-bottom: 1px solid #e0e0e0;
-  padding: 12px 0; /* reduce vertical padding */
-  /* make navbar full-bleed while inner content remains centered */
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  width: 100vw;
+.header {
+  background: white;
+  border-bottom: 1px solid var(--color-border);
+  padding: 16px 0;
 }
 
-.navContainer {
-  max-width: 1200px; /* center content width similar to page */
+.headerContainer {
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 24px; /* inner horizontal padding */
-  box-sizing: border-box;
+  padding: 0 80px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -62,128 +51,109 @@
 .logo h1 {
   font-size: 24px;
   font-weight: 700;
-  color: #000000;
-}
-
-.navLinks {
-  display: flex;
-  list-style: none;
-  gap: 28px; /* tightened spacing between links */
+  color: var(--color-primary);
   margin: 0;
-  padding: 0;
 }
 
-.navLinks li a {
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.navLink {
+  color: var(--color-primary);
   text-decoration: none;
-  color: #000000;
   font-weight: 400;
   font-size: 16px;
   transition: color 0.3s ease;
 }
 
-.navLinks li a:hover,
-.navLinks li a.active {
-  color: #db4444;
-  text-decoration: underline;
+.navLink:hover {
+  color: var(--color-accent);
 }
 
-.navActions {
+.headerRight {
   display: flex;
   align-items: center;
   gap: 24px;
 }
 
-.searchBox {
+.searchBar {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.searchBox input {
-  padding: 8px 16px;
-  border: none;
-  background-color: #f5f5f5;
+.searchInput {
+  width: 200px;
+  padding: 10px 16px 10px 40px;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
-  width: 320px; /* a bit wider for better usability */
+  font-size: 14px;
   outline: none;
-  font-size: 13px;
 }
 
-.searchBtn {
+.searchInput:focus {
+  border-color: var(--color-accent);
+}
+
+.searchIcon {
   position: absolute;
-  right: 12px;
-  background: none;
-  border: none;
-  cursor: pointer;
+  left: 12px;
+  color: #999;
   font-size: 16px;
 }
 
-.actionIcons {
-  display: flex;
-  gap: 16px;
-}
-
-.iconBtn {
+.headerIcon {
   background: none;
   border: none;
   font-size: 20px;
+  color: var(--color-primary);
   cursor: pointer;
-  padding: 4px;
-  transition: transform 0.2s ease;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
-/* Font Awesome icon tweaks */
-.iconBtn i {
-  color: #000; /* black heart outline as in screenshot */
-  font-size: 18px;
+.headerIcon:hover {
+  background: var(--color-secondary);
 }
 
-.searchBtn i, .iconBtn i.fa-magnifying-glass {
-  font-size: 16px;
+.signUpBtn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.iconBtn:hover {
-  transform: scale(1.1);
-}
-
-/* react-icons SVG sizing and color */
-.iconBtn svg {
-  width: 18px;
-  height: 18px;
-  color: #000; /* heart outline and cart color */
-}
-
-.searchBtn svg {
-  width: 16px;
-  height: 16px;
-  color: #666;
-}
-
-@media (max-width: 1024px) {
-  .navContainer {
-    padding: 0 24px;
-  }
-  .searchBox input { width: 260px; }
+.signUpBtn:hover {
+  background: var(--color-accent);
 }
 
 @media (max-width: 768px) {
-  .navContainer {
-    flex-direction: column;
-    gap: 12px;
-    padding: 0 16px;
+  .bannerContent {
+    margin-left: 20px;
   }
 
-  .navLinks {
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
+  .languageSelector {
+    margin-right: 20px;
   }
 
-  .searchBox input {
-    width: 200px;
+  .headerContainer {
+    padding: 0 20px;
   }
 
-  .navActions {
-    gap: 12px;
+  .navigation {
+    display: none;
+  }
+
+  .searchInput {
+    width: 150px;
   }
 }

@@ -1,63 +1,74 @@
-import React, { useState } from 'react';
-import styles from './NavBar.module.css';
-import { FiHeart, FiSearch, FiShoppingCart } from 'react-icons/fi';
+import React from "react";
+import styles from "./NavBar.module.css";
+import {
+  FiSearch,
+  FiHeart,
+  FiShoppingCart,
+  FiChevronDown,
+} from "react-icons/fi";
 
 const NavBar = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [language, setLanguage] = useState('English');
-
   return (
     <>
       {/* Top Banner */}
       <div className={styles.topBanner}>
-        <p>Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%! <span>ShopNow</span></p>
+        <div className={styles.bannerContent}>
+          <p className={styles.bannerText}>
+            Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!
+          </p>
+          <a href="#" className={styles.shopNowLink}>
+            Shop Now
+          </a>
+        </div>
         <div className={styles.languageSelector}>
-          <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-            <option>English</option>
-            <option>العربية</option>
-            <option>Français</option>
-          </select>
+          <span>English</span>
+          <FiChevronDown />
         </div>
       </div>
-      
-      {/* Main Navigation */}
-      <nav className={styles.navbar}>
-        <div className={styles.navContainer}>
+
+      {/* Main Header */}
+      <header className={styles.header}>
+        <div className={styles.headerContainer}>
+          {/* Logo */}
           <div className={styles.logo}>
-            <h1>Exclusive</h1>
+            <h1>Zenon</h1>
           </div>
-          
-          <ul className={styles.navLinks}>
-            <li><a href="/" className={styles.active}>Home</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/signup">Sign Up</a></li>
-          </ul>
-          
-          <div className={styles.navActions}>
-            <div className={styles.searchBox}>
-              <input 
-                type="text" 
+
+          {/* Navigation */}
+          <nav className={styles.navigation}>
+            <a href="/" className={styles.navLink}>
+              Home
+            </a>
+            <a href="/contact" className={styles.navLink}>
+              Contact
+            </a>
+            <a href="/about" className={styles.navLink}>
+              About
+            </a>
+            <button className={styles.signUpBtn}>Sign Up</button>
+          </nav>
+
+          {/* Right Side */}
+          <div className={styles.headerRight}>
+            <div className={styles.searchBar}>
+              <input
+                type="text"
                 placeholder="What are you looking for?"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                className={styles.searchInput}
               />
-              <button className={styles.searchBtn} aria-label="search">
-                <FiSearch />
-              </button>
+              <FiSearch className={styles.searchIcon} />
             </div>
-            
-            <div className={styles.actionIcons}>
-              <button className={styles.iconBtn} aria-label="wishlist">
-                <FiHeart />
-              </button>
-              <button className={styles.iconBtn} aria-label="cart">
-                <FiShoppingCart />
-              </button>
-            </div>
+
+            <button className={styles.headerIcon}>
+              <FiHeart />
+            </button>
+
+            <button className={styles.headerIcon}>
+              <FiShoppingCart />
+            </button>
           </div>
         </div>
-      </nav>
+      </header>
     </>
   );
 };

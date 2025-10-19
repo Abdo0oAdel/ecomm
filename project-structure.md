@@ -1,7 +1,7 @@
 # E-Commerce Application - Project Structure
 
 ## Overview
-This is a modern e-commerce web application built with React, Redux, and Vite.
+This is a modern e-commerce web application built with React, Redux, and Vite with secure JWT authentication using HTTP-only cookies.
 
 ## Root Directory
 ```
@@ -17,8 +17,20 @@ ecomm/
 ├── package.json               # Project dependencies and scripts
 ├── README.md                  # Project documentation
 ├── vite.config.js             # Vite bundler configuration
+├── backend/                   # Express backend server
 ├── public/                    # Static assets
 └── src/                       # Source code
+```
+
+## Backend Directory
+```
+backend/
+├── .env                       # Environment variables (JWT secrets, etc.)
+├── app.js                     # Express application with JWT auth
+├── package.json               # Backend dependencies
+├── users.json                 # User database (JSON file)
+└── middleware/
+    └── auth.js                # Authentication & authorization middleware
 ```
 
 ## Public Directory
@@ -34,7 +46,7 @@ public/
 ### Main Files
 ```
 src/
-├── App.jsx                    # Root application component
+├── App.jsx                    # Root application component with auth verification
 └── main.jsx                   # Application entry point
 ```
 
@@ -63,8 +75,8 @@ components/
 │   ├── Footer.jsx             # Footer component
 │   └── Footer.module.css      # Footer styles
 ├── NavBar/
-│   ├── NavBar.jsx             # Navigation bar component
-│   └── NavBar.module.css      # Navigation bar styles
+│   ├── NavBar.jsx             # Navigation bar with auth-aware UI
+│   └── NavBar.module.css      # Navigation bar styles (includes user menu)
 ├── ProductCard/
 │   ├── ProductCard.jsx        # Product card component
 │   └── ProductCard.module.css # Product card styles
@@ -73,22 +85,12 @@ components/
     └── SideBar.module.css     # Sidebar styles
 ```
 
-### Context (`src/context/`)
-React Context API for global state management:
-
-```
-context/
-├── AuthContext.jsx            # Authentication context provider
-├── CartContext.jsx            # Shopping cart context provider
-└── WishlistContext.jsx        # Wishlist context provider
-```
-
 ### Hooks (`src/hooks/`)
 Custom React hooks:
 
 ```
 hooks/
-└── useAuth.js                 # Custom authentication hook
+└── useAuth.js                 # Custom authentication hook (Redux integration)
 ```
 
 ### Layout (`src/layout/`)
@@ -187,35 +189,54 @@ store/
 ```
 
 ### Utils (`src/utils/`)
-Utility functions and helpers:
+Utility functions and API configuration:
 
 ```
-utils/
-└── helpers.js                 # Helper functions
+Utility functions and helpers:
+├── api.js                     # API endpoints and authentication calls
+└── helpers.js                 # Helper functions (HTTP-only cookie support)
 ```
 
 ## Technology Stack
 
 ### Core
 - **React** - UI library
-- **Redux Toolkit** - State management
+- **Redux Toolkit** - Global state management
 - **React Router** - Client-side routing
 - **Vite** - Build tool and dev server
 
+### Backend
+- **Express** - Node.js web framework
+- **JWT (jsonwebtoken)** - Token-based authentication
+- **bcryptjs** - Password hashing (ready for production)
+- **cookie-parser** - HTTP-only cookie handling
+
 ### Styling
 - **CSS Modules** - Component-scoped styling
-- **Global CSS** - Application-wide styles
+- **Tailwind CSS** - Utility-first CSS framework
+- **React Icons** - Icon library
+
+### State Management
+- **Redux Toolkit** - Centralized state management
+- **React-Redux** - React bindings for Redux
+
+### Notifications
+- **React Toastify** - Toast notifications for user feedback
 
 ### Development Tools
 - **ESLint** - Code linting
 - **Git** - Version control
+- **Nodemon** - Auto-restart for backend development
 
 ## Key Features
 
-### Authentication
-- User registration and login
+### Authentication & Security
+- JWT-based authentication with HTTP-only cookies
+- Secure token storage (protected from XSS attacks)
 - Protected routes for authenticated users
-- Auth context and Redux integration
+- Role-based authorization (admin/customer)
+- Persistent login sessions
+- Secure logout functionality
 
 ### E-Commerce Functionality
 - Product browsing and details
@@ -225,8 +246,9 @@ utils/
 - User account management
 
 ### UI/UX
-- Responsive navigation
+- Responsive navigation with user dropdown menu
 - Theme switching (light/dark mode)
+- Toast notifications for user feedback
 - Modular component architecture
 - Consistent styling with CSS modules
 
@@ -236,6 +258,23 @@ utils/
 - FAQ section
 - Privacy policy
 - Terms and conditions
+
+## Backend API Structure
+
+### Authentication Endpoints
+- `POST /api/auth/login` - User login (sets HTTP-only cookie)
+- `POST /api/auth/register` - User registration (sets HTTP-only cookie)
+- `GET /api/auth/verify` - Verify token validity (protected)
+- `POST /api/auth/logout` - User logout (clears cookie, protected)
+- `GET /api/auth/me` - Get current user profile (protected)
+- `PUT /api/auth/me` - Update user profile (protected)
+
+### Admin Endpoints
+- `GET /api/admin/users` - Get all users (admin only, protected)
+
+### User Endpoints
+- `GET /api/users` - Get all users (public)
+- `GET /api/users/:id` - Get user by ID (public)
 
 ## Routing Structure
 
@@ -273,11 +312,47 @@ utils/
 - Related sub-components are kept in the same directory
 
 ### State Management
-- Global state: Redux (Auth, Theme)
-- Component-specific state: React Context (Cart, Wishlist)
-- Local state: useState hook
+- **Redux** - All global state (Authentication, Theme, Cart, Wishlist)
+- **Local state** - Component-specific state using useState hook
+- **No Context API** - Removed in favor of Redux for consistency
+
+### Security Best Practices
+- Tokens stored in HTTP-only cookies (not accessible via JavaScript)
+- CORS configured with credentials support
+- SameSite cookie attribute prevents CSRF attacks
+- Secure flag enabled in production (HTTPS only)
+- Password hashing ready for production (bcrypt)
+
+## Running the Application
+
+### Development Mode
+
+**Start Backend:**
+```bash
+cd backend
+npm run dev
+```
+Backend runs on: `http://localhost:3001`
+
+**Start Frontend:**
+```bash
+npm run dev
+```
+Frontend runs on: `http://localhost:5173`
+
+### Environment Variables
+Backend requires `.env` file:
+```
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_EXPIRES_IN=7d
+PORT=3001
+NODE_ENV=development
+```
+
+## Documentation Files
+- **project-structure.md** - This file
 
 ---
 
 *Last Updated: October 18, 2025*
-
+*Architecture: Redux-based state management with HTTP-only cookie authentication*
