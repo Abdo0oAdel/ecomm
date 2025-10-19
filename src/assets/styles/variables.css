@@ -1,9 +1,10 @@
 :root {
   --color-bg: #ffffff;
   --color-text: #213547;
-  --color-accent: black;
+  --color-accent: #646cff;
   --color-accent-hover: #747bff;
-  --root-padding: 0rem;
+  --max-width: 1280px;
+  --root-padding: 2rem;
   --btn-radius: 8px;
   --btn-padding: 0.6em 1.2em;
   --btn-bg: #f9f9f9;
@@ -12,7 +13,7 @@
 .dark {
   --color-bg: #242424;
   --color-text: rgba(255, 255, 255, 0.87);
-  --color-accent: black;
+  --color-accent: #646cff;
   --color-accent-hover: #535bf2;
   --btn-bg: #1a1a1a;
 }

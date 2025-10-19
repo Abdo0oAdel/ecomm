@@ -9,7 +9,9 @@
   cursor: pointer;
   transition: border-color 0.25s;
 }
-.btn:hover { border-color: var(--color-accent); }
+.btn:hover {
+  border-color: var(--color-accent);
+}
 
 .logo {
   height: 6rem;
@@ -18,5 +20,5 @@
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em var(--color-accent)aa);
+  filter: drop-shadow(0 0 2em var(--color-accent) aa);
 }

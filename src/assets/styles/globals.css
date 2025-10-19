@@ -16,9 +16,6 @@ a {
   font-weight: 500;
   text-decoration: inherit;
 }
-a:hover {
-  color: var(--color-accent-hover);
-}
 
 #root {
   margin: 0;
