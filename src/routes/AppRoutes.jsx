@@ -17,10 +17,12 @@ import ProductDetails from "../pages/Public/ProductDetails/ProductDetails";
 
 import Cart from "../pages/Protected/Cart/Cart";
 import Wishlist from "../pages/Protected/Wishlist/Wishlist";
-import Checkout from "../pages/Protected/CheckOut/CheckOut";
+import Checkout from "../pages/Protected/Checkout/Checkout";
 import Account from "../pages/Protected/Account/Account";
 
 import Error from "../pages/Error/Error";
+
+import {useRoutes} from "react-router-dom";
 
 const routes = [
   {
@@ -76,11 +78,11 @@ const routes = [
     ],
   },
   {
-    path: "*",
-    element: <Error />,
+      path: "*",
+      element: <Error />
   },
 ];
 
 export default function AppRoutes() {
-  return useRoutes(routes);
+    return useRoutes(routes);
 }
