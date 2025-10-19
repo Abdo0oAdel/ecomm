@@ -1,1 +1,97 @@
-
+.loginContainer {
+  width: fit-content;
+  height: 781px;
+  position: relative;
+  top: 60px;
+  margin-bottom: 140px;
+  display: flex;
+  flex-direction: row;
+}
+.sideImage {
+  width: 805px;
+  height: 781px;
+}
+.loginForm {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  left: 129px;
+}
+.loginForm h1 {
+  font-size: 36px;
+  line-height: 30px;
+  letter-spacing: 4%;
+  font-weight: 500;
+  color: black;
+}
+.loginForm h2 {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: black;
+  margin-top: 24px;
+}
+.inputForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 48px;
+  width: 370px;
+  height: 176px;
+  margin-bottom: 40px;
+}
+.inputForm input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #515151;
+  padding: 10px 0px;
+  outline: none;
+}
+.inputForm input::placeholder {
+  font-family: "Poppins", sans-serif;
+  size: 16px;
+  line-height: 26px;
+  font-weight: 400;
+}
+.formButtons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+.formButtons .signUpButton {
+  height: 56px;
+  background-color: #db4444;
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  size: 16px;
+  line-height: 26px;
+  font-weight: 400;
+  border-radius: 4px;
+}
+.formButtons .signUpGoogleButton {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 56px;
+  border: 1px solid #646464;
+  border-radius: 4px;
+  color: #000000;
+  font-family: "Poppins", sans-serif;
+  size: 16px;
+  line-height: 26px;
+  font-weight: 400;
+  border-radius: 4px;
+}
+.backToLogIn {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 34px;
+  font-family: "Poppins", sans-serif;
+  size: 16px;
+  line-height: 26px;
+  font-weight: 400;
+  border-radius: 4px;
+}
