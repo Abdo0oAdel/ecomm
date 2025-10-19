@@ -1,0 +1,63 @@
+/* Container around the form */
+.container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+/* Heading style */
+.title {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* Input fields and textarea */
+.input,
+.textarea {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+}
+
+.input:focus,
+.textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Submit button */
+.button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #B71F3B;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.button:hover {
+    background-color: oklch(0.637 0.237 25.331);
+}
+
+/* Thank you message */
+.thankYou {
+    text-align: center;
+    font-size: 1.2rem;
+    color: oklch(0.637 0.237 25.331);
+    margin-top: 2rem;
+}
