@@ -44,13 +44,13 @@ const Contact = () => {
   return (
     <>
       <div
-        className={` mx-9 mt-3 flex flex-row flex-start text-md text-black pb-5 cursor-pointer`}
+        className={`${styles.aboutContainer} mx-9 mt-3 flex flex-row flex-start text-md text-black pb-5 cursor-pointer`}
       >
-        <Link to="/" className=" text-gray-500 ">
+        <Link to="/" className=" text-gray-300 mx-1 ">
           Home
         </Link>
         <span> / </span>
-        <Link to="/Contact" className="  ">
+        <Link to="/Contact" className=" mx-1  ">
           Contact
         </Link>
       </div>
