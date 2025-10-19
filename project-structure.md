@@ -350,9 +350,6 @@ NODE_ENV=development
 ```
 
 ## Documentation Files
-- **AUTHENTICATION_GUIDE.md** - Complete authentication implementation details
-- **QUICK_START.md** - Quick start guide for testing the app
-- **SECURITY_IMPLEMENTATION.md** - HTTP-only cookie security documentation
 - **project-structure.md** - This file
 
 ---

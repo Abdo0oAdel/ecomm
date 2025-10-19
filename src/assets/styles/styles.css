@@ -3,3 +3,5 @@
 @import "./variables.css";
 @import "./mixins.css";
 @import "./globals.css";
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
