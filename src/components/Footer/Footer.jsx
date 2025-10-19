@@ -2,6 +2,23 @@ import React from "react";
 import styles from "./Footer.module.css";
 
 const Footer = () => {
+  // smooth-scroll to in-page anchor if present
+  const handleAnchorClick = (e) => {
+    try {
+      const href = e.currentTarget.getAttribute("href");
+      if (href && href.startsWith("#")) {
+        const id = href.slice(1);
+        const el = document.getElementById(id);
+        if (el) {
+          e.preventDefault();
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    } catch (err) {
+      // fallback to default navigation if any error
+    }
+  };
+
   return (
     <footer className={styles.footer}>
       <div className={styles.top}>
@@ -37,21 +54,21 @@ const Footer = () => {
         <div className={styles.col}>
           <h3 className={styles.title}>Account</h3>
           <ul className={styles.list}>
-            <li>My Account</li>
-            <li>Login / Register</li>
-            <li>Cart</li>
-            <li>Wishlist</li>
-            <li>Shop</li>
+            <li><a className={styles.link} href="#account" onClick={handleAnchorClick}>My Account</a></li>
+            <li><a className={styles.link} href="#login" onClick={handleAnchorClick}>Login / Register</a></li>
+            <li><a className={styles.link} href="#cart" onClick={handleAnchorClick}>Cart</a></li>
+            <li><a className={styles.link} href="#wishlist" onClick={handleAnchorClick}>Wishlist</a></li>
+            <li><a className={styles.link} href="#shop" onClick={handleAnchorClick}>Shop</a></li>
           </ul>
         </div>
 
         <div className={styles.col}>
           <h3 className={styles.title}>Quick Link</h3>
           <ul className={styles.list}>
-            <li>Privacy Policy</li>
-            <li>Terms Of Use</li>
-            <li>FAQ</li>
-            <li>Contact</li>
+            <li><a className={styles.link} href="#privacy" onClick={handleAnchorClick}>Privacy Policy</a></li>
+            <li><a className={styles.link} href="#terms" onClick={handleAnchorClick}>Terms Of Use</a></li>
+            <li><a className={styles.link} href="#faq" onClick={handleAnchorClick}>FAQ</a></li>
+            <li><a className={styles.link} href="#contact" onClick={handleAnchorClick}>Contact</a></li>
           </ul>
         </div>
 
