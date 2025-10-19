@@ -1,0 +1,38 @@
+.aboutContainer {
+  text-align: start;
+  position: relative;
+  display: block;
+}
+
+.secLink {
+  margin-left: 4rem;
+}
+
+.texts {
+  padding: 0px;
+}
+.containers {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+  min-height: 97px;
+}
+/* small */
+@media (min-width: 768px) {
+  .containers {
+    width: 750px;
+  }
+}
+/* madiam */
+@media (min-width: 992px) {
+  .containers {
+    width: 990px;
+  }
+}
+/* big */
+@media (min-width: 1200px) {
+  .containers {
+    width: 1170px;
+  }
+}

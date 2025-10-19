@@ -1,34 +1,47 @@
-html, body {
-    margin: 0;
-    min-width: 320px;
-    min-height: 100vh;
-    color: var(--color-text);
-    background-color: var(--color-bg);
-    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+html,
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  font-family: var(--font-family);
+  line-height: 1.5;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  a {
-    color: var(--color-accent);
-    font-weight: 500;
-    text-decoration: inherit;
-  }
-  a:hover { color: var(--color-accent-hover); }
+a {
+  color: var(--color-accent);
+  font-weight: 500;
+  text-decoration: inherit;
+}
 
-  #root {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    padding: var(--root-padding);
-    text-align: center;
-  }
+#root {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
 
-  .card { padding: 2rem; }
-  .read-the-docs { color: #888; }
+.card {
+  padding: 2rem;
+}
+.read-the-docs {
+  color: #888;
+}
 
-  @keyframes logo-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  @media (prefers-reduced-motion: no-preference) {
-    a:nth-of-type(2) .logo { animation: logo-spin infinite 20s linear; }
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
   }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
