@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import styles from './Support.module.css';
 
 function Support() {
     const [form, setForm] = useState({ name: '', email: '', message: '' });
@@ -14,12 +15,12 @@ function Support() {
     };
 
     if (submitted) {
-        return <p>Thanks! Your message has been sent.</p>;
+        return <p className={styles.thankYou}>Thanks! Your message has been sent to The Support.</p>;
     }
 
     return (
-        <div>
-            <h2>Contact Support</h2>
+        <div className={styles.container}>
+            <h2 className={styles.title}>Contact Support</h2>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -27,6 +28,7 @@ function Support() {
                     placeholder="Your Name"
                     value={form.name}
                     onChange={handleChange}
+                    className={styles.input}
                     required
                 />
                 <input
@@ -35,6 +37,7 @@ function Support() {
                     placeholder="Your Email"
                     value={form.email}
                     onChange={handleChange}
+                    className={styles.input}
                     required
                 />
                 <textarea
@@ -43,9 +46,10 @@ function Support() {
                     rows="5"
                     value={form.message}
                     onChange={handleChange}
+                    className={styles.textarea}
                     required
                 />
-                <button type="submit">
+                <button type="submit" className={styles.button}>
                     Send Message
                 </button>
             </form>
