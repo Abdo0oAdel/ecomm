@@ -1,3 +1,4 @@
+/* Footer styles (clean, merged from both branches) */
 .footer {
   background: var(--color-primary);
   color: white;
@@ -51,6 +52,9 @@
   background: white;
   border-radius: 4px;
   overflow: hidden;
+  position: relative;
+  width: 100%;
+  max-width: 420px;
 }
 
 .emailInput {
@@ -294,3 +298,33 @@
     max-width: 100%;
   }
 }
+
+/* Extra small screens: improve touch targets */
+@media (max-width: 380px) {
+  .emailInput { padding: 14px 48px 14px 14px; font-size: 15px; }
+  .subscribeBtn { width: 40px; height: 40px; }
+  .iconBtn { width: 40px; height: 40px; }
+  .appBtn { padding: 10px; gap: 6px; }
+}
+
+/* Additional responsive tweaks */
+@media (max-width: 1024px) {
+  .brandSection { align-items: flex-start; }
+}
+
+@media (max-width: 768px) {
+  .footerColumn { align-items: center; }
+  .brandSection { align-items: center; }
+  .socialIcons { justify-content: center; }
+  .appStores { align-items: center; flex-direction: row; gap: 12px; }
+  .qrPlaceholder { width: 64px; height: 64px; }
+}
+
+@media (max-width: 480px) {
+  .qrPlaceholder { width: 56px; height: 56px; }
+  .storeLink img { width: 100px; height: 36px; }
+  .socialIcon { width: 36px; height: 36px; }
+  .subscribeForm { max-width: 100%; }
+  .scrollToTop { display: none; }
+}
+
