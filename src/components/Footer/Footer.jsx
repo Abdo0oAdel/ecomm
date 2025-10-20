@@ -28,103 +28,46 @@ const Footer = () => {
 
   return (
     <footer className={styles.footer}>
-<<<<<<< HEAD
-      <div className={styles.top}>
-        <div className={styles.col}>
-          <h3 className={styles.title}>Exclusive</h3>
-          <h4 className={styles.subscribe}>Subscribe</h4>
-          <p className={styles.subtext}>Get 10% off your first order</p>
-          <form className={styles.subscribeForm} onSubmit={(e) => e.preventDefault()}>
-            <input
-              className={styles.emailInput}
-              type="email"
-              placeholder="Enter your email"
-              aria-label="Email"
-            />
-            <button className={styles.sendBtn} aria-label="Subscribe">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2 21L23 12L2 3V10L17 12L2 14V21Z" fill="currentColor" />
-              </svg>
-            </button>
-          </form>
-        </div>
-
-        <div className={styles.col}>
-          <h3 className={styles.title}>Support</h3>
-          <address className={styles.address}>
-            111 Bijoy sarani, Dhaka,
-            <br /> DH 1515, Bangladesh.
-          </address>
-          <a className={styles.link} href="mailto:exclusive@gmail.com">exclusive@gmail.com</a>
-          <a className={styles.link} href="tel:+88015888889999">+88015-88888-9999</a>
-        </div>
-
-        <div className={styles.col}>
-          <h3 className={styles.title}>Account</h3>
-          <ul className={styles.list}>
-            <li><a className={styles.link} href="#account" onClick={handleAnchorClick}>My Account</a></li>
-            <li><a className={styles.link} href="#login" onClick={handleAnchorClick}>Login / Register</a></li>
-            <li><a className={styles.link} href="#cart" onClick={handleAnchorClick}>Cart</a></li>
-            <li><a className={styles.link} href="#wishlist" onClick={handleAnchorClick}>Wishlist</a></li>
-            <li><a className={styles.link} href="#shop" onClick={handleAnchorClick}>Shop</a></li>
-          </ul>
-        </div>
-
-        <div className={styles.col}>
-          <h3 className={styles.title}>Quick Link</h3>
-          <ul className={styles.list}>
-            <li><a className={styles.link} href="#privacy" onClick={handleAnchorClick}>Privacy Policy</a></li>
-            <li><a className={styles.link} href="#terms" onClick={handleAnchorClick}>Terms Of Use</a></li>
-            <li><a className={styles.link} href="#faq" onClick={handleAnchorClick}>FAQ</a></li>
-            <li><a className={styles.link} href="#contact" onClick={handleAnchorClick}>Contact</a></li>
-          </ul>
-        </div>
-
-        <div className={styles.col}>
-          <h3 className={styles.title}>Download App</h3>
-          <p className={styles.small}>Save $3 with App New User Only</p>
-
-          <div className={styles.appRow}>
-            <div className={styles.qr} aria-hidden>
-              {/* simple QR placeholder */}
-              <div className={styles.qrInner}></div>
-=======
       <div className={styles.footerContainer}>
-        {/* Subscribe Section */}
+        {/* Subscribe / Brand Column */}
         <div className={styles.footerColumn}>
           <div className={styles.brandSection}>
             <h3 className={styles.brandName}>Zenon</h3>
             <h4 className={styles.subscribeTitle}>Subscribe</h4>
             <p className={styles.subscribeText}>Get 10% off your first order</p>
-            <div className={styles.subscribeForm}>
+            <form
+              className={styles.subscribeForm}
+              onSubmit={(e) => e.preventDefault()}
+            >
               <input
                 type="email"
                 placeholder="Enter your email"
                 className={styles.emailInput}
+                aria-label="Email"
               />
-              <button className={styles.subscribeBtn}>
+              <button className={styles.subscribeBtn} aria-label="Subscribe">
                 <FiSend />
               </button>
->>>>>>> origin/master
-            </div>
+            </form>
+
             <div className={styles.socialIcons}>
-              <a href="#" className={styles.socialIcon}>
+              <a href="#" className={styles.socialIcon} aria-label="Facebook">
                 <FaFacebookF />
               </a>
-              <a href="#" className={styles.socialIcon}>
+              <a href="#" className={styles.socialIcon} aria-label="Twitter">
                 <FaTwitter />
               </a>
-              <a href="#" className={styles.socialIcon}>
+              <a href="#" className={styles.socialIcon} aria-label="Instagram">
                 <FaInstagram />
               </a>
-              <a href="#" className={styles.socialIcon}>
+              <a href="#" className={styles.socialIcon} aria-label="LinkedIn">
                 <FaLinkedinIn />
               </a>
             </div>
           </div>
         </div>
 
-        {/* Support Section */}
+        {/* Support Column */}
         <div className={styles.footerColumn}>
           <h4 className={styles.columnTitle}>Support</h4>
           <div className={styles.contactInfo}>
@@ -136,7 +79,7 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Account Section */}
+        {/* Account Column */}
         <div className={styles.footerColumn}>
           <h4 className={styles.columnTitle}>Account</h4>
           <ul className={styles.footerLinks}>
@@ -158,7 +101,7 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Quick Link Section */}
+        {/* Quick Link Column */}
         <div className={styles.footerColumn}>
           <h4 className={styles.columnTitle}>Quick Link</h4>
           <ul className={styles.footerLinks}>
@@ -177,11 +120,11 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Download App Section */}
+        {/* Download App Column */}
         <div className={styles.footerColumn}>
           <h4 className={styles.columnTitle}>Download App</h4>
           <p className={styles.appText}>Save $3 with App New User Only</p>
-          <div className={styles.qrCode}>
+          <div className={styles.qrCode} aria-hidden>
             <div className={styles.qrPlaceholder}></div>
           </div>
           <div className={styles.appStores}>
@@ -209,7 +152,7 @@ const Footer = () => {
       </div>
 
       {/* Scroll to Top Button */}
-      <button className={styles.scrollToTop}>
+      <button className={styles.scrollToTop} aria-label="Scroll to top">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path
             d="M12 19V5M5 12L12 5L19 12"
