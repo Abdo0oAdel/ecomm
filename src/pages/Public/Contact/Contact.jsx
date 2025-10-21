@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./Contact.module.css";
 import { Link } from "react-router-dom";
-import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import {ErrorMessage, Field, Form, Formik} from "formik";
 
 const Contact = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
