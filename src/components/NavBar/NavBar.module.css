@@ -5,6 +5,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+  left: 0;
+  right: 0;
+  margin: 0; /* remove negative margins that cause overflow */
+  width: 100%; /* use 100% instead of 100vw to avoid scrollbar with vertical scrollbar present */
+  box-sizing: border-box;
+  /* allow banner to grow on mobile when dropdown opens */
+  overflow: visible;
   font-size: 14px;
 }
 
@@ -27,71 +35,233 @@
 }
 
 .languageSelector {
+  position: absolute;
+  right: 48px; /* align with navbar container padding */
   display: flex;
   align-items: center;
   gap: 4px;
   cursor: pointer;
 }
 
+/* custom language dropdown */
+.langDropdown {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+}
+
+.langCurrent {
+  color: white;
+  padding: 8px 10px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+.caret { font-size: 11px; opacity: 0.95; color: #fff; }
+
+.langList {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: #111; /* solid dark background for clear contrast */
+  list-style: none;
+  margin: 0;
+  padding: 6px 4px;
+  display: none; /* show on hover/focus */
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  z-index: 1100;
+  min-width: 140px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.langList li { margin: 0; }
+.langList li button {
+  background: transparent;
+  border: none;
+  color: #fff;
+  padding: 8px 10px;
+  width: 100%;
+  text-align: right;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.langList li button:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.langList li button:focus { outline: 2px solid rgba(255,255,255,0.12); border-radius: 6px; }
+
+/* show the list when hovering or focusing the container */
+.langDropdown:hover .langList,
+.langDropdown:focus-within .langList {
+  display: block;
+}
+
+/* Responsive tweaks for language dropdown */
+@media (max-width: 768px) {
+  /* move selector into normal flow so it doesn't overlap or get clipped */
+  .languageSelector {
+    position: static;
+    right: auto;
+    margin-top: 8px;
+    display: flex;
+    justify-content: flex-end; /* keep trigger on right side */
+    padding-right: 16px;
+  }
+
+  /* make the dropdown trigger more tappable */
+  .langCurrent {
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    font-size: 14px;
+    color: #fff;
+  }
+
+  /* make the list stack under the trigger and full width of its container */
+  .langList {
+    position: static;
+    display: none; /* controlled by focus/hover */
+    width: calc(100% - 32px);
+    margin: 8px 16px 0 16px;
+    padding: 8px 6px;
+    background: #111; /* solid for readability */
+    box-shadow: none;
+    justify-content: center;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .langDropdown:hover .langList,
+  .langDropdown:focus-within .langList {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .langList li button {
+    padding: 12px 14px;
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+    color: #fff; /* ensure high contrast */
+  }
+}
+
+@media (max-width: 420px) {
+  .langCurrent { font-size: 14px; padding: 12px 14px; }
+  .langList li button { padding: 12px 16px; font-size: 16px; }
+}
+
+
 .header {
   background: white;
   border-bottom: 1px solid var(--color-border);
-  padding: 16px 0;
+  padding: 10px 0; /* reduced for smaller navbar height */
 }
 
 .headerContainer {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 80px;
+  padding: 0 40px; /* smaller horizontal padding */
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 48px; /* constrain header height slightly */
 }
 
 .logo h1 {
-  font-size: 24px;
+  font-size: 20px; /* slightly smaller */
   font-weight: 700;
   color: var(--color-primary);
   margin: 0;
+  line-height: 1;
 }
 
+/* mobile menu button (hamburger) */
+.menuBtn {
+  display: none; /* shown on small screens */
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* desktop navigation */
 .navigation {
   display: flex;
   align-items: center;
   gap: 48px;
 }
 
+/* link styles — used by both desktop nav and mobile nav list */
+.navLinks li a,
 .navLink {
   color: var(--color-primary);
   text-decoration: none;
   font-weight: 400;
   font-size: 16px;
   transition: color 0.3s ease;
+  display: inline-block;
+  padding: 6px 10px;
 }
 
+.navLinks li a:hover,
 .navLink:hover {
   color: var(--color-accent);
 }
 
+/* Desktop: make navLinks horizontal and visible */
+@media (min-width: 769px) {
+  .navLinks {
+    display: flex !important;
+    flex-direction: row;
+    gap: 18px;
+    align-items: center;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    position: static;
+  }
+
+  .navLinks li {
+    display: inline-block;
+  }
+}
+
+
 .headerRight {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .searchBar {
-  position: relative;
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  gap: 8px; /* icon next to input */
 }
 
 .searchInput {
   width: 200px;
-  padding: 10px 16px 10px 40px;
+  padding: 8px 10px; /* reduced padding for smaller height */
   border: 1px solid var(--color-border);
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 13px;
   outline: none;
+  height: 32px;
 }
 
 .searchInput:focus {
@@ -99,10 +269,11 @@
 }
 
 .searchIcon {
-  position: absolute;
-  left: 12px;
-  color: #999;
+  color: #666;
   font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .headerIcon {
@@ -118,6 +289,17 @@
 
 .headerIcon:hover {
   background: var(--color-secondary);
+}
+
+/* group search and wishlist (heart) together */
+.searchHeart {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.searchHeart .headerIcon {
+  padding: 6px; /* slightly tighter to sit next to input */
 }
 
 .signUpBtn {
@@ -141,10 +323,29 @@
     margin-left: 20px;
   }
 
+  /* show hamburger and hide inline links initially on smaller screens */
+  .menuBtn { display: block; }
+
+  .navLinks {
+    gap: 20px;
+    flex-direction: column;
+    width: 100%;
+    display: none; /* hidden until open */
+    background: #fff;
+    padding: 12px 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    border-radius: 6px;
+  }
+
+  .navLinks.open {
+    display: flex;
+  }
+
+  /* keep language selector visible and adjusted on mobile */
   .languageSelector {
     margin-right: 20px;
   }
-
+  
   .headerContainer {
     padding: 0 20px;
   }
@@ -154,6 +355,57 @@
   }
 
   .searchInput {
-    width: 150px;
+    width: 140px;
   }
+
+  /* keep cart and icons on the same line if space allows, otherwise hide search */
+  .navActions {
+    gap: 8px;
+  }
+
+  .searchHeart { order: 1; }
+  .headerIcon { order: 2; }
+}
+
+/* Additional mobile improvements */
+@media (max-width: 768px) {
+  /* make navLinks appear as a dropdown panel below the header */
+  .navLinks {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    max-width: 100%;
+    background: white;
+    z-index: 1050;
+    padding: 12px 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    border-radius: 0 0 8px 8px;
+  }
+
+  /* stack footer of nav items vertically and center them */
+  .navLinks li {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* ensure menu button is visible and accessible */
+  .menuBtn {
+    display: block;
+  }
+
+  /* make header container position relative to anchor the dropdown */
+  .headerContainer {
+    position: relative;
+  }
+
+  /* reduce gaps on small screens */
+  .navLinks { gap: 12px; }
+}
+
+/* small screens: reduce search input width and center icons */
+@media (max-width: 480px) {
+  .searchInput { width: 120px; }
+  .headerRight { gap: 12px; }
 }

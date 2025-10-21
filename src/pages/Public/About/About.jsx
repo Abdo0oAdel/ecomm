@@ -37,14 +37,12 @@ const About = () => {
   return (
     <section className={styles.aboutContainer}>
       {/* link handelling */}
-      <div
-        className={`${styles.secLink} text-md text-black pb-5 cursor-pointer`}
-      >
+      <div className={`mx-9 mt-3 text-md text-black pb-5 cursor-pointer`}>
         <Link to="/" className=" text-gray-500 ">
           Home
         </Link>
         <span> / </span>
-        <Link to="/about" className="  ">
+        <Link to="/about" className={"  "}>
           About
         </Link>
       </div>

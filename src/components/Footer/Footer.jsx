@@ -9,43 +9,65 @@ import {
 } from "react-icons/fa";
 
 const Footer = () => {
+  // smooth-scroll to in-page anchor if present
+  const handleAnchorClick = (e) => {
+    try {
+      const href = e.currentTarget.getAttribute("href");
+      if (href && href.startsWith("#")) {
+        const id = href.slice(1);
+        const el = document.getElementById(id);
+        if (el) {
+          e.preventDefault();
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    } catch (err) {
+      // fallback to default navigation if any error
+    }
+  };
+
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContainer}>
-        {/* Subscribe Section */}
+        {/* Subscribe / Brand Column */}
         <div className={styles.footerColumn}>
           <div className={styles.brandSection}>
             <h3 className={styles.brandName}>Zenon</h3>
             <h4 className={styles.subscribeTitle}>Subscribe</h4>
             <p className={styles.subscribeText}>Get 10% off your first order</p>
-            <div className={styles.subscribeForm}>
+            <form
+              className={styles.subscribeForm}
+              onSubmit={(e) => e.preventDefault()}
+            >
               <input
                 type="email"
                 placeholder="Enter your email"
                 className={styles.emailInput}
+                aria-label="Email"
               />
-              <button className={styles.subscribeBtn}>
+              <button className={styles.subscribeBtn} aria-label="Subscribe">
                 <FiSend />
               </button>
-            </div>
+            </form>
+
             <div className={styles.socialIcons}>
-              <a href="#" className={styles.socialIcon}>
+              <a href="#" className={styles.socialIcon} aria-label="Facebook">
                 <FaFacebookF />
               </a>
-              <a href="#" className={styles.socialIcon}>
+              <a href="#" className={styles.socialIcon} aria-label="Twitter">
                 <FaTwitter />
               </a>
-              <a href="#" className={styles.socialIcon}>
+              <a href="#" className={styles.socialIcon} aria-label="Instagram">
                 <FaInstagram />
               </a>
-              <a href="#" className={styles.socialIcon}>
+              <a href="#" className={styles.socialIcon} aria-label="LinkedIn">
                 <FaLinkedinIn />
               </a>
             </div>
           </div>
         </div>
 
-        {/* Support Section */}
+        {/* Support Column */}
         <div className={styles.footerColumn}>
           <h4 className={styles.columnTitle}>Support</h4>
           <div className={styles.contactInfo}>
@@ -57,7 +79,7 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Account Section */}
+        {/* Account Column */}
         <div className={styles.footerColumn}>
           <h4 className={styles.columnTitle}>Account</h4>
           <ul className={styles.footerLinks}>
@@ -79,7 +101,7 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Quick Link Section */}
+        {/* Quick Link Column */}
         <div className={styles.footerColumn}>
           <h4 className={styles.columnTitle}>Quick Link</h4>
           <ul className={styles.footerLinks}>
@@ -98,11 +120,11 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Download App Section */}
+        {/* Download App Column */}
         <div className={styles.footerColumn}>
           <h4 className={styles.columnTitle}>Download App</h4>
           <p className={styles.appText}>Save $3 with App New User Only</p>
-          <div className={styles.qrCode}>
+          <div className={styles.qrCode} aria-hidden>
             <div className={styles.qrPlaceholder}></div>
           </div>
           <div className={styles.appStores}>
@@ -130,7 +152,7 @@ const Footer = () => {
       </div>
 
       {/* Scroll to Top Button */}
-      <button className={styles.scrollToTop}>
+      <button className={styles.scrollToTop} aria-label="Scroll to top">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path
             d="M12 19V5M5 12L12 5L19 12"
