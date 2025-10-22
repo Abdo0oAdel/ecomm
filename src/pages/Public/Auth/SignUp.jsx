@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./SignUp.module.css";
 import loginImage from "../../../assets/imgs/Side Image.svg";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -9,10 +10,22 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { register } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Log In button pressed");
+    const result = await register({
+      email,
+      password,
+      name: user,
+    });
+
+    if (!result.success) {
+      setError(result.error || "Failed to register");
+    } else {
+      console.log("✅ Registered user:", result.user);
+      navigate("/login");
+    }
   };
   return (
     <div className={styles.loginContainer}>

@@ -1,15 +1,24 @@
 import React, { useState } from "react";
 import styles from "./LogIn.module.css";
 import loginImage from "../../../assets/imgs/Side Image.svg";
+import { useAuth } from "../../../hooks/useAuth";
+import { Navigate } from "react-router-dom";
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { login, loading } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Log In button pressed");
+    const result = await login(email, password);
+    if (!result.success) {
+      setError(result.error || "Invalid credentials");
+    } else {
+      console.log("✅ Logged in user:", result.user);
+      Navigate("/");
+    }
   };
   return (
     <div className={styles.loginContainer}>
