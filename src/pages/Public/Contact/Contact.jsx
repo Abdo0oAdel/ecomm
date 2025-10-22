@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "./Contact.module.css";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
-import {ErrorMessage, Field, Form, Formik} from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 
 const Contact = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -77,7 +77,7 @@ const Contact = () => {
 
               {/* Write To Us */}
 
-              <div className="flex items-center gap-4 mb-6 lex flex-col items-start justify-center">
+              <div className="flex items-start gap-4 mb-6 lex flex-col justify-center">
                 <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
                   <i className="fas fa-envelope text-white"></i>
                 </div>
