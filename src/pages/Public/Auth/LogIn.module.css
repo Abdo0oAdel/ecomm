@@ -32,6 +32,15 @@
   color: black;
   margin-top: 24px;
 }
+.errorMessage {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-top: 16px;
+  font-size: 14px;
+  border-left: 4px solid #DB4444;
+}
 .inputForm{
   display: flex;
   flex-direction: column;
@@ -68,6 +77,13 @@
   line-height: 26px;
   font-weight: 400;
   border-radius: 4px;
+  cursor: pointer;
+  border: none;
+}
+.formButtons .loginButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 .formButtons .forgotPassword{
   width: 143px;
@@ -78,4 +94,123 @@
   line-height: 26px;
   font-weight: 400;
   border-radius: 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
+.formButtons .forgotPassword:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 1318px) {
+  .loginContainer {
+    width: 100%;
+    height: auto;
+    padding: 0 20px;
+    justify-content: center;
+    gap: 40px;
+  }
+
+  .sideImage {
+    width: 50%;
+    max-width: 500px;
+    height: auto;
+  }
+
+  .loginForm {
+    left: 0;
+    width: 100%;
+    max-width: 450px;
+  }
+
+  .inputForm {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .loginContainer {
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    top: 20px;
+    margin-bottom: 40px;
+    padding: 0 20px;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .sideImage {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin-bottom: 30px;
+  }
+
+  .loginForm {
+    left: 0;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .loginForm h1 {
+    font-size: 28px;
+    text-align: center;
+  }
+
+  .loginForm h2 {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .inputForm {
+    width: 100%;
+    height: auto;
+    gap: 20px;
+  }
+
+  .formButtons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .formButtons .loginButton,
+  .formButtons .forgotPassword {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .loginContainer {
+    padding: 0 15px;
+  }
+
+  .sideImage {
+    max-width: 300px;
+  }
+
+  .loginForm {
+    max-width: 100%;
+  }
+
+  .loginForm h1 {
+    font-size: 24px;
+  }
+
+  .loginForm h2 {
+    font-size: 13px;
+  }
+
+  .inputForm {
+    gap: 15px;
+  }
+
+  .formButtons .loginButton,
+  .formButtons .forgotPassword {
+    height: 48px;
+    font-size: 14px;
+  }
+}
+

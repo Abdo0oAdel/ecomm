@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { wishlistActions } from '../../../store/Wishlist/slice.js';
+import { cartActions } from '../../../store/Cart/slice.js';
 import styles from './Wishlist.module.css';
 
-// Wishlist data
-export const wishlistData = [
+// Initial Wishlist data for demo purposes
+const initialWishlistData = [
     {
         id: 1,
         name: "Gucci duffle bag",
@@ -71,16 +74,35 @@ export const justForYouData = [
 ];
 
 const Wishlist = () => {
+    const dispatch = useDispatch();
+    const wishlistItems = useSelector((state) => state.wishlist.items);
+
+    // Initialize wishlist with demo data if empty (for demo purposes)
+    useEffect(() => {
+        if (wishlistItems.length === 0) {
+            initialWishlistData.forEach(item => {
+                dispatch(wishlistActions.addToWishlist(item));
+            });
+        }
+    }, []);
+
     const handleMoveAllToBag = () => {
-        console.log('Moving all items to bag');
+        wishlistItems.forEach(item => {
+            dispatch(cartActions.addToCart({ ...item, price: item.currentPrice, quantity: 1 }));
+        });
+        dispatch(wishlistActions.clearWishlist());
     };
 
     const handleRemoveFromWishlist = (id) => {
-        console.log('Removing item:', id);
+        dispatch(wishlistActions.removeFromWishlist(id));
     };
 
     const handleAddToCart = (id) => {
-        console.log('Adding to cart:', id);
+        const item = wishlistItems.find(item => item.id === id);
+        if (item) {
+            dispatch(cartActions.addToCart({ ...item, price: item.currentPrice, quantity: 1 }));
+            dispatch(wishlistActions.removeFromWishlist(id));
+        }
     };
 
     const handleQuickView = (id) => {
@@ -92,14 +114,14 @@ const Wishlist = () => {
             {/* Wishlist Section */}
             <section className={styles.wishlistSection}>
                 <div className={styles.sectionHeader}>
-                    <h2 className={styles.sectionTitle}>Wishlist ({wishlistData.length})</h2>
+                    <h2 className={styles.sectionTitle}>Wishlist ({wishlistItems.length})</h2>
                     <button className={styles.moveAllButton} onClick={handleMoveAllToBag}>
                         Move All To Bag
                     </button>
                 </div>
 
                 <div className={styles.productsGrid}>
-                    {wishlistData.map((product) => (
+                    {wishlistItems.map((product) => (
                         <article key={product.id} className={styles.productCard}>
                             <div className={styles.productImageContainer}>
                                 {product.discount && (

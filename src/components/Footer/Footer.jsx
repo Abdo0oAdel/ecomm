@@ -1,4 +1,6 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import styles from "./Footer.module.css";
 import { FiSend } from "react-icons/fi";
 import {
@@ -9,6 +11,9 @@ import {
 } from "react-icons/fa";
 
 const Footer = () => {
+  const navigate = useNavigate();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
   // smooth-scroll to in-page anchor if present
   const handleAnchorClick = (e) => {
     try {
@@ -23,6 +28,13 @@ const Footer = () => {
       }
     } catch (err) {
       // fallback to default navigation if any error
+    }
+  };
+
+  const handleProtectedLink = (e, path) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      navigate('/login');
     }
   };
 
@@ -74,7 +86,7 @@ const Footer = () => {
             <p className={styles.contactItem}>
               111 Bijoy sarani, Dhaka, D1515, Bangladesh.
             </p>
-            <p className={styles.contactItem}>exclusive@gmail.com</p>
+            <p className={styles.contactItem}>Zenon@gmail.com</p>
             <p className={styles.contactItem}>+88015-88888-9999</p>
           </div>
         </div>
@@ -83,21 +95,34 @@ const Footer = () => {
         <div className={styles.footerColumn}>
           <h4 className={styles.columnTitle}>Account</h4>
           <ul className={styles.footerLinks}>
-            <li>
-              <a href="/account">My Account</a>
-            </li>
-            <li>
-              <a href="/login">Login / Register</a>
-            </li>
-            <li>
-              <a href="/cart">Cart</a>
-            </li>
-            <li>
-              <a href="/wishlist">Wishlist</a>
-            </li>
-            <li>
-              <a href="/shop">Shop</a>
-            </li>
+            {isAuthenticated ? (
+              <>
+                <li>
+                  <Link to="/account">My Account</Link>
+                </li>
+                <li>
+                  <Link to="/cart">Cart</Link>
+                </li>
+                <li>
+                  <Link to="/wishlist">Wishlist</Link>
+                </li>
+                <li>
+                  <Link to="/shop">Shop</Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/login">Login</Link>
+                </li>
+                <li>
+                  <Link to="/signup">Register</Link>
+                </li>
+                <li>
+                  <Link to="/shop">Shop</Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
 
@@ -106,16 +131,16 @@ const Footer = () => {
           <h4 className={styles.columnTitle}>Quick Link</h4>
           <ul className={styles.footerLinks}>
             <li>
-              <a href="/privacy">Privacy Policy</a>
+              <Link to="/privacy">Privacy Policy</Link>
             </li>
             <li>
-              <a href="/terms">Terms Of Use</a>
+              <Link to="/terms">Terms Of Use</Link>
             </li>
             <li>
-              <a href="/faq">FAQ</a>
+              <Link to="/faq">FAQ</Link>
             </li>
             <li>
-              <a href="/contact">Contact</a>
+              <Link to="/contact">Contact</Link>
             </li>
           </ul>
         </div>
@@ -125,18 +150,23 @@ const Footer = () => {
           <h4 className={styles.columnTitle}>Download App</h4>
           <p className={styles.appText}>Save $3 with App New User Only</p>
           <div className={styles.qrCode} aria-hidden>
-            <div className={styles.qrPlaceholder}></div>
+            <img
+                className={styles.qrPlaceholder}
+                src="https://s3-alpha-sig.figma.com/img/9913/87c0/5dd6d44594e01b675513068803e2426d?Expires=1762128000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=ECdF6r9PnOPgZxX6vHZc0RFYs74bt~DzWyLu0HWV05PAFtI3vdJ-Lo9RuLa9QvdZhNqMVpc1OUHe6qlO22Wo5wVkm2j0lFxENVE8l6pRRmL~jiFkq~KDDNaR6eCE7ZPn2XXksKIpvNv3CGivxMvEovBkcxIx6S79ovo365sUmkrp63cFhGudSTVwQwHDeb7YO-FMF4x9i~-Tn3e6~16U~NxgblgF0cOkIiF-YGFZio39plJ89n3v~FTJRhrrH6amIoYWpmYafb4KSg-XOtUrOi9jp7uOorhuWMWcPY-knPjPtHQtLNUJFwTaDfdt5KNmG-xhBdeAntoXmRpNMjLqEA__"
+                alt="QR Code"
+            />
           </div>
           <div className={styles.appStores}>
             <a href="#" className={styles.storeLink}>
               <img
-                src="https://via.placeholder.com/120x40/000/fff?text=GET+IT+ON+Google+Play"
+                className={styles.googlePlayImg}
+                src="https://s3-alpha-sig.figma.com/img/bc01/ada9/a3a9f391d5bc48d312bdbfd556710281?Expires=1762128000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=KYEko4O1kSCgSf0~PQ8e3sRwNI0a0TkxUMPMmJLZnc6tYYZyYuAl2VbIz9SuvCQG5xfnf4RfHdQeptFIEp3wlyyiFvdaXN1Z7BhyRGTZKZXO~Hhbhclu0zoY6aY3GTooLZ-DFTgX4BBjkX3RZo0TWVSo9LpKJwdlkGqRmX1EsGP~cZp6Bvjf-IJhvNF1uUfCo4MAnF2jtXI-F9k3gfG91QF-bqljhY8U9SrXhxmiPRhCZhrbAHQ73yDtq-nWeV6TG2dbkxiHtZUpHiC2Ig9jWtGW48Mh~uCI99RoFHoAhEtU1ohI9mT-vbpNxpUlY2S2Rm-yXyC4iTSakugTxAPJ~w__"
                 alt="Google Play"
               />
             </a>
             <a href="#" className={styles.storeLink}>
               <img
-                src="https://via.placeholder.com/120x40/000/fff?text=Download+on+the+App+Store"
+                src="https://s3-alpha-sig.figma.com/img/3893/2d5a/ccb54c528f9bcf326ca48ea29bd6d890?Expires=1762128000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=NCzgtrj28Imlufq~FoaQmanPln4-PgImg0h8iQaETHg4PBTG1yln-GbiJCLD6Viot8EgN05-zoL-bGUtcAFwpRIpOo74pH1MMXxtrJZuqR2ZzH~iYzi94Trh5g9xqOR6C5yICCtXhfvax2RkkiUS-MQe1~CFtglvayAmYz3yM-TRARG3Gauaz1HV2FJUqn~byBEXiZ20IKqpGXDJGhXe7pzfODh72WHnZH~2mSVS~qx3x6Ymgdcem5BOnzP3bq0s~yfKeQ7tlyvhlSUDqgoSyLl11qHRx7n0O1KZfMcW4OC7A0XABCum-9zLMUX5iXcdNJfn48oO6FavM2U5Bym~Ag__"
                 alt="App Store"
               />
             </a>

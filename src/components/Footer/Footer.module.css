@@ -170,6 +170,16 @@
   border: 1px solid #ddd;
 }
 
+/* Specific fix for Google Play button */
+.googlePlayImg {
+    width: 110px;
+    height: 40px;
+    background: #030406;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
 .socialIcons {
   display: flex;
   gap: 16px;
@@ -327,4 +337,3 @@
   .subscribeForm { max-width: 100%; }
   .scrollToTop { display: none; }
 }
-

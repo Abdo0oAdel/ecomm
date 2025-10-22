@@ -62,7 +62,7 @@ const About = () => {
             across the region.
           </p>
           <p className="text-black leading-relaxed text-[15px] md:text-[16px]">
-            Exclusive has more than 1 Million products to offer, growing at a
+            Zenon has more than 1 Million products to offer, growing at a
             very fast. Exclusive offers a diverse assotment in categories
             ranging from consumer.
           </p>
@@ -71,7 +71,7 @@ const About = () => {
           <img
             className="w-full h-full object-cover object-center md:rounded-none"
             src={ImagClass}
-            alt="About Exclusive"
+            alt="About Zenon"
           />
         </div>
       </div>

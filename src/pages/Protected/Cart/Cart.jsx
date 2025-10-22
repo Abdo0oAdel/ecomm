@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { cartActions } from "../../../store/Cart/slice.js";
 import styles from "./Cart.module.css";
 import { Link } from "react-router-dom";
 
-const data = [{
+const initialData = [{
     id: "1",
     name: "LCD Monitor",
     price: 650,
@@ -19,21 +21,31 @@ const data = [{
 ];
 
 const Cart = () => {
-    const [cartItems, setCartItems] = useState(data);
-    const [couponCode, setCouponCode] = useState("");
+    const dispatch = useDispatch();
+    const cartItems = useSelector((state) => state.cart.items);
+    const couponCode = useSelector((state) => state.cart.couponCode);
+
+    // Initialize cart with demo data if empty (for demo purposes)
+    useEffect(() => {
+        if (cartItems.length === 0) {
+            initialData.forEach(item => {
+                dispatch(cartActions.addToCart(item));
+            });
+        }
+    }, []);
 
     const updateQuantity = (id, delta) => {
-        setCartItems(items =>
-            items.map(item =>
-                item.id === id
-                    ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-                    : item
-            )
-        );
+        const item = cartItems.find(item => item.id === id);
+        if (item) {
+            dispatch(cartActions.updateQuantity({
+                id,
+                quantity: item.quantity + delta
+            }));
+        }
     };
 
     const removeItem = (id) => {
-        setCartItems(items => items.filter(item => item.id !== id));
+        dispatch(cartActions.removeFromCart(id));
     };
 
     const subtotal = cartItems.reduce(
@@ -179,7 +191,7 @@ const Cart = () => {
                                 <input
                                     type="text"
                                     value={couponCode}
-                                    onChange={(e) => setCouponCode(e.target.value)}
+                                    onChange={(e) => dispatch(cartActions.setCouponCode(e.target.value))}
                                     placeholder="Coupon Code"
                                     className={`${styles.input} ${styles.couponInput}`}
                                 />

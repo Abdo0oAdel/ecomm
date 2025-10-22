@@ -144,6 +144,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .sectionTitle {
@@ -189,6 +191,7 @@
   flex: 1;
   display: flex;
   justify-content: center;
+  min-width: 280px;
 }
 
 .navigationSection {
@@ -733,6 +736,61 @@
   .featuresGrid {
     grid-template-columns: 1fr;
   }
+
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .centerSection {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .navigationSection {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .countdownTimer {
+    gap: 6px;
+  }
+
+  .timeUnit {
+    padding: 10px 12px;
+    min-width: 50px;
+  }
+
+  .timeNumber {
+    font-size: 20px;
+  }
+
+  .timeLabel {
+    font-size: 11px;
+  }
+
+  /* Music Banner Responsive */
+  .bannerInfo h2 {
+    font-size: 36px;
+  }
+
+  .bannerImageContainer img {
+    width: 350px;
+    height: 350px;
+  }
+
+  .musicCountdown .timeUnit {
+    width: 55px;
+    height: 55px;
+  }
+
+  .musicCountdown .timeNumber {
+    font-size: 18px;
+  }
+
+  .musicCountdown .timeLabel {
+    font-size: 9px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -786,6 +844,80 @@
   .promoBannersRow {
     flex-direction: column;
   }
+
+  .sectionTitle h2 {
+    font-size: 24px;
+  }
+
+  .centerSection {
+    min-width: auto;
+  }
+
+  .countdownTimer {
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .timeUnit {
+    padding: 8px 10px;
+    min-width: 45px;
+  }
+
+  .timeNumber {
+    font-size: 16px;
+  }
+
+  .timeLabel {
+    font-size: 10px;
+  }
+
+  .timeSeparator {
+    font-size: 18px;
+  }
+
+  /* Music Banner Mobile */
+  .bannerWrapper {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+  }
+
+  .bannerInfo h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+
+  .bannerLabel {
+    font-size: 14px;
+  }
+
+  .musicCountdown {
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .musicCountdown .timeUnit {
+    width: 50px;
+    height: 50px;
+  }
+
+  .musicCountdown .timeNumber {
+    font-size: 16px;
+  }
+
+  .musicCountdown .timeLabel {
+    font-size: 8px;
+  }
+
+  .musicCountdown .timeSeparator {
+    font-size: 20px;
+  }
+
+  .buyNowBtn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -798,7 +930,48 @@
   }
 
   .sectionTitle h2 {
-    font-size: 24px;
+    font-size: 20px;
+  }
+
+  .todayLabel {
+    font-size: 14px;
+  }
+
+  .titleAccent {
+    width: 16px;
+    height: 16px;
+  }
+
+  .centerSection {
+    min-width: 100%;
+    order: 3;
+  }
+
+  .navigationSection {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .countdownTimer {
+    gap: 3px;
+    justify-content: center;
+  }
+
+  .timeUnit {
+    padding: 6px 8px;
+    min-width: 40px;
+  }
+
+  .timeNumber {
+    font-size: 14px;
+  }
+
+  .timeLabel {
+    font-size: 9px;
+  }
+
+  .timeSeparator {
+    font-size: 16px;
   }
 
   .bannerText h2 {
@@ -811,5 +984,47 @@
 
   .featuredContent h3 {
     font-size: 32px;
+  }
+
+  /* Music Banner Small Mobile */
+  .bannerInfo h2 {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
+  .bannerLabel {
+    font-size: 13px;
+  }
+
+  .musicCountdown {
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .musicCountdown .timeUnit {
+    width: 45px;
+    height: 45px;
+  }
+
+  .musicCountdown .timeNumber {
+    font-size: 14px;
+  }
+
+  .musicCountdown .timeLabel {
+    font-size: 7px;
+  }
+
+  .musicCountdown .timeSeparator {
+    font-size: 16px;
+  }
+
+  .buyNowBtn {
+    padding: 10px 18px;
+    font-size: 13px;
+  }
+
+  .bannerImageContainer img {
+    width: 280px;
+    height: 280px;
   }
 }

@@ -1,18 +1,56 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { authActions } from "../../../store/Auth/slice.js";
+import { authAPI } from "../../../utils/api.js";
 import styles from "./SignUp.module.css";
 import loginImage from "../../../assets/imgs/Side Image.svg";
-import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const loading = useSelector((state) => state.auth.loading);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Log In button pressed");
+    setError("");
+
+    // Simple validation - in production, you'd validate against your backend
+    if (!email || !user || !password) {
+      setError("Please fill in all fields");
+      return;
+    }
+
+    // Set loading state
+    dispatch(authActions.setLoading(true));
+
+    try {
+      // Call backend API
+      const response = await authAPI.register({
+        email,
+        username: user,
+        password,
+      });
+
+      if (response.success && response.user) {
+        // Dispatch login action with user data from backend
+        dispatch(authActions.login({ user: response.user }));
+
+        // Navigate to home or dashboard
+        navigate("/");
+      } else {
+        setError("Registration failed. Please try again.");
+        dispatch(authActions.setLoading(false));
+      }
+    } catch (err) {
+      setError(err.message || "Registration failed. Please try again.");
+      dispatch(authActions.setError(err.message));
+      dispatch(authActions.setLoading(false));
+    }
   };
   return (
     <div className={styles.loginContainer}>
@@ -22,35 +60,42 @@ const SignUp = () => {
       <div className={styles.loginForm}>
         <h1>Create an account</h1>
         <h2>Enter your details below</h2>
+        {error && <div className={styles.errorMessage}>{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className={styles.inputForm}>
             <input
               type="Text"
               id="name"
+              value={user}
               onChange={(e) => setUser(e.target.value)}
               placeholder="Name"
               required
+              disabled={loading}
             />
             <input
               type="email"
               id="email"
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email or Phone Number"
               required
+              disabled={loading}
             />
             <input
               type="password"
               id="password"
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               required
+              disabled={loading}
             />
           </div>
           <div className={styles.formButtons}>
-            <button type="submit" className={styles.signUpButton}>
-              Sign Up
+            <button type="submit" className={styles.signUpButton} disabled={loading}>
+              {loading ? "Creating Account..." : "Sign Up"}
             </button>
-            <button type="submit" className={styles.signUpGoogleButton}>
+            <button type="button" className={styles.signUpGoogleButton} disabled={loading}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="45"
