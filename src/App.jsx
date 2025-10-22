@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 import { authActions } from "./store/Auth/slice.js";
 import { authAPI } from "./utils/api.js";
 import AppRoutes from "./routes/AppRoutes.jsx";
+import store from "./store";
+import { Provider } from "react-redux";
 
 function App() {
   const dispatch = useDispatch();
@@ -44,9 +46,11 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
         <AppRoutes />
-    </BrowserRouter>
+      </BrowserRouter>
+    </Provider>
   );
 }
 

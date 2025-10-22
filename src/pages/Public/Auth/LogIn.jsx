@@ -5,6 +5,7 @@ import { authActions } from "../../../store/Auth/slice.js";
 import { authAPI } from "../../../utils/api.js";
 import styles from "./LogIn.module.css";
 import loginImage from "../../../assets/imgs/Side Image.svg";
+import { useAuth } from "../../../hooks/useAuth";
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
