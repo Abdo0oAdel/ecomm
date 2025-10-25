@@ -1,14 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { authActions } from '../../store/Auth/slice.js';
+import { cartActions } from '../../store/Cart/slice.js';
+import { wishlistActions } from '../../store/Wishlist/slice.js';
+import { authAPI } from '../../utils/api.js';
 import styles from './NavBar.module.css';
 
 const NavBar = () => {
+  const { t, i18n } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [language, setLanguage] = useState('English');
   const userMenuRef = useRef(null);
   const mobileMenuRef = useRef(null);
 
@@ -20,10 +24,35 @@ const NavBar = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const wishlistItems = useSelector((state) => state.wishlist.items);
 
-  const handleLogout = () => {
-    dispatch(authActions.logout());
-    setUserMenuOpen(false);
-    navigate('/login');
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
+
+  const getCurrentLanguageLabel = () => {
+    switch (i18n.language) {
+      case 'ar':
+        return 'العربية';
+      case 'fr':
+        return 'Français';
+      default:
+        return 'English';
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      // Call backend logout to clear the HTTP-only cookie
+      await authAPI.logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      // Update Redux state regardless of API call result
+      dispatch(authActions.logout());
+      dispatch(cartActions.clearCart());
+      dispatch(wishlistActions.clearWishlist());
+      setUserMenuOpen(false);
+      navigate('/login');
+    }
   };
 
   // Close dropdown when clicking outside
@@ -49,19 +78,19 @@ const NavBar = () => {
       <div className={styles.topBanner}>
         <div className={styles.bannerContent}>
           <p className={styles.bannerText}>
-            Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!
+            {t('banner.summerSale')}
           </p>
           <a href="#" className={styles.shopNowLink}>
-            Shop Now
+            {t('banner.shopNow')}
           </a>
         </div>
         <div className={styles.languageSelector}>
           <div className={styles.langDropdown} tabIndex={0} aria-label="Language selector">
-            <div className={styles.langCurrent}>{language} <span className={styles.caret}>▾</span></div>
+            <div className={styles.langCurrent}>{getCurrentLanguageLabel()} <span className={styles.caret}>▾</span></div>
             <ul className={styles.langList}>
-              <li><button type="button" onClick={() => setLanguage('English')}>English</button></li>
-              <li><button type="button" onClick={() => setLanguage('العربية')}>العربية</button></li>
-              <li><button type="button" onClick={() => setLanguage('Français')}>Français</button></li>
+              <li><button type="button" onClick={() => changeLanguage('en')}>{t('languages.english')}</button></li>
+              <li><button type="button" onClick={() => changeLanguage('ar')}>{t('languages.arabic')}</button></li>
+              <li><button type="button" onClick={() => changeLanguage('fr')}>{t('languages.french')}</button></li>
             </ul>
           </div>
         </div>
@@ -102,21 +131,21 @@ const NavBar = () => {
             className={`${styles.navLink} ${location.pathname === '/' ? styles.active : ''}`}
             onClick={() => setMobileMenuOpen(false)}
           >
-            Home
+            {t('nav.home')}
           </Link>
           <Link
             to="/contact"
             className={`${styles.navLink} ${location.pathname === '/contact' ? styles.active : ''}`}
             onClick={() => setMobileMenuOpen(false)}
           >
-            Contact
+            {t('nav.contact')}
           </Link>
           <Link
             to="/about"
             className={`${styles.navLink} ${location.pathname === '/about' ? styles.active : ''}`}
             onClick={() => setMobileMenuOpen(false)}
           >
-            About
+            {t('nav.about')}
           </Link>
           {!isAuthenticated && (
             <Link
@@ -124,7 +153,7 @@ const NavBar = () => {
               className={`${styles.navLink} ${location.pathname === '/signup' ? styles.active : ''}`}
               onClick={() => setMobileMenuOpen(false)}
             >
-              Sign Up
+              {t('nav.signup')}
             </Link>
           )}
           {isAuthenticated && (
@@ -133,7 +162,7 @@ const NavBar = () => {
               className={`${styles.navLink} ${location.pathname === '/account' ? styles.active : ''}`}
               onClick={() => setMobileMenuOpen(false)}
             >
-              My Account
+              {t('nav.myAccount')}
             </Link>
           )}
         </nav>
@@ -146,7 +175,7 @@ const NavBar = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="What are you looking for?"
+              placeholder={t('nav.searchPlaceholder')}
               className={styles.searchInput}
             />
             <button className={styles.searchButton} aria-label="Search">
@@ -217,13 +246,13 @@ const NavBar = () => {
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                       <circle cx="12" cy="7" r="4"></circle>
                     </svg>
-                    <span>Manage My Account</span>
+                    <span>{t('nav.manageAccount')}</span>
                   </button>
                   <button onClick={() => { navigate('/orders'); setUserMenuOpen(false); }} className={styles.dropdownItem}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                     </svg>
-                    <span>My Order</span>
+                    <span>{t('nav.myOrder')}</span>
                   </button>
                   <button onClick={() => { navigate('/cancellations'); setUserMenuOpen(false); }} className={styles.dropdownItem}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -231,13 +260,13 @@ const NavBar = () => {
                       <line x1="15" y1="9" x2="9" y2="15"></line>
                       <line x1="9" y1="9" x2="15" y2="15"></line>
                     </svg>
-                    <span>My Cancellations</span>
+                    <span>{t('nav.myCancellations')}</span>
                   </button>
                   <button onClick={() => { navigate('/reviews'); setUserMenuOpen(false); }} className={styles.dropdownItem}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                     </svg>
-                    <span>My Reviews</span>
+                    <span>{t('nav.myReviews')}</span>
                   </button>
                   <div className={styles.dropdownDivider}></div>
                   <button onClick={handleLogout} className={styles.dropdownItem}>
@@ -246,7 +275,7 @@ const NavBar = () => {
                       <polyline points="16 17 21 12 16 7"></polyline>
                       <line x1="21" y1="12" x2="9" y2="12"></line>
                     </svg>
-                    <span>Logout</span>
+                    <span>{t('nav.logout')}</span>
                   </button>
                 </div>
               )}

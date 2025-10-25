@@ -58,4 +58,63 @@ export const authAPI = {
   },
 };
 
+// Cart API calls
+export const cartAPI = {
+  getCart: async () => {
+    return fetchWithAuth(`${API_BASE_URL}/cart`);
+  },
+
+  addToCart: async (item) => {
+    return fetchWithAuth(`${API_BASE_URL}/cart`, {
+      method: 'POST',
+      body: JSON.stringify(item),
+    });
+  },
+
+  updateQuantity: async (itemId, quantity) => {
+    return fetchWithAuth(`${API_BASE_URL}/cart/${itemId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ quantity }),
+    });
+  },
+
+  removeFromCart: async (itemId) => {
+    return fetchWithAuth(`${API_BASE_URL}/cart/${itemId}`, {
+      method: 'DELETE',
+    });
+  },
+
+  clearCart: async () => {
+    return fetchWithAuth(`${API_BASE_URL}/cart`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+// Wishlist API calls
+export const wishlistAPI = {
+  getWishlist: async () => {
+    return fetchWithAuth(`${API_BASE_URL}/wishlist`);
+  },
+
+  addToWishlist: async (item) => {
+    return fetchWithAuth(`${API_BASE_URL}/wishlist`, {
+      method: 'POST',
+      body: JSON.stringify(item),
+    });
+  },
+
+  removeFromWishlist: async (itemId) => {
+    return fetchWithAuth(`${API_BASE_URL}/wishlist/${itemId}`, {
+      method: 'DELETE',
+    });
+  },
+
+  clearWishlist: async () => {
+    return fetchWithAuth(`${API_BASE_URL}/wishlist`, {
+      method: 'DELETE',
+    });
+  },
+};
+
 export default authAPI;

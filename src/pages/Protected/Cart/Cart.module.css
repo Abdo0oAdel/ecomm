@@ -432,6 +432,7 @@
   cursor: pointer;
   border: none;
   outline: none;
+  text-decoration: none;
 }
 
 .button:disabled {

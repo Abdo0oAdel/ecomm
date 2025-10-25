@@ -1,0 +1,124 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "contact": "Contact",
+    "about": "À propos",
+    "signup": "S'inscrire",
+    "myAccount": "Mon compte",
+    "searchPlaceholder": "Que recherchez-vous?",
+    "wishlist": "Liste de souhaits",
+    "cart": "Panier",
+    "manageAccount": "Gérer mon compte",
+    "myOrder": "Mes commandes",
+    "myCancellations": "Mes annulations",
+    "myReviews": "Mes avis",
+    "logout": "Déconnexion",
+    "login": "Connexion"
+  },
+  "banner": {
+    "summerSale": "Soldes d'été sur tous les maillots de bain et livraison express gratuite - -50%!",
+    "shopNow": "Acheter maintenant"
+  },
+  "languages": {
+    "english": "English",
+    "arabic": "العربية",
+    "french": "Français"
+  },
+  "home": {
+    "title": "Bienvenue chez Zenon",
+    "description": "Votre magasin unique pour des produits incroyables"
+  },
+  "about": {
+    "title": "À propos de nous",
+    "description": "En savoir plus sur notre entreprise"
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "description": "Entrez en contact avec nous"
+  },
+  "auth": {
+    "login": "Connexion",
+    "signup": "S'inscrire",
+    "createAccount": "Créer un compte",
+    "enterDetails": "Entrez vos informations ci-dessous",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "username": "Nom d'utilisateur",
+    "forgotPassword": "Mot de passe oublié?",
+    "alreadyHaveAccount": "Vous avez déjà un compte?",
+    "dontHaveAccount": "Vous n'avez pas de compte?",
+    "submit": "Soumettre",
+    "cancel": "Annuler"
+  },
+  "cart": {
+    "title": "Panier",
+    "emptyCart": "Votre panier est vide",
+    "continueShopping": "Continuer vos achats",
+    "checkout": "Passer la commande",
+    "subtotal": "Sous-total",
+    "total": "Total",
+    "quantity": "Quantité",
+    "price": "Prix",
+    "remove": "Supprimer"
+  },
+  "wishlist": {
+    "title": "Ma liste de souhaits",
+    "emptyWishlist": "Votre liste de souhaits est vide",
+    "addToCart": "Ajouter au panier",
+    "remove": "Supprimer"
+  },
+  "account": {
+    "title": "Mon compte",
+    "profile": "Profil",
+    "orders": "Commandes",
+    "settings": "Paramètres",
+    "addressBook": "Carnet d'adresses"
+  },
+  "checkout": {
+    "title": "Passer la commande",
+    "shippingAddress": "Adresse de livraison",
+    "paymentMethod": "Mode de paiement",
+    "orderSummary": "Résumé de la commande",
+    "placeOrder": "Confirmer la commande"
+  },
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "update": "Mettre à jour",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "confirm": "Confirmer",
+    "close": "Fermer"
+  },
+  "footer": {
+    "subscribe": "S'abonner",
+    "exclusive": "Exclusif",
+    "getDiscount": "Obtenez 10% de réduction sur votre première commande",
+    "enterEmail": "Entrez votre email",
+    "support": "Support",
+    "quickLink": "Lien rapide",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsOfUse": "Conditions d'utilisation",
+    "faq": "FAQ",
+    "downloadApp": "Télécharger l'application",
+    "saveWith": "Économisez 3$ avec l'application Nouveaux utilisateurs uniquement"
+  },
+  "product": {
+    "addToCart": "Ajouter au panier",
+    "addToWishlist": "Ajouter aux favoris",
+    "viewDetails": "Voir les détails",
+    "quickView": "Aperçu rapide",
+    "inStock": "En stock",
+    "outOfStock": "Rupture de stock",
+    "sale": "Solde",
+    "new": "Nouveau"
+  }
+}
+

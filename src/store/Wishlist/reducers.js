@@ -18,3 +18,7 @@ export const moveAllToBag = (state) => {
     state.items = [];
 }
 
+export const setWishlist = (state, action) => {
+    state.items = action.payload;
+}
+

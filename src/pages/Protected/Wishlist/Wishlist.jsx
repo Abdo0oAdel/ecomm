@@ -1,38 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { wishlistActions } from '../../../store/Wishlist/slice.js';
 import { cartActions } from '../../../store/Cart/slice.js';
 import styles from './Wishlist.module.css';
-
-// Initial Wishlist data for demo purposes
-const initialWishlistData = [
-    {
-        id: 1,
-        name: "Gucci duffle bag",
-        currentPrice: 960,
-        originalPrice: 1160,
-        discount: 35,
-        image: "https://images.unsplash.com/photo-1719329102117-7d6de5eae6ea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBkdWZmbGUlMjBiYWd8ZW58MXx8fHwxNzYwODg5MzQxfDA&ixlib=rb-4.1.0&q=80&w=1080",
-    },
-    {
-        id: 2,
-        name: "RGB liquid CPU Cooler",
-        currentPrice: 1960,
-        image: "https://images.unsplash.com/photo-1607732667154-ff11e81e5665?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxSR0IlMjBDUFUlMjBjb29sZXJ8ZW58MXx8fHwxNzYwODg5MzQyfDA&ixlib=rb-4.1.0&q=80&w=1080",
-    },
-    {
-        id: 3,
-        name: "GP11 Shooter USB Gamepad",
-        currentPrice: 550,
-        image: "https://images.unsplash.com/photo-1580234811497-9df7fd2f357e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYW1pbmclMjBnYW1lcGFkJTIwY29udHJvbGxlcnxlbnwxfHx8fDE3NjA4ODkzNDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    },
-    {
-        id: 4,
-        name: "Quilted Satin Jacket",
-        currentPrice: 750,
-        image: "https://images.unsplash.com/photo-1633293822049-dee1b40a99c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxxdWlsdGVkJTIwamFja2V0fGVufDF8fHx8MTc2MDg4OTM0Mnww&ixlib=rb-4.1.0&q=80&w=1080",
-    },
-];
 
 // Just For You data
 export const justForYouData = [
@@ -74,17 +45,11 @@ export const justForYouData = [
 ];
 
 const Wishlist = () => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const wishlistItems = useSelector((state) => state.wishlist.items);
 
-    // Initialize wishlist with demo data if empty (for demo purposes)
-    useEffect(() => {
-        if (wishlistItems.length === 0) {
-            initialWishlistData.forEach(item => {
-                dispatch(wishlistActions.addToWishlist(item));
-            });
-        }
-    }, []);
+    // Wishlist data is now loaded from backend on login - no need for demo data
 
     const handleMoveAllToBag = () => {
         wishlistItems.forEach(item => {
@@ -114,9 +79,9 @@ const Wishlist = () => {
             {/* Wishlist Section */}
             <section className={styles.wishlistSection}>
                 <div className={styles.sectionHeader}>
-                    <h2 className={styles.sectionTitle}>Wishlist ({wishlistItems.length})</h2>
+                    <h2 className={styles.sectionTitle}>{t('wishlist.title')} ({wishlistItems.length})</h2>
                     <button className={styles.moveAllButton} onClick={handleMoveAllToBag}>
-                        Move All To Bag
+                        {t('wishlist.addToCart')}
                     </button>
                 </div>
 

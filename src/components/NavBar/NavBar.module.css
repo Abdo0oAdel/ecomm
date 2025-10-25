@@ -487,3 +487,73 @@
   }
 }
 
+/* RTL Support */
+html[dir="rtl"] .topBanner {
+  direction: rtl;
+}
+
+html[dir="rtl"] .bannerContent {
+  direction: rtl;
+}
+
+html[dir="rtl"] .bannerText {
+  text-align: center;
+  direction: rtl;
+}
+
+html[dir="rtl"] .languageSelector {
+  right: auto;
+  left: 40px;
+}
+
+html[dir="rtl"] .langList {
+  right: auto;
+  left: 0;
+}
+
+html[dir="rtl"] .langList li button {
+  text-align: right;
+}
+
+html[dir="rtl"] .shopNowLink {
+  margin-left: 0;
+  margin-right: 4px;
+}
+
+html[dir="rtl"] .navLinks {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .headerRight {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .searchBox {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .searchInput {
+  text-align: right;
+  padding-right: 40px;
+  padding-left: 16px;
+}
+
+html[dir="rtl"] .searchIcon {
+  right: auto;
+  left: 12px;
+}
+
+html[dir="rtl"] .userDropdown {
+  right: auto;
+  left: 0;
+}
+
+html[dir="rtl"] .dropdownItem {
+  text-align: right;
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .dropdownItem svg {
+  margin-right: 0;
+  margin-left: 12px;
+}

@@ -1,0 +1,124 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "contact": "اتصل بنا",
+    "about": "من نحن",
+    "signup": "التسجيل",
+    "myAccount": "حسابي",
+    "searchPlaceholder": "ماذا تبحث؟",
+    "wishlist": "قائمة الأمنيات",
+    "cart": "عربة التسوق",
+    "manageAccount": "إدارة حسابي",
+    "myOrder": "طلباتي",
+    "myCancellations": "إلغاءاتي",
+    "myReviews": "تقييماتي",
+    "logout": "تسجيل الخروج",
+    "login": "تسجيل الدخول"
+  },
+  "banner": {
+    "summerSale": "تخفيضات الصيف على جميع ملابس السباحة مع توصيل مجاني - خصم 50%!",
+    "shopNow": "تسوق الآن"
+  },
+  "languages": {
+    "english": "English",
+    "arabic": "العربية",
+    "french": "Français"
+  },
+  "home": {
+    "title": "مرحباً بك في زينون",
+    "description": "متجرك الشامل للمنتجات الرائعة"
+  },
+  "about": {
+    "title": "من نحن",
+    "description": "تعرف على المزيد عن شركتنا"
+  },
+  "contact": {
+    "title": "اتصل بنا",
+    "description": "تواصل معنا"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "signup": "التسجيل",
+    "createAccount": "إنشاء حساب",
+    "enterDetails": "أدخل بياناتك أدناه",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "username": "اسم المستخدم",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "alreadyHaveAccount": "لديك حساب بالفعل؟",
+    "dontHaveAccount": "ليس لديك حساب؟",
+    "submit": "إرسال",
+    "cancel": "إلغاء"
+  },
+  "cart": {
+    "title": "عربة التسوق",
+    "emptyCart": "عربة التسوق فارغة",
+    "continueShopping": "متابعة التسوق",
+    "checkout": "إتمام الشراء",
+    "subtotal": "المجموع الفرعي",
+    "total": "الإجمالي",
+    "quantity": "الكمية",
+    "price": "السعر",
+    "remove": "إزالة"
+  },
+  "wishlist": {
+    "title": "قائمة أمنياتي",
+    "emptyWishlist": "قائمة الأمنيات فارغة",
+    "addToCart": "أضف إلى السلة",
+    "remove": "إزالة"
+  },
+  "account": {
+    "title": "حسابي",
+    "profile": "الملف الشخصي",
+    "orders": "الطلبات",
+    "settings": "الإعدادات",
+    "addressBook": "دفتر العناوين"
+  },
+  "checkout": {
+    "title": "إتمام الشراء",
+    "shippingAddress": "عنوان الشحن",
+    "paymentMethod": "طريقة الدفع",
+    "orderSummary": "ملخص الطلب",
+    "placeOrder": "تأكيد الطلب"
+  },
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "add": "إضافة",
+    "update": "تحديث",
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجاح",
+    "confirm": "تأكيد",
+    "close": "إغلاق"
+  },
+  "footer": {
+    "subscribe": "اشترك",
+    "exclusive": "حصري",
+    "getDiscount": "احصل على خصم 10% على طلبك الأول",
+    "enterEmail": "أدخل بريدك الإلكتروني",
+    "support": "الدعم",
+    "quickLink": "روابط سريعة",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsOfUse": "شروط الاستخدام",
+    "faq": "الأسئلة الشائعة",
+    "downloadApp": "تحميل التطبيق",
+    "saveWith": "وفر 3 دولار مع التطبيق للمستخدمين الجدد فقط"
+  },
+  "product": {
+    "addToCart": "أضف إلى السلة",
+    "addToWishlist": "أضف إلى المفضلة",
+    "viewDetails": "عرض التفاصيل",
+    "quickView": "معاينة سريعة",
+    "inStock": "متوفر",
+    "outOfStock": "غير متوفر",
+    "sale": "تخفيض",
+    "new": "جديد"
+  }
+}
+

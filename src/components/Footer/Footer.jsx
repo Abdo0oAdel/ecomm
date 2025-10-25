@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import styles from "./Footer.module.css";
 import { FiSend } from "react-icons/fi";
 import {
@@ -11,6 +12,7 @@ import {
 } from "react-icons/fa";
 
 const Footer = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
@@ -45,15 +47,15 @@ const Footer = () => {
         <div className={styles.footerColumn}>
           <div className={styles.brandSection}>
             <h3 className={styles.brandName}>Zenon</h3>
-            <h4 className={styles.subscribeTitle}>Subscribe</h4>
-            <p className={styles.subscribeText}>Get 10% off your first order</p>
+            <h4 className={styles.subscribeTitle}>{t('footer.subscribe')}</h4>
+            <p className={styles.subscribeText}>{t('footer.getDiscount')}</p>
             <form
               className={styles.subscribeForm}
               onSubmit={(e) => e.preventDefault()}
             >
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t('footer.enterEmail')}
                 className={styles.emailInput}
                 aria-label="Email"
               />
@@ -81,7 +83,7 @@ const Footer = () => {
 
         {/* Support Column */}
         <div className={styles.footerColumn}>
-          <h4 className={styles.columnTitle}>Support</h4>
+          <h4 className={styles.columnTitle}>{t('footer.support')}</h4>
           <div className={styles.contactInfo}>
             <p className={styles.contactItem}>
               111 Bijoy sarani, Dhaka, D1515, Bangladesh.
@@ -93,18 +95,18 @@ const Footer = () => {
 
         {/* Account Column */}
         <div className={styles.footerColumn}>
-          <h4 className={styles.columnTitle}>Account</h4>
+          <h4 className={styles.columnTitle}>{t('account.title')}</h4>
           <ul className={styles.footerLinks}>
             {isAuthenticated ? (
               <>
                 <li>
-                  <Link to="/account">My Account</Link>
+                  <Link to="/account">{t('nav.myAccount')}</Link>
                 </li>
                 <li>
-                  <Link to="/cart">Cart</Link>
+                  <Link to="/cart">{t('nav.cart')}</Link>
                 </li>
                 <li>
-                  <Link to="/wishlist">Wishlist</Link>
+                  <Link to="/wishlist">{t('nav.wishlist')}</Link>
                 </li>
                 <li>
                   <Link to="/shop">Shop</Link>
@@ -113,10 +115,10 @@ const Footer = () => {
             ) : (
               <>
                 <li>
-                  <Link to="/login">Login</Link>
+                  <Link to="/login">{t('nav.login')}</Link>
                 </li>
                 <li>
-                  <Link to="/signup">Register</Link>
+                  <Link to="/signup">{t('nav.signup')}</Link>
                 </li>
                 <li>
                   <Link to="/shop">Shop</Link>
@@ -128,27 +130,27 @@ const Footer = () => {
 
         {/* Quick Link Column */}
         <div className={styles.footerColumn}>
-          <h4 className={styles.columnTitle}>Quick Link</h4>
+          <h4 className={styles.columnTitle}>{t('footer.quickLink')}</h4>
           <ul className={styles.footerLinks}>
             <li>
-              <Link to="/privacy">Privacy Policy</Link>
+              <Link to="/privacy">{t('footer.privacyPolicy')}</Link>
             </li>
             <li>
-              <Link to="/terms">Terms Of Use</Link>
+              <Link to="/terms">{t('footer.termsOfUse')}</Link>
             </li>
             <li>
-              <Link to="/faq">FAQ</Link>
+              <Link to="/faq">{t('footer.faq')}</Link>
             </li>
             <li>
-              <Link to="/contact">Contact</Link>
+              <Link to="/contact">{t('nav.contact')}</Link>
             </li>
           </ul>
         </div>
 
         {/* Download App Column */}
         <div className={styles.footerColumn}>
-          <h4 className={styles.columnTitle}>Download App</h4>
-          <p className={styles.appText}>Save $3 with App New User Only</p>
+          <h4 className={styles.columnTitle}>{t('footer.downloadApp')}</h4>
+          <p className={styles.appText}>{t('footer.saveWith')}</p>
           <div className={styles.qrCode} aria-hidden>
             <img
                 className={styles.qrPlaceholder}
@@ -160,7 +162,6 @@ const Footer = () => {
             <a href="#" className={styles.storeLink}>
               <img
                 className={styles.googlePlayImg}
-                src="https://s3-alpha-sig.figma.com/img/bc01/ada9/a3a9f391d5bc48d312bdbfd556710281?Expires=1762128000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=KYEko4O1kSCgSf0~PQ8e3sRwNI0a0TkxUMPMmJLZnc6tYYZyYuAl2VbIz9SuvCQG5xfnf4RfHdQeptFIEp3wlyyiFvdaXN1Z7BhyRGTZKZXO~Hhbhclu0zoY6aY3GTooLZ-DFTgX4BBjkX3RZo0TWVSo9LpKJwdlkGqRmX1EsGP~cZp6Bvjf-IJhvNF1uUfCo4MAnF2jtXI-F9k3gfG91QF-bqljhY8U9SrXhxmiPRhCZhrbAHQ73yDtq-nWeV6TG2dbkxiHtZUpHiC2Ig9jWtGW48Mh~uCI99RoFHoAhEtU1ohI9mT-vbpNxpUlY2S2Rm-yXyC4iTSakugTxAPJ~w__"
                 alt="Google Play"
               />
             </a>
