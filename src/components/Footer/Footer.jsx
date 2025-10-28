@@ -83,7 +83,8 @@ const Footer = () => {
 
         {/* Support Column */}
         <div className={styles.footerColumn}>
-          <h4 className={styles.columnTitle}>{t('footer.support')}</h4>
+       {/*<h4 className={styles.columnTitle}>{t('footer.support')}</h4>*/}
+          <Link to="/support" className={styles.columnTitle}>{t('footer.support')}</Link>
           <div className={styles.contactInfo}>
             <p className={styles.contactItem}>
               111 Bijoy sarani, Dhaka, D1515, Bangladesh.
