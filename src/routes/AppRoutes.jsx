@@ -19,7 +19,6 @@ import Cart from "../pages/Protected/Cart/Cart";
 import Wishlist from "../pages/Protected/Wishlist/Wishlist";
 import Checkout from "../pages/Protected/CheckOut/CheckOut";
 import Account from "../pages/Protected/Account/Account";
-
 import Error from "../pages/Error/Error";
 
 const routes = [
@@ -36,11 +35,13 @@ const routes = [
       { path: "/login", element: <Login /> },
       { path: "/signup", element: <SignUp /> },
       { path: "/support", element: <Support /> },
+
       // protected routes and should remove them after implement login
       // { path: "/cart", element: <Cart /> },
       // { path: "/wishlist", element: <Wishlist /> },
       // { path: "/checkout", element: <Checkout /> },
       // { path: "/account", element: <Account /> },
+      // { path: "/*", element: <Error /> },
     ],
   },
   {
