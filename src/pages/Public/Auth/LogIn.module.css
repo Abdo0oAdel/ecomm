@@ -1,22 +1,29 @@
 .loginContainer {
-  width: fit-content;
+  width: 100%;
+  max-width: 1440px;
   height: 781px;
   position: relative;
   top: 60px;
-  margin-bottom: 140px;
+  margin: 0 auto 140px;
+  padding: 0 40px;
   display: flex;
   flex-direction: row;
+  gap: 129px;
+  align-items: center;
 }
 .sideImage {
   width: 805px;
   height: 781px;
+  flex-shrink: 0;
+  object-fit: cover;
 }
 .loginForm {
   display: flex;
   position: relative;
   flex-direction: column;
   justify-content: center;
-  left: 129px;
+  flex: 1;
+  max-width: 500px;
 }
 .loginForm h1 {
   font-size: 36px;
@@ -106,10 +113,8 @@
 /* Mobile Responsive Styles */
 @media (max-width: 1318px) {
   .loginContainer {
-    width: 100%;
     height: auto;
     padding: 0 20px;
-    justify-content: center;
     gap: 40px;
   }
 
@@ -120,7 +125,6 @@
   }
 
   .loginForm {
-    left: 0;
     width: 100%;
     max-width: 450px;
   }
@@ -133,12 +137,10 @@
 @media (max-width: 768px) {
   .loginContainer {
     flex-direction: column;
-    width: 100%;
     height: auto;
     top: 20px;
     margin-bottom: 40px;
     padding: 0 20px;
-    align-items: center;
     gap: 20px;
   }
 
@@ -146,11 +148,9 @@
     width: 100%;
     max-width: 400px;
     height: auto;
-    margin-bottom: 30px;
   }
 
   .loginForm {
-    left: 0;
     width: 100%;
     max-width: 400px;
   }
@@ -214,3 +214,61 @@
   }
 }
 
+/* RTL Support */
+html[dir="rtl"] .loginContainer {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .loginForm {
+  text-align: right;
+}
+
+html[dir="rtl"] .loginForm h1,
+html[dir="rtl"] .loginForm h2 {
+  text-align: right;
+}
+
+html[dir="rtl"] .errorMessage {
+  border-left: none;
+  border-right: 4px solid #DB4444;
+  text-align: right;
+}
+
+html[dir="rtl"] .inputForm input {
+  text-align: right;
+  direction: rtl;
+}
+
+html[dir="rtl"] .formButtons {
+  flex-direction: row-reverse;
+  align-items: flex-start;
+}
+
+html[dir="rtl"] .forgotPassword {
+  text-align: right;
+}
+
+@media (max-width: 1318px) {
+  html[dir="rtl"] .loginForm {
+    max-width: 450px;
+  }
+}
+
+@media (max-width: 768px) {
+  html[dir="rtl"] .loginContainer {
+    flex-direction: column;
+  }
+
+  html[dir="rtl"] .loginForm {
+    text-align: center;
+  }
+
+  html[dir="rtl"] .loginForm h1,
+  html[dir="rtl"] .loginForm h2 {
+    text-align: center;
+  }
+
+  html[dir="rtl"] .formButtons {
+    flex-direction: column;
+  }
+}

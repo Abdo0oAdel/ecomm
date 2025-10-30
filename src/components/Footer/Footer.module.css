@@ -337,3 +337,42 @@
   .subscribeForm { max-width: 100%; }
   .scrollToTop { display: none; }
 }
+
+/* RTL Support */
+html[dir="rtl"] .footer {
+  text-align: right;
+}
+
+html[dir="rtl"] .footerContainer {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .footerLinks {
+  text-align: right;
+}
+
+html[dir="rtl"] .contactInfo {
+  text-align: right;
+}
+
+html[dir="rtl"] .subscribeForm {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .emailInput {
+  text-align: right;
+}
+
+html[dir="rtl"] .socialIcons {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .appStores {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+html[dir="rtl"] .copyright {
+  text-align: center;
+}
+

@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { authActions } from "../../../store/Auth/slice.js";
-import { authAPI } from "../../../utils/api.js";
+import { cartActions } from "../../../store/Cart/slice.js";
+import { wishlistActions } from "../../../store/Wishlist/slice.js";
+import { authAPI, cartAPI, wishlistAPI } from "../../../utils/api.js";
 import styles from "./LogIn.module.css";
 import loginImage from "../../../assets/imgs/Side Image.svg";
 
 const LogIn = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -36,6 +40,24 @@ const LogIn = () => {
         // Dispatch login action with user data from backend
         dispatch(authActions.login({ user: response.user }));
 
+        // Load cart and wishlist from backend
+        try {
+          const [cartResponse, wishlistResponse] = await Promise.all([
+            cartAPI.getCart(),
+            wishlistAPI.getWishlist()
+          ]);
+
+          if (cartResponse.cart) {
+            dispatch(cartActions.setCart(cartResponse.cart));
+          }
+
+          if (wishlistResponse.wishlist) {
+            dispatch(wishlistActions.setWishlist(wishlistResponse.wishlist));
+          }
+        } catch (err) {
+          console.error('❌ LOGIN - Error loading cart/wishlist:', err);
+        }
+
         // Redirect to the page user was trying to access, or home
         const from = location.state?.from?.pathname || "/";
         navigate(from, { replace: true });
@@ -55,8 +77,8 @@ const LogIn = () => {
         <img src={loginImage} alt="Login Side" className={styles.sideImage} />
       </div>
       <div className={styles.loginForm}>
-        <h1>Log in to Zenon</h1>
-        <h2>Enter your details below</h2>
+        <h1>{t('auth.login')}</h1>
+        <h2>{t('auth.enterDetails')}</h2>
         {error && <div className={styles.errorMessage}>{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className={styles.inputForm}>
@@ -65,7 +87,7 @@ const LogIn = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email or Phone Number"
+              placeholder={t('auth.email')}
               required
               disabled={loading}
             />
@@ -74,16 +96,16 @@ const LogIn = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              placeholder={t('auth.password')}
               required
               disabled={loading}
             />
           </div>
           <div className={styles.formButtons}>
             <button type="submit" className={styles.loginButton} disabled={loading}>
-              {loading ? "Logging in..." : "Log In"}
+              {loading ? "Logging in..." : t('auth.login')}
             </button>
-            <button type="button" className={styles.forgotPassword} disabled={loading}>Forgot Password?</button>
+            <button type="button" className={styles.forgotPassword} disabled={loading}>{t('auth.forgotPassword')}</button>
           </div>
         </form>
       </div>

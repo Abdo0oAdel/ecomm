@@ -516,201 +516,73 @@
   }
 }
 
-
-/* ... (Your existing CSS up to the media queries) ... */
-
-/* Mobile responsive */
-@media (max-width: 1024px) {
-    /* Top Banner Mobile */
-    .topBanner {
-        padding: 8px 0;
-    }
-
-    .bannerContent {
-        padding: 0 10px;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .bannerText {
-        font-size: 11px;
-        line-height: 1.3;
-    }
-
-    .shopNowLink {
-        font-size: 11px;
-    }
-
-    .languageSelector {
-        position: static;
-        margin-top: 4px;
-    }
-
-    .langCurrent {
-        font-size: 12px;
-        padding: 2px 6px;
-    }
-
-    /* Main Header Mobile */
-    .headerContainer {
-        padding: 0 16px;
-        /* Ensure it's a column layout to stack topRow and searchRow */
-        flex-direction: column; 
-        gap: 16px; /* Increased gap for separation */
-    }
-
-    .topRow {
-        /* Re-establish row layout for logo, hamburger, and icons */
-        justify-content: space-between;
-        width: 100%;
-    }
-
-    .searchRow {
-        /* Search bar is now the bottom element in the headerContainer */
-        order: 2; /* Ensure it appears below the topRow */
-        width: 100%;
-    }
-
-    /* Logo stays on the left */
-    .logo {
-        order: 1; 
-        margin-right: auto; /* Push other elements away from the logo */
-    }
-
-    .logo h1 {
-        font-size: 20px;
-    }
-
-    /* Show Hamburger Menu on Mobile */
-    .hamburger {
-        display: block;
-        order: 2; /* Logo -> Hamburger -> Icons */
-    }
-
-    /* Adjusting the main action icons (cart/wishlist/user) */
-    .actionsTop {
-        /* These are the icons on the right */
-        order: 3; 
-        margin-left: 12px; /* Small space after the hamburger/nav */
-        gap: 8px; /* Reduce gap between icons */
-    }
-
-    /* Hide the default desktop nav links */
-    .navLinks {
-        /* The sidebar menu logic is fine, no change needed here */
-        position: fixed;
-        top: 0;
-        left: -100%;
-        width: 70%;
-        max-width: 300px;
-        height: 100vh;
-        background: white;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0;
-        padding: 80px 20px 20px;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-        transition: left 0.3s ease-in-out;
-        z-index: 1000;
-        overflow-y: auto;
-    }
-
-    .navLinks.mobileMenuOpen {
-        left: 0;
-    }
-
-    .navLink {
-        width: 100%;
-        padding: 16px 0;
-        border-bottom: 1px solid #f0f0f0;
-        font-size: 16px;
-    }
-
-    /* No change needed for .headerRight as it's not used in this mobile structure */
-
-    .searchBox {
-        max-width: none; /* Let it take the full width of the container */
-        padding: 8px 12px; /* Slightly larger padding for better touch targets */
-    }
-
-    .searchInput {
-        font-size: 14px; /* Slightly larger font */
-    }
-
-    .iconButton {
-        padding: 8px;
-    }
-
-    .iconButton svg {
-        width: 24px;
-        height: 24px;
-    }
-
-    .badge {
-        font-size: 10px;
-        min-width: 18px;
-        height: 18px;
-        padding: 2px 4px;
-    }
-
-    .userDropdown {
-        right: 0; /* Align user dropdown to the right edge of the header */
-    }
+/* RTL Support */
+html[dir="rtl"] .topBanner {
+  direction: rtl;
 }
 
-@media (max-width: 480px) {
-    .bannerText {
-        font-size: 10px;
-    }
-
-    .shopNowLink {
-        font-size: 10px;
-    }
-
-    .headerContainer {
-        padding: 0 12px;
-    }
-
-    .logo h1 {
-        font-size: 18px;
-    }
-
-    .navLinks {
-        width: 80%;
-    }
-
-    .searchBox {
-        min-width: unset;
-    }
-
-    .actionsTop {
-        gap: 6px; /* Further reduce icon gap */
-    }
+html[dir="rtl"] .bannerContent {
+  direction: rtl;
 }
 
-/* Desktop / Laptop: keep search on same header row and reduce width */
-@media (min-width: 1025px) {
-  .headerContainer {
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .topRow { flex: 1 1 auto; }
-
-  .searchRow { margin-top: 0; justify-content: flex-end; width: auto; }
-
-  .searchBox { max-width: 320px; }
-
-  /* Increase spacing between primary links on desktop to match design */
-  .navLinks {
-    gap: 48px; /* larger gap for Home / Contact / About */
-  }
+html[dir="rtl"] .bannerText {
+  text-align: center;
+  direction: rtl;
 }
 
-/* Desktop: show navSearch inline and hide centered searchRow */
-@media (min-width: 1025px) {
-  .navSearch { display: block; }
-  .searchRow { display: none; }
-  .navSearch .searchBox { max-width: 240px; }
+html[dir="rtl"] .languageSelector {
+  right: auto;
+  left: 40px;
+}
+
+html[dir="rtl"] .langList {
+  right: auto;
+  left: 0;
+}
+
+html[dir="rtl"] .langList li button {
+  text-align: right;
+}
+
+html[dir="rtl"] .shopNowLink {
+  margin-left: 0;
+  margin-right: 4px;
+}
+
+html[dir="rtl"] .navLinks {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .headerRight {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .searchBox {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .searchInput {
+  text-align: right;
+  padding-right: 40px;
+  padding-left: 16px;
+}
+
+html[dir="rtl"] .searchIcon {
+  right: auto;
+  left: 12px;
+}
+
+html[dir="rtl"] .userDropdown {
+  right: auto;
+  left: 0;
+}
+
+html[dir="rtl"] .dropdownItem {
+  text-align: right;
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .dropdownItem svg {
+  margin-right: 0;
+  margin-left: 12px;
 }

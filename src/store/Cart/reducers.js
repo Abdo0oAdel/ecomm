@@ -26,3 +26,7 @@ export const setCouponCode = (state, action) => {
     state.couponCode = action.payload;
 }
 
+export const setCart = (state, action) => {
+    state.items = action.payload;
+}
+

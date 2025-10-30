@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { authActions } from "../../../store/Auth/slice.js";
 import { authAPI } from "../../../utils/api.js";
 import styles from "./SignUp.module.css";
 import loginImage from "../../../assets/imgs/Side Image.svg";
 
 const SignUp = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
@@ -58,8 +60,8 @@ const SignUp = () => {
         <img src={loginImage} alt="Login Side" className={styles.sideImage} />
       </div>
       <div className={styles.loginForm}>
-        <h1>Create an account</h1>
-        <h2>Enter your details below</h2>
+        <h1>{t('auth.createAccount')}</h1>
+        <h2>{t('auth.enterDetails')}</h2>
         {error && <div className={styles.errorMessage}>{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className={styles.inputForm}>
@@ -68,7 +70,7 @@ const SignUp = () => {
               id="name"
               value={user}
               onChange={(e) => setUser(e.target.value)}
-              placeholder="Name"
+              placeholder={t('auth.username')}
               required
               disabled={loading}
             />
@@ -77,7 +79,7 @@ const SignUp = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email or Phone Number"
+              placeholder={t('auth.email')}
               required
               disabled={loading}
             />
@@ -86,14 +88,14 @@ const SignUp = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              placeholder={t('auth.password')}
               required
               disabled={loading}
             />
           </div>
           <div className={styles.formButtons}>
             <button type="submit" className={styles.signUpButton} disabled={loading}>
-              {loading ? "Creating Account..." : "Sign Up"}
+              {loading ? "Creating Account..." : t('auth.signup')}
             </button>
             <button type="button" className={styles.signUpGoogleButton} disabled={loading}>
               <svg
@@ -124,9 +126,9 @@ const SignUp = () => {
           </div>
         </form>
         <div className={styles.backToLogIn}>
-          <a>Already have account?</a>
+          <a>{t('auth.alreadyHaveAccount')}</a>
           <button className={styles.logIn} onClick={() => navigate("/login")}>
-            Log In
+            {t('auth.login')}
           </button>
         </div>
       </div>

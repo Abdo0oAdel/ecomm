@@ -206,7 +206,11 @@ app.get('/api/auth/verify', authenticateToken, (req, res) => {
 
 // Logout endpoint (client-side will remove token, but we can blacklist tokens in production)
 app.post('/api/auth/logout', authenticateToken, (req, res) => {
-  res.clearCookie('token');
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Strict'
+  });
   res.json({ success: true, message: 'Logged out successfully' });
 });
 
@@ -263,6 +267,208 @@ app.get('/api/admin/users', authenticateToken, authorizeRole('admin'), (req, res
     res.json(safeUsers);
   } catch (error) {
     res.status(500).json({ error: 'Failed to read users' });
+  }
+});
+
+// ============================================
+// CART API ENDPOINTS
+// ============================================
+
+// Get user's cart
+app.get('/api/cart', authenticateToken, (req, res) => {
+  try {
+    const users = readUsers();
+    const user = users.find(u => u.id === req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({ cart: user.cart || [] });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get cart' });
+  }
+});
+
+// Add item to cart
+app.post('/api/cart', authenticateToken, (req, res) => {
+  try {
+    const users = readUsers();
+    const userIndex = users.findIndex(u => u.id === req.user.id);
+
+    if (userIndex === -1) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (!users[userIndex].cart) {
+      users[userIndex].cart = [];
+    }
+
+    const { id, quantity = 1, ...itemData } = req.body;
+    const existingItemIndex = users[userIndex].cart.findIndex(item => item.id === id);
+
+    if (existingItemIndex !== -1) {
+      // Update quantity if item already exists
+      users[userIndex].cart[existingItemIndex].quantity += quantity;
+    } else {
+      // Add new item
+      users[userIndex].cart.push({ id, quantity, ...itemData });
+    }
+
+    writeUsers(users);
+    res.json({ success: true, cart: users[userIndex].cart });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to add to cart' });
+  }
+});
+
+// Update cart item quantity
+app.put('/api/cart/:itemId', authenticateToken, (req, res) => {
+  try {
+    const users = readUsers();
+    const userIndex = users.findIndex(u => u.id === req.user.id);
+
+    if (userIndex === -1) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const { quantity } = req.body;
+    const itemIndex = users[userIndex].cart.findIndex(item => item.id === req.params.itemId);
+
+    if (itemIndex === -1) {
+      return res.status(404).json({ error: 'Item not found in cart' });
+    }
+
+    users[userIndex].cart[itemIndex].quantity = Math.max(1, quantity);
+
+    writeUsers(users);
+    res.json({ success: true, cart: users[userIndex].cart });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update cart' });
+  }
+});
+
+// Remove item from cart
+app.delete('/api/cart/:itemId', authenticateToken, (req, res) => {
+  try {
+    const users = readUsers();
+    const userIndex = users.findIndex(u => u.id === req.user.id);
+
+    if (userIndex === -1) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    users[userIndex].cart = users[userIndex].cart.filter(item => item.id !== req.params.itemId);
+
+    writeUsers(users);
+    res.json({ success: true, cart: users[userIndex].cart });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to remove from cart' });
+  }
+});
+
+// Clear cart
+app.delete('/api/cart', authenticateToken, (req, res) => {
+  try {
+    const users = readUsers();
+    const userIndex = users.findIndex(u => u.id === req.user.id);
+
+    if (userIndex === -1) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    users[userIndex].cart = [];
+
+    writeUsers(users);
+    res.json({ success: true, cart: [] });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to clear cart' });
+  }
+});
+
+// ============================================
+// WISHLIST API ENDPOINTS
+// ============================================
+
+// Get user's wishlist
+app.get('/api/wishlist', authenticateToken, (req, res) => {
+  try {
+    const users = readUsers();
+    const user = users.find(u => u.id === req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({ wishlist: user.wishlist || [] });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get wishlist' });
+  }
+});
+
+// Add item to wishlist
+app.post('/api/wishlist', authenticateToken, (req, res) => {
+  try {
+    const users = readUsers();
+    const userIndex = users.findIndex(u => u.id === req.user.id);
+
+    if (userIndex === -1) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (!users[userIndex].wishlist) {
+      users[userIndex].wishlist = [];
+    }
+
+    const item = req.body;
+    const exists = users[userIndex].wishlist.find(i => i.id === item.id);
+
+    if (!exists) {
+      users[userIndex].wishlist.push(item);
+      writeUsers(users);
+    }
+
+    res.json({ success: true, wishlist: users[userIndex].wishlist });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to add to wishlist' });
+  }
+});
+
+// Remove item from wishlist
+app.delete('/api/wishlist/:itemId', authenticateToken, (req, res) => {
+  try {
+    const users = readUsers();
+    const userIndex = users.findIndex(u => u.id === req.user.id);
+
+    if (userIndex === -1) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    users[userIndex].wishlist = users[userIndex].wishlist.filter(item => item.id !== req.params.itemId);
+
+    writeUsers(users);
+    res.json({ success: true, wishlist: users[userIndex].wishlist });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to remove from wishlist' });
+  }
+});
+
+// Clear wishlist
+app.delete('/api/wishlist', authenticateToken, (req, res) => {
+  try {
+    const users = readUsers();
+    const userIndex = users.findIndex(u => u.id === req.user.id);
+
+    if (userIndex === -1) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    users[userIndex].wishlist = [];
+
+    writeUsers(users);
+    res.json({ success: true, wishlist: [] });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to clear wishlist' });
   }
 });
 
