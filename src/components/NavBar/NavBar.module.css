@@ -105,18 +105,40 @@
 .header {
   background: white;
   border-bottom: 1px solid #e5e5e5;
-  padding: 20px 0;
+  padding: 12px 0; /* reduced vertical padding */
 }
 
 .headerContainer {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 40px;
+  padding: 0 16px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 40px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
   position: relative;
+}
+
+/* top row: logo, nav, icons */
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.actionsTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px; /* small nudge to bring icons closer to the nav links */
+}
+
+/* search row: centered below top row */
+.searchRow {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .logo {
@@ -144,8 +166,12 @@
 .navLinks {
   display: flex;
   align-items: center;
-  gap: 48px;
+  gap: 20px; /* reduced gap so links are closer together and closer to the actions */
   flex: 0 0 auto;
+}
+
+.navSearch {
+  display: none; /* hidden by default (mobile) */
 }
 
 .navLink {
@@ -189,8 +215,9 @@
   align-items: center;
   background: #F5F5F5;
   border-radius: 4px;
-  padding: 8px 12px;
-  min-width: 243px;
+  padding: 6px 8px;
+  width: 100%;
+  max-width: 360px; /* smaller search width */
 }
 
 .searchInput {
@@ -199,7 +226,7 @@
   outline: none;
   font-size: 12px;
   width: 100%;
-  padding-right: 8px;
+  padding-right: 6px;
 }
 
 .searchInput::placeholder {
@@ -215,6 +242,10 @@
   align-items: center;
   justify-content: center;
   color: #000;
+}
+
+.searchIcon {
+  margin-left: 6px;
 }
 
 .iconButton {
@@ -343,7 +374,7 @@
 }
 
 /* Mobile responsive */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   /* Top Banner Mobile */
   .topBanner {
     padding: 8px 0;
@@ -376,9 +407,7 @@
 
   /* Main Header Mobile */
   .headerContainer {
-    padding: 0 20px;
-    flex-wrap: wrap;
-    gap: 16px;
+    padding: 0 16px;
   }
 
   .logo h1 {
@@ -428,12 +457,12 @@
   }
 
   .searchBox {
-    min-width: 150px;
+    max-width: 420px;
     padding: 6px 10px;
   }
 
   .searchInput {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .iconButton {
@@ -471,12 +500,12 @@
   }
 
   .logo h1 {
-    font-size: 18px;
+    font-size: 20px; /* reduced size */
+    font-weight: 700;
+    color: #000;
+    margin: 0;
   }
-
-  .navLinks {
-    width: 80%;
-  }
+  
 
   .searchBox {
     min-width: 120px;
