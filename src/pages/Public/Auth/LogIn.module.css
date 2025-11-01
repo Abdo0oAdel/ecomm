@@ -23,7 +23,6 @@
   flex-direction: column;
   justify-content: center;
   flex: 1;
-  max-width: 500px;
 }
 .loginForm h1 {
   font-size: 36px;
@@ -53,7 +52,6 @@
   flex-direction: column;
   justify-content: space-between;
   margin-top: 48px;
-  width: 370px;
   height: 104px;
   margin-bottom: 40px;
 }
@@ -70,40 +68,47 @@
   line-height: 26px;
   font-weight: 400;
 }
-.formButtons{
+.formButtons {
   display: flex;
   justify-content: space-between;
 }
-.formButtons .loginButton{
+.formButtons .loginButton {
   width: 143px;
   height: 56px;
-  background-color: #DB4444;
+  background-color: #db4444;
   color: #ffffff;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   size: 16px;
   line-height: 26px;
   font-weight: 400;
   border-radius: 4px;
   cursor: pointer;
-  border: none;
+  transition: all 0.3s ease;
+}
+.formButtons .loginButton:hover {
+  background-color: #a855f7;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 .formButtons .loginButton:disabled {
   background-color: #ccc;
   cursor: not-allowed;
   opacity: 0.6;
 }
-.formButtons .forgotPassword{
+.formButtons .forgotPassword {
   width: 143px;
   height: 56px;
-  color: #DB4444;
-  font-family: 'Poppins', sans-serif;
+  color: #db4444;
+  font-family: "Poppins", sans-serif;
   size: 16px;
   line-height: 26px;
   font-weight: 400;
   border-radius: 4px;
-  background: transparent;
-  border: none;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+.formButtons .forgotPassword:hover {
+  transform: scale(1.05);
 }
 .formButtons .forgotPassword:disabled {
   opacity: 0.6;
