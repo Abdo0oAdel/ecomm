@@ -1,11 +1,166 @@
-import React from 'react';
-import styles from './ProductDetails.module.css';
+import React, { useState } from "react";
+import { useParams, useLocation, Link } from "react-router-dom";
+import styles from "./ProductDetails.module.css";
+import { AiFillStar } from "react-icons/ai";
+import { FiChevronLeft, FiShoppingCart, FiHeart } from "react-icons/fi";
+import products from "../../../data/products";
+import ProductCard from "../../../components/ProductCard/ProductCard";
 
 const ProductDetail = () => {
+    const { id } = useParams();
+    const location = useLocation();
+    const fallback = products.find((p) => String(p.id) === String(id));
+    const product = location.state?.product || fallback;
+
+    const [mainIndex, setMainIndex] = useState(0);
+    const [selectedColor, setSelectedColor] = useState(
+        product?.colors?.[0] || null
+    );
+    const [selectedSize, setSelectedSize] = useState(
+        product?.sizes?.includes("M") ? "M" : product?.sizes?.[0] || null
+    );
+    const [qty, setQty] = useState(1);
+
+    const renderStars = (rating) =>
+        Array.from({ length: 5 }).map((_, i) => (
+            <AiFillStar
+                key={i}
+                className={i < rating ? styles.starFilled : styles.starEmpty}
+            />
+        ));
+
+    if (!product) {
+        return (
+            <div className={styles.container}>
+                <div className={styles.headerRow}>
+                    <Link to="/" className={styles.backButton}>
+                        <FiChevronLeft /> العودة
+                    </Link>
+                </div>
+                <div className={styles.notFound}>
+                    <p>لم يتم العثور على المنتج بالمعرّف {id}.</p>
+                </div>
+            </div>
+        );
+    }
+
+    const imgs = product.images && product.images.length ? product.images : [product.image];
+
+    const related = products.filter((p) => p.id !== product.id).slice(0, 4);
+
     return (
-        <>
-        </>
-    )
-}
+        <div className={styles.container}>
+            <div className={styles.headerRow}>
+                <Link to="/" className={styles.backButton}>
+                    <FiChevronLeft /> العودة
+                </Link>
+            </div>
+
+            <div className={styles.grid}>
+                <div className={styles.thumbs}>
+                    {imgs.map((src, i) => (
+                        <button
+                            key={i}
+                            className={`${styles.thumbBtn} ${i === mainIndex ? styles.activeThumb : ""}`}
+                            onClick={() => setMainIndex(i)}
+                        >
+                            <img src={src} alt={`${product.name} ${i}`} />
+                        </button>
+                    ))}
+                </div>
+
+                <div className={styles.mainImageWrap}>
+                    <img src={imgs[mainIndex]} alt={product.name} className={styles.mainImage} />
+                </div>
+
+                <div className={styles.details}>
+                    <h1 className={styles.title}>{product.name}</h1>
+
+                    <div className={styles.ratingRow}>
+                        <div className={styles.stars}>{renderStars(product.rating)}</div>
+                        <span className={styles.reviews}>({product.reviews} Reviews)</span>
+                        <span className={styles.stock}>{product.inStock ? "In Stock" : "Out of Stock"}</span>
+                    </div>
+
+                    <div className={styles.priceRow}>
+                        <span className={styles.currentPrice}>${product.currentPrice}</span>
+                        {product.originalPrice > product.currentPrice && (
+                            <span className={styles.originalPrice}>${product.originalPrice}</span>
+                        )}
+                    </div>
+
+                    <p className={styles.description}>{product.description}</p>
+
+                    {product.colors?.length ? (
+                        <div className={styles.optionRow}>
+                            <label className={styles.optionLabel}>Colours:</label>
+                            <div className={styles.colors}> 
+                                {product.colors.map((c) => (
+                                    <button
+                                        key={c}
+                                        className={`${styles.colorDot} ${selectedColor === c ? styles.colorSelected : ""}`}
+                                        onClick={() => setSelectedColor(c)}
+                                        title={c}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    ) : null}
+
+                    {product.sizes?.length ? (
+                        <div className={styles.optionRow}>
+                            <label className={styles.optionLabel}>Size:</label>
+                            <div className={styles.sizes}>
+                                {product.sizes.map((s) => (
+                                    <button
+                                        key={s}
+                                        className={`${styles.sizeBtn} ${selectedSize === s ? styles.sizeSelected : ""}`}
+                                        onClick={() => setSelectedSize(s)}
+                                    >
+                                        {s}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    ) : null}
+
+                    <div className={styles.buyRow}>
+                        <div className={styles.qtyControl}>
+                            <button onClick={() => setQty(Math.max(1, qty - 1))}>-</button>
+                            <span className={styles.qty}>{qty}</span>
+                            <button onClick={() => setQty(qty + 1)}>+</button>
+                        </div>
+                        <button className={styles.buyBtn}>
+                            <FiShoppingCart /> Buy Now
+                        </button>
+                        <button className={styles.wishBtn} title="Add to wishlist">
+                            <FiHeart />
+                        </button>
+                    </div>
+
+                    <div className={styles.deliveryBoxes}>
+                        <div className={styles.box}>
+                            <strong>Free Delivery</strong>
+                            <p>Enter your postal code for Delivery Availability</p>
+                        </div>
+                        <div className={styles.box}>
+                            <strong>Return Delivery</strong>
+                            <p>Free 30 Days Delivery Returns. Details</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section className={styles.relatedSection}>
+                <h3 className={styles.relatedTitle}>Related Items</h3>
+                <div className={styles.relatedGrid}>
+                    {related.map((r) => (
+                        <ProductCard key={r.id} product={r} />
+                    ))}
+                </div>
+            </section>
+        </div>
+    );
+};
 
 export default ProductDetail;

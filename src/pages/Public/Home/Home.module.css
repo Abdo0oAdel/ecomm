@@ -57,7 +57,10 @@
 .categoryItem:hover {
   color: var(--color-accent);
 }
-
+.activeCategory {
+  color: var(--color-accent);
+  font-weight: 600;
+}
 .categoryItem:last-child {
   border-bottom: none;
 }
