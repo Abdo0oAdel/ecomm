@@ -1,11 +1,6 @@
 import {
   FiHeart,
-  FiSearch,
   FiShoppingCart,
-  FiMenu,
-  FiX,
-  FiChevronDown,
-  FiUser,
 } from 'react-icons/fi';
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -39,23 +34,18 @@ const NavBar = () => {
 
   const getCurrentLanguageLabel = () => {
     switch (i18n.language) {
-      case 'ar':
-        return 'العربية';
-      case 'fr':
-        return 'Français';
-      default:
-        return 'English';
+      case 'ar': return 'العربية';
+      case 'fr': return 'Français';
+      default: return 'English';
     }
   };
 
   const handleLogout = async () => {
     try {
-      // Call backend logout to clear the HTTP-only cookie
       await authAPI.logout();
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout Error:", error);
     } finally {
-      // Update Redux state regardless of API call result
       dispatch(authActions.logout());
       dispatch(cartActions.clearCart());
       dispatch(wishlistActions.clearWishlist());
@@ -64,7 +54,6 @@ const NavBar = () => {
     }
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
@@ -74,7 +63,6 @@ const NavBar = () => {
         setMobileMenuOpen(false);
       }
     };
-
     if (userMenuOpen || mobileMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -86,20 +74,20 @@ const NavBar = () => {
       {/* Top Banner */}
       <div className={styles.topBanner}>
         <div className={styles.bannerContent}>
-          <p className={styles.bannerText}>
-            {t('banner.summerSale')}
-          </p>
-          <a href="#" className={styles.shopNowLink}>
-            {t('banner.shopNow')}
-          </a>
+          <p className={styles.bannerText}>{t('banner.summerSale')}</p>
+          <a href="#" className={styles.shopNowLink}>{t('banner.shopNow')}</a>
         </div>
+
+        {/* Language Selector */}
         <div className={styles.languageSelector}>
-          <div className={styles.langDropdown} tabIndex={0} aria-label="Language selector">
-            <div className={styles.langCurrent}>{getCurrentLanguageLabel()} <span className={styles.caret}>▾</span></div>
+          <div className={styles.langDropdown}>
+            <div className={styles.langCurrent}>
+              {getCurrentLanguageLabel()} ▾
+            </div>
             <ul className={styles.langList}>
-              <li><button type="button" onClick={() => changeLanguage('en')}>{t('languages.english')}</button></li>
-              <li><button type="button" onClick={() => changeLanguage('ar')}>{t('languages.arabic')}</button></li>
-              <li><button type="button" onClick={() => changeLanguage('fr')}>{t('languages.french')}</button></li>
+              <li><button onClick={() => changeLanguage('en')}>{t('languages.english')}</button></li>
+              <li><button onClick={() => changeLanguage('ar')}>{t('languages.arabic')}</button></li>
+              <li><button onClick={() => changeLanguage('fr')}>{t('languages.french')}</button></li>
             </ul>
           </div>
         </div>
@@ -107,11 +95,7 @@ const NavBar = () => {
 
       {/* Main Header */}
       <header className={styles.header}>
-      <div className={styles.headerContainer}>
-        {/* Logo */}
-        <Link to="/" className={styles.logo}>
-          <h1>Zenon</h1>
-        </Link>
+        <div className={styles.headerContainer}>
 
         {/* Hamburger Menu Button - Mobile Only */}
         <button
@@ -169,8 +153,8 @@ const NavBar = () => {
             className={`${styles.navLink} ${location.pathname === '/about' ? styles.active : ''}`}
             onClick={() => setMobileMenuOpen(false)}
           >
-            {t('nav.about')}
-          </Link>
+            {mobileMenuOpen ? "✖" : "☰"}
+          </button>
 
           <Link
             to="/signup"
@@ -189,33 +173,32 @@ const NavBar = () => {
           </Link>
         </nav>
 
-        {/* Right Side Actions */}
-        <div className={styles.headerRight}>
-          {/* Search Bar */}
-          <div className={styles.searchBox}>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t('nav.searchPlaceholder')}
-              className={styles.searchInput}
-            />
-            <button className={styles.searchButton} aria-label="Search">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-              </svg>
-            </button>
-          </div>
+            {!isAuthenticated ? (
+              <Link
+                to="/login"
+                className={styles.navLink}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t('nav.login')}
+              </Link>
+            ) : (
+              <Link
+                to="/account"
+                className={styles.navLink}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t('nav.myAccount')}
+              </Link>
+            )}
+          </nav>
 
-          {/* action icons */}
-          <div className={styles.actionsTop}>
-            {/* Wishlist (heart) - visible for all users */}
+          {/* Right Actions */}
+          <div className={styles.headerRight}>
+
+            {/* Wishlist */}
             <button
               className={styles.iconButton}
               onClick={() => navigate('/wishlist')}
-              aria-label="Wishlist"
-              title="Wishlist"
             >
               <FiHeart size={20} />
               {wishlistItems.length > 0 && (
@@ -223,12 +206,10 @@ const NavBar = () => {
               )}
             </button>
 
-            {/* Cart - visible for all users */}
+            {/* Cart */}
             <button
               className={styles.iconButton}
               onClick={() => navigate('/cart')}
-              aria-label="Cart"
-              title="Cart"
             >
               <FiShoppingCart size={20} />
               {cartItems.length > 0 && (
@@ -236,17 +217,21 @@ const NavBar = () => {
               )}
             </button>
 
-            {isAuthenticated && user ? (
-              <div className={styles.userMenu} ref={userMenuRef}>
+            {/* User / Login */}
+            {!isAuthenticated ? (
+              <button
+                className={styles.iconButton}
+                onClick={() => navigate('/login')}
+              >
+                👤
+              </button>
+            ) : (
+              <div ref={userMenuRef} className={styles.userMenu}>
                 <button
-                  className={`${styles.iconButton} ${styles.userButton} ${userMenuOpen ? styles.active : ''}`}
+                  className={styles.iconButton}
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  aria-label="User Menu"
                 >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
+                  👤
                 </button>
 
                 {userMenuOpen && (
@@ -301,25 +286,12 @@ const NavBar = () => {
                   </div>
                 )}
               </div>
-            ) : (
-              <button
-                className={styles.iconButton}
-                onClick={() => navigate('/login')}
-                aria-label="Login"
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-              </button>
             )}
           </div>
         </div>
-      </div>
-    </header>
+      </header>
     </>
   );
 };
 
 export default NavBar;
-

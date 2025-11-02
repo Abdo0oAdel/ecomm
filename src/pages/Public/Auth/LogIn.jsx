@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { authActions } from "../../../store/Auth/slice.js";
+import { useAuth } from "../../../hooks/useAuth";
+import { useDispatch } from "react-redux";
 import { cartActions } from "../../../store/Cart/slice.js";
 import { wishlistActions } from "../../../store/Wishlist/slice.js";
-import { authAPI, cartAPI, wishlistAPI } from "../../../utils/api.js";
+import { cartAPI, wishlistAPI } from "../../../utils/api.js";
 import styles from "./LogIn.module.css";
 import loginImage from "../../../assets/imgs/Side Image.svg";
 
@@ -14,10 +14,10 @@ const LogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { login, loading } = useAuth();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const loading = useSelector((state) => state.auth.loading);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,22 +29,18 @@ const LogIn = () => {
       return;
     }
 
-    // Set loading state
-    dispatch(authActions.setLoading(true));
-
     try {
-      // Call backend API
-      const response = await authAPI.login(email, password);
+      // Call login from useAuth hook
+      const { success, user, error: loginError } = await login(email, password);
 
-      if (response.success && response.user) {
-        // Dispatch login action with user data from backend
-        dispatch(authActions.login({ user: response.user }));
+      if (success && user) {
+        // User is now logged in and tokens are stored
 
         // Load cart and wishlist from backend
         try {
           const [cartResponse, wishlistResponse] = await Promise.all([
             cartAPI.getCart(),
-            wishlistAPI.getWishlist()
+            wishlistAPI.getWishlist(),
           ]);
 
           if (cartResponse.cart) {
@@ -55,7 +51,7 @@ const LogIn = () => {
             dispatch(wishlistActions.setWishlist(wishlistResponse.wishlist));
           }
         } catch (err) {
-          console.error('❌ LOGIN - Error loading cart/wishlist:', err);
+          console.error("❌ LOGIN - Error loading cart/wishlist:", err);
         }
 
         // Redirect to the page user was trying to access, or home
@@ -77,8 +73,8 @@ const LogIn = () => {
         <img src={loginImage} alt="Login Side" className={styles.sideImage} />
       </div>
       <div className={styles.loginForm}>
-        <h1>{t('auth.login')}</h1>
-        <h2>{t('auth.enterDetails')}</h2>
+        <h1>{t("auth.login")}</h1>
+        <h2>{t("auth.enterDetails")}</h2>
         {error && <div className={styles.errorMessage}>{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className={styles.inputForm}>
@@ -87,7 +83,7 @@ const LogIn = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={t('auth.email')}
+              placeholder={t("auth.email")}
               required
               disabled={loading}
             />
@@ -96,16 +92,26 @@ const LogIn = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={t('auth.password')}
+              placeholder={t("auth.password")}
               required
               disabled={loading}
             />
           </div>
           <div className={styles.formButtons}>
-            <button type="submit" className={styles.loginButton} disabled={loading}>
-              {loading ? "Logging in..." : t('auth.login')}
+            <button
+              type="submit"
+              className={styles.loginButton}
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : t("auth.login")}
             </button>
-            <button type="button" className={styles.forgotPassword} disabled={loading}>{t('auth.forgotPassword')}</button>
+            <button
+              type="button"
+              className={styles.forgotPassword}
+              disabled={loading}
+            >
+              {t("auth.forgotPassword")}
+            </button>
           </div>
         </form>
       </div>
