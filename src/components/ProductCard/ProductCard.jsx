@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import styles from "./ProductCard.module.css";
 import { FiHeart, FiEye, FiShoppingCart } from "react-icons/fi";
 import { AiFillStar } from "react-icons/ai";
@@ -37,11 +38,13 @@ const ProductCard = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className={styles.productImageContainer}>
-        <img
-          src={product.image}
-          alt={product.name}
-          className={styles.productImage}
-        />
+        <Link to={`/products/${product.id}`} state={{ product }}>
+          <img
+            src={product.image}
+            alt={product.name}
+            className={styles.productImage}
+          />
+        </Link>
 
         {/* Discount/New Badge */}
         {product.isNew && (
@@ -69,7 +72,11 @@ const ProductCard = ({
       </div>
 
       <div className={styles.productInfo}>
-        <h3 className={styles.productName}>{product.name}</h3>
+        <h3 className={styles.productName}>
+          <Link to={`/products/${product.id}`} state={{ product }}>
+            {product.name}
+          </Link>
+        </h3>
 
         <div className={styles.priceContainer}>
           <span className={styles.currentPrice}>${product.currentPrice}</span>
