@@ -8,6 +8,8 @@ import loginImage from "../../../assets/imgs/Side Image.svg";
 const SignUp = () => {
   const { t } = useTranslation();
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -56,6 +58,24 @@ const SignUp = () => {
         {error && <div className={styles.errorMessage}>{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className={styles.inputForm}>
+            <div className={styles.nameInputs}>
+              <input
+                placeholder="First Name"
+                type="Text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+                disabled={loading}
+              ></input>
+              <input
+                placeholder="Last Name"
+                type="Text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+                disabled={loading}
+              ></input>
+            </div>
             <input
               type="Text"
               id="name"

@@ -59,12 +59,10 @@ const LogIn = () => {
         navigate(from, { replace: true });
       } else {
         setError("Login failed. Please try again.");
-        dispatch(authActions.setLoading(false));
       }
     } catch (err) {
       setError(err.message || "Invalid email or password");
-      dispatch(authActions.setError(err.message));
-      dispatch(authActions.setLoading(false));
+      // useAuth handles auth state; show error to the user
     }
   };
   return (
