@@ -1,0 +1,174 @@
+.container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f9fafb;
+    color: #333;
+    font-family: "Inter", sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background-color: #fff;
+    border-right: 1px solid #e5e7eb;
+    padding: 24px;
+}
+
+.sidebar h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.navSection {
+    margin-bottom: 28px;
+}
+
+.navLink {
+    display: block;
+    color: #555;
+    font-size: 0.95rem;
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: color 0.2s ease;
+}
+
+.navLink:hover {
+    color: #e11d48;
+}
+
+.navLinkActive {
+    color: #e11d48;
+    font-weight: 500;
+}
+
+/* Main content */
+.main {
+    flex: 1;
+    padding: 40px;
+}
+
+.topBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.breadcrumb {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.welcomeText {
+    font-size: 0.9rem;
+}
+
+.username {
+    color: #e11d48;
+    font-weight: 500;
+}
+
+/* Profile Card */
+.profileCard {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.profileCard h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #e11d48;
+    margin-bottom: 24px;
+}
+
+/* Form */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.input:focus {
+    border-color: #e11d48;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.15);
+}
+
+.inputDisabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* Password section */
+.passwordSection {
+    margin-top: 10px;
+}
+
+.passwordSection h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* Buttons */
+.buttonRow {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    padding-top: 12px;
+}
+
+.cancelBtn {
+    background: none;
+    color: #6b7280;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.cancelBtn:hover {
+    color: #374151;
+}
+
+.saveBtn {
+    background-color: #e11d48;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.saveBtn:hover {
+    background-color: #be123c;
+}
