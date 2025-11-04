@@ -57,6 +57,11 @@
   height: 176px;
   margin-bottom: 40px;
 }
+.nameInputs {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+}
 .inputForm input {
   width: 100%;
   border: none;
