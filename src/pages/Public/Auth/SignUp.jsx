@@ -10,8 +10,9 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [user, setUser] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const { register, loading } = useAuth();
   const navigate = useNavigate();
@@ -21,8 +22,14 @@ const SignUp = () => {
     setError("");
 
     // Simple validation - in production, you'd validate against your backend
-    if (!email || !user || !password) {
+    if (!email || !firstName || !lastName || !phone || !password || !confirmPassword) {
       setError("Please fill in all fields");
+      return;
+    }
+
+    // Validate password match
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
       return;
     }
 
@@ -32,9 +39,11 @@ const SignUp = () => {
         user: newUser,
         error: registerError,
       } = await register({
-        email,
-        username: user,
-        password,
+        userEmail: email,
+        userPassword: password,
+        userFirstName: firstName,
+        userLastName: lastName,
+        userPhone: phone,
       });
 
       if (success && newUser) {
@@ -77,11 +86,11 @@ const SignUp = () => {
               ></input>
             </div>
             <input
-              type="Text"
-              id="name"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-              placeholder={t("auth.username")}
+              type="tel"
+              id="phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Phone Number"
               required
               disabled={loading}
             />
@@ -100,6 +109,15 @@ const SignUp = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder={t("auth.password")}
+              required
+              disabled={loading}
+            />
+            <input
+              type="password"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm Password"
               required
               disabled={loading}
             />

@@ -1,53 +1,62 @@
 import { fetchWithAuth } from "./helpers";
 
-const API_BASE_URL = "http://localhost:3001/api";
-
+// const API_BASE_URL = "http://localhost:3001/api";
+const API_BASE_URL = "http://depiproject.runasp.net/api";
 // Auth API calls
 export const authAPI = {
-  login: async (email, password) => {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+  login: async (userEmail, userPassword) => {
+    const response = await fetch(`${API_BASE_URL}/Authentication/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ userEmail, userPassword }),
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || "Login failed");
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      const errorMsg = result.message || result.errors?.[0] || "Login failed";
+      throw new Error(errorMsg);
     }
 
-    return response.json();
+    // Return the data object which contains user info and tokens
+    return result.data;
   },
 
   register: async (userData) => {
-    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+    const response = await fetch(`${API_BASE_URL}/Authentication/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || "Registration failed");
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      const errorMsg = result.message || result.errors?.[0] || "Registration failed";
+      throw new Error(errorMsg);
     }
 
-    return response.json();
+    // Return the data object which contains user info and tokens
+    return result.data;
   },
 
   // Exchange refresh token for a new access token
   refresh: async (refreshToken) => {
-    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+    const response = await fetch(`${API_BASE_URL}/Authentication/refresh-token`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refreshToken }),
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || "Refresh failed");
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      const errorMsg = result.message || result.errors?.[0] || "Refresh failed";
+      throw new Error(errorMsg);
     }
 
-    return response.json();
+    // Return the data object which contains user info and tokens
+    return result.data;
   },
 
   verify: async () => {

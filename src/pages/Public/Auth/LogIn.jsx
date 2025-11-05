@@ -11,8 +11,8 @@ import loginImage from "../../../assets/imgs/Side Image.svg";
 
 const LogIn = () => {
   const { t } = useTranslation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [userEmail, setEmail] = useState("");
+  const [userPassword, setPassword] = useState("");
   const [error, setError] = useState("");
   const { login, loading } = useAuth();
   const dispatch = useDispatch();
@@ -24,14 +24,14 @@ const LogIn = () => {
     setError("");
 
     // Simple validation - in production, you'd validate against your backend
-    if (!email || !password) {
+    if (!userEmail || !userPassword) {
       setError("Please enter both email and password");
       return;
     }
 
     try {
       // Call login from useAuth hook
-      const { success, user, error: loginError } = await login(email, password);
+      const { success, user, error: loginError } = await login(userEmail, userPassword);
 
       if (success && user) {
         // User is now logged in and tokens are stored
@@ -79,7 +79,7 @@ const LogIn = () => {
             <input
               type="email"
               id="email"
-              value={email}
+              value={userEmail}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t("auth.email")}
               required
@@ -88,7 +88,7 @@ const LogIn = () => {
             <input
               type="password"
               id="password"
-              value={password}
+              value={userPassword}
               onChange={(e) => setPassword(e.target.value)}
               placeholder={t("auth.password")}
               required

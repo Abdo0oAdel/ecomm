@@ -10,25 +10,33 @@ export const useAuth = () => {
     (state) => state.auth
   );
 
-  const login = async (email, password) => {
+  const login = async (userEmail, userPassword) => {
     try {
       dispatch(authActions.setLoading(true));
-      const response = await authAPI.login(email, password);
+      const response = await authAPI.login(userEmail, userPassword);
 
       // Store tokens in localStorage
       if (response.accessToken && response.refreshToken) {
         tokenManager.setTokens(response.accessToken, response.refreshToken);
       }
 
+      // Build user object from response data
+      const user = {
+        userId: response.userId,
+        email: response.userEmail,
+        firstName: response.userFirstName,
+        lastName: response.userLastName,
+      };
+
       // Update Redux state
       dispatch(
         authActions.login({
-          user: response.user,
+          user,
         })
       );
 
       toast.success("Login successful!");
-      return { success: true, user: response.user };
+      return { success: true, user };
     } catch (error) {
       dispatch(authActions.setError(error.message));
       toast.error(error.message || "Login failed");
@@ -46,15 +54,23 @@ export const useAuth = () => {
         tokenManager.setTokens(response.accessToken, response.refreshToken);
       }
 
+      // Build user object from response data
+      const user = {
+        userId: response.userId,
+        email: response.userEmail,
+        firstName: response.userFirstName,
+        lastName: response.userLastName,
+      };
+
       // Update Redux state
       dispatch(
         authActions.login({
-          user: response.user,
+          user,
         })
       );
 
       toast.success("Registration successful!");
-      return { success: true, user: response.user };
+      return { success: true, user };
     } catch (error) {
       dispatch(authActions.setError(error.message));
       toast.error(error.message || "Registration failed");

@@ -1,14 +1,14 @@
 import { tokenManager } from "./tokenManager";
 
 // Base url (keep in sync with src/utils/api.js)
-const API_BASE_URL = "http://localhost:3001/api";
+const API_BASE_URL = "http://depiproject.runasp.net/api";
 
 // Internal helper: call refresh endpoint with stored refresh token
 const refreshAccessToken = async () => {
   const refreshToken = tokenManager.getRefreshToken();
   if (!refreshToken) return null;
 
-  const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
+  const res = await fetch(`${API_BASE_URL}/Authentication/refresh-token`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ refreshToken }),
@@ -19,11 +19,11 @@ const refreshAccessToken = async () => {
     return null;
   }
 
-  const data = await res.json();
-  // Expecting { accessToken, refreshToken? }
-  if (data.accessToken) {
-    tokenManager.setTokens(data.accessToken, data.refreshToken || refreshToken);
-    return data.accessToken;
+  const result = await res.json();
+  // New backend returns { success, message, data: { accessToken, refreshToken, ... }, errors }
+  if (result.success && result.data?.accessToken) {
+    tokenManager.setTokens(result.data.accessToken, result.data.refreshToken || refreshToken);
+    return result.data.accessToken;
   }
 
   return null;
