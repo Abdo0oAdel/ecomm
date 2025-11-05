@@ -1,17 +1,21 @@
 import React from "react";
 import { FiUser } from "react-icons/fi";
+import styles from "./AccountDrop.module.css";
+import { useNavigate } from "react-router-dom";
 
-const AccountDrop = () => {
+const AccountDrop = ({closeMenu, onLogout}) => {
+  const navigate = useNavigate();
+
   return (
     <>
       <div className={styles.container}>
         <div className={styles.inner}>
           <ul>
-            <li>
+            <li onClick={() => {navigate ("/account");closeMenu();}}>
               <FiUser size={24} />
               Manage My Account
             </li>
-            <li>
+            <li onClick={() => {navigate ("/orders");closeMenu();}}>
               <svg
                 width="24"
                 height="24"
@@ -35,7 +39,7 @@ const AccountDrop = () => {
               </svg>
               My Orders
             </li>
-            <li>
+            <li onClick={() => {navigate ("/cancellations");closeMenu();}}>
               <svg
                 width="24"
                 height="24"
@@ -67,7 +71,7 @@ const AccountDrop = () => {
               </svg>
               My Cancellations
             </li>
-            <li>
+            <li onClick={() => {navigate ("/reviews");closeMenu();}}>
               <svg
                 width="24"
                 height="24"
@@ -83,7 +87,7 @@ const AccountDrop = () => {
               </svg>
               My Reviews
             </li>
-            <li>
+            <li onClick={() => {onLogout();closeMenu();}}>
               <svg
                 width="24"
                 height="24"
