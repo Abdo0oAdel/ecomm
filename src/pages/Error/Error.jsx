@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Error Page Component
 const Error = ({ error, errorInfo, resetError }) => {
+  const navigate = useNavigate();
   const handleGoHome = () => {
     if (resetError) resetError();
-    window.location.href = "/";
+    navigate("/");
   };
   const message =
     error?.message || "Your visited page not found. You may go home page.";
