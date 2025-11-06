@@ -4,7 +4,8 @@ import { useDispatch } from "react-redux";
 import { authActions } from "./store/Auth/slice.js";
 import { cartActions } from "./store/Cart/slice.js";
 import { wishlistActions } from "./store/Wishlist/slice.js";
-import { authAPI, cartAPI, wishlistAPI } from "./utils/api.js";
+import { cartAPI, wishlistAPI } from "./utils/api.js";
+import { tokenManager } from "./utils/tokenManager.js";
 import AppRoutes from "./routes/AppRoutes.jsx";
 
 function App() {
@@ -12,39 +13,40 @@ function App() {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
-    // Verify authentication on app load
-    const verifyAuth = async () => {
+    // Check if user has valid tokens in localStorage
+    const checkAuthTokens = async () => {
       try {
-        const response = await authAPI.verify();
-        if (response.success && response.user) {
-          dispatch(authActions.login({ user: response.user }));
+        const accessToken = tokenManager.getAccessToken();
+        const refreshToken = tokenManager.getRefreshToken();
 
-          // Load cart and wishlist from backend
+        // If tokens exist, user is authenticated
+        if (accessToken && refreshToken) {
+          // Try to load cart and wishlist from backend
           try {
             const [cartResponse, wishlistResponse] = await Promise.all([
               cartAPI.getCart(),
               wishlistAPI.getWishlist()
             ]);
-            if (cartResponse.cart) {
+            if (cartResponse?.cart) {
               dispatch(cartActions.setCart(cartResponse.cart));
             }
 
-            if (wishlistResponse.wishlist) {
+            if (wishlistResponse?.wishlist) {
               dispatch(wishlistActions.setWishlist(wishlistResponse.wishlist));
             }
           } catch (error) {
             console.error('❌ Error loading cart/wishlist:', error);
+            // If we get 401, tokens might be invalid - they'll be cleared by fetchWithAuth
           }
         }
       } catch (error) {
-        // User is not authenticated, do nothing
-        console.log('Not authenticated:', error.message);
+        console.error('Error checking auth tokens:', error);
       } finally {
         setIsCheckingAuth(false);
       }
     };
 
-    verifyAuth();
+    checkAuthTokens();
   }, [dispatch]);
 
   if (isCheckingAuth) {

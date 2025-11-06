@@ -58,14 +58,18 @@ export const authAPI = {
     return result.data;
   },
 
-  verify: async () => {
-    return fetchWithAuth(`${API_BASE_URL}/auth/verify`);
-  },
-
-  logout: async () => {
-    return fetchWithAuth(`${API_BASE_URL}/auth/logout`, {
+  // Revoke refresh token (logout)
+  logout: async (refreshToken) => {
+    if (!refreshToken) {
+      return { success: true };
+    }
+    const response = await fetch(`${API_BASE_URL}/Authentication/revoke-token`, {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
     });
+    const result = await response.json();
+    return result;
   },
 
   getProfile: async () => {

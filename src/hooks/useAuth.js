@@ -80,8 +80,11 @@ export const useAuth = () => {
 
   const logout = async () => {
     try {
-      // Call backend logout
-      await authAPI.logout();
+      const refreshToken = tokenManager.getRefreshToken();
+      // Call backend logout with refresh token
+      if (refreshToken) {
+        await authAPI.logout(refreshToken);
+      }
       // Clear tokens from localStorage
       tokenManager.clearTokens();
     } catch (error) {
@@ -93,37 +96,6 @@ export const useAuth = () => {
       dispatch(authActions.logout());
 
       toast.info("Logged out successfully");
-    }
-  };
-
-  const verifyAuth = async () => {
-    try {
-      // Check if we have a refresh token
-      const refreshToken = tokenManager.getRefreshToken();
-      if (!refreshToken) {
-        return { success: false };
-      }
-
-      // Try to verify and get a new access token
-      const response = await authAPI.verify();
-
-      // If successful, store the new access token
-      if (response.accessToken) {
-        tokenManager.setTokens(response.accessToken, refreshToken);
-      }
-
-      dispatch(
-        authActions.login({
-          user: response.user,
-        })
-      );
-
-      return { success: true, user: response.user };
-    } catch (error) {
-      // Token is invalid, clear auth state and tokens
-      dispatch(authActions.logout());
-      tokenManager.clearTokens();
-      return { success: false };
     }
   };
 
@@ -139,7 +111,6 @@ export const useAuth = () => {
     login,
     register,
     logout,
-    verifyAuth,
     clearError,
   };
 };
