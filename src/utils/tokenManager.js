@@ -38,7 +38,6 @@ export const tokenManager = {
   clearTokens: () => {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
-
     // Notify callback if set (for Redux logout)
     if (onTokensClearedCallback) {
       onTokensClearedCallback();
@@ -58,19 +57,28 @@ export const tokenManager = {
   // Extract user info from access token
   getUserFromToken: () => {
     const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-    if (!accessToken) return null;
+    if (!accessToken) {
+      return null;
+    }
 
     const payload = decodeJWT(accessToken);
-    if (!payload) return null;
+    if (!payload) {
+      return null;
+    }
 
-    // Extract user information from JWT claims
-    // Adjust these field names based on your actual JWT structure
-    return {
-      userId: payload.userId || payload.sub || payload.id,
-      email: payload.email || payload.userEmail,
-      firstName: payload.firstName || payload.given_name,
-      lastName: payload.lastName || payload.family_name,
+    const user = {
+      userId: payload.userId || payload.UserId || payload.sub || payload.id || payload.nameid || payload.unique_name,
+      email: payload.email || payload.Email || payload.userEmail || payload.UserEmail,
+      firstName: payload.firstName || payload.FirstName || payload.userFirstName || payload.UserFirstName || payload.given_name || payload.firstname,
+      lastName: payload.lastName || payload.LastName || payload.userLastName || payload.UserLastName || payload.family_name || payload.lastname,
     };
+
+    // Validate we have minimal required data
+    if (!user.userId && !user.email) {
+      return null;
+    }
+
+    return user;
   },
 
   // Check if access token is expired
