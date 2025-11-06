@@ -1,20 +1,11 @@
-import {
-  FiHeart,
-  FiSearch,
-  FiShoppingCart,
-  FiMenu,
-  FiX,
-  FiChevronDown,
-  FiUser,
-} from "react-icons/fi";
+import {FiHeart, FiShoppingCart, FiX} from "react-icons/fi";
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { authActions } from "../../store/Auth/slice.js";
+import { useAuth } from "../../hooks/useAuth";
 import { cartActions } from "../../store/Cart/slice.js";
 import { wishlistActions } from "../../store/Wishlist/slice.js";
-import { authAPI } from "../../utils/api.js";
 import styles from "./NavBar.module.css";
 import AccountDrop from "../AccountDropDown/AccountDrop.jsx";
 
@@ -26,6 +17,7 @@ const NavBar = () => {
   const userMenuRef = useRef(null);
   const mobileMenuRef = useRef(null);
 
+  const { logout } = useAuth();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,19 +42,18 @@ const NavBar = () => {
   };
 
   const handleLogout = async () => {
-    try {
-      // Call backend logout to clear the HTTP-only cookie
-      await authAPI.logout();
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
-      // Update Redux state regardless of API call result
-      dispatch(authActions.logout());
-      dispatch(cartActions.clearCart());
-      dispatch(wishlistActions.clearWishlist());
-      setUserMenuOpen(false);
-      navigate("/login");
-    }
+    // Use the logout from useAuth hook which handles:
+    // - Calling backend to revoke refresh token
+    // - Clearing tokens from localStorage
+    // - Updating Redux auth state
+    await logout();
+
+    // Clear cart and wishlist from Redux
+    dispatch(cartActions.clearCart());
+    dispatch(wishlistActions.clearWishlist());
+
+    setUserMenuOpen(false);
+    navigate("/login");
   };
 
   // Close dropdown when clicking outside

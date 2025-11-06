@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {login, logout, setLoading, setError, clearError} from "./reducers.js";
+import {login, logout, restoreAuth, setLoading, setError, clearError} from "./reducers.js";
 
 const initialAuthState = {
     isAuthenticated: false,
@@ -14,6 +14,7 @@ const authSlice = createSlice({
     reducers: {
         login,
         logout,
+        restoreAuth,
         setLoading,
         setError,
         clearError

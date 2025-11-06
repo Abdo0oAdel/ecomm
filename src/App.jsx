@@ -13,34 +13,50 @@ function App() {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
-    // Check if user has valid tokens in localStorage
+    // Set up callback to sync Redux when tokens are cleared from anywhere
+    tokenManager.setOnTokensClearedCallback(() => {
+      dispatch(authActions.logout());
+    });
+
+    // Check if user has valid tokens in localStorage and restore to Redux
     const checkAuthTokens = async () => {
       try {
-        const accessToken = tokenManager.getAccessToken();
-        const refreshToken = tokenManager.getRefreshToken();
+        // Check if tokens exist and are valid
+        if (tokenManager.hasTokens()) {
+          // Extract user info from access token
+          const user = tokenManager.getUserFromToken();
 
-        // If tokens exist, user is authenticated
-        if (accessToken && refreshToken) {
-          // Try to load cart and wishlist from backend
-          try {
-            const [cartResponse, wishlistResponse] = await Promise.all([
-              cartAPI.getCart(),
-              wishlistAPI.getWishlist()
-            ]);
-            if (cartResponse?.cart) {
-              dispatch(cartActions.setCart(cartResponse.cart));
-            }
+          if (user) {
+            // Restore authentication state in Redux
+            dispatch(authActions.restoreAuth({ user }));
 
-            if (wishlistResponse?.wishlist) {
-              dispatch(wishlistActions.setWishlist(wishlistResponse.wishlist));
-            }
-          } catch (error) {
-            console.error('❌ Error loading cart/wishlist:', error);
-            // If we get 401, tokens might be invalid - they'll be cleared by fetchWithAuth
+            // Try to load cart and wishlist from backend
+            try {
+              const [cartResponse, wishlistResponse] = await Promise.all([
+                cartAPI.getCart(),
+                wishlistAPI.getWishlist()
+              ]);
+              if (cartResponse?.cart) {
+                dispatch(cartActions.setCart(cartResponse.cart));
+              }
+
+              if (wishlistResponse?.wishlist) {
+                dispatch(wishlistActions.setWishlist(wishlistResponse.wishlist));
+              }
+            } catch (error) {
+              console.error('Error loading cart/wishlist:', error);
+              // If we get 401, tokens might be invalid
+              // Clear tokens and logout from Redux
+              tokenManager.clearTokens();
+                    }
+          } else {
+            // Tokens exist but can't decode user info - clear them
+            tokenManager.clearTokens();
           }
         }
       } catch (error) {
         console.error('Error checking auth tokens:', error);
+        tokenManager.clearTokens();
       } finally {
         setIsCheckingAuth(false);
       }
