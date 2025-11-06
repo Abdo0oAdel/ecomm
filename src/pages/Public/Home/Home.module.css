@@ -19,7 +19,7 @@
   margin: 0 auto;
   padding: 0 80px;
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 260px 1fr; /* slightly narrower sidebar to match compact submenu */
   gap: 40px;
   align-items: stretch;
 }
@@ -27,7 +27,7 @@
 .categorySidebar {
   background: white;
   border-radius: 4px;
-  padding: 24px;
+  padding: 12px; /* reduce outer padding for more compact look */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -48,14 +48,107 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
+  padding: 8px 0; /* reduced vertical padding to make list tighter */
   border-bottom: 1px solid var(--color-border);
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
 }
 
 .categoryItem:hover {
   color: var(--color-accent);
+}
+.categoryButton {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 13px; /* readable label while submenu is compact */
+  color: inherit;
+}
+
+.arrowDown {
+  transition: transform 0.18s ease;
+  font-size: 16px; /* slightly smaller chevron for compact look */
+  margin-left: 6px;
+}
+
+.rotated {
+  transform: rotate(180deg);
+}
+
+/* Submenu styles (accordion) - compact */
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.28s ease-in-out, padding 0.15s ease;
+  background: #fafafa; /* clean white-ish background */
+  border-radius: 4px;
+  margin-top: 4px;
+  padding: 0 6px; /* reduced horizontal padding */
+}
+
+.submenu.active {
+  max-height: 260px; /* even more compact when expanded */
+  padding: 6px; /* minimal padding when open */
+}
+
+.submenuInner {
+  display: grid;
+  grid-template-columns: 1fr; /* single column by default for compactness */
+  gap: 6px 8px; /* even smaller gaps */
+}
+
+.submenuColumn {
+  display: flex;
+  flex-direction: column;
+  padding: 0 2px; /* minimal padding to separate columns when larger screens */
+}
+
+.submenuCategory {
+  font-weight: 600;
+  color: #333;
+  padding: 2px 0;
+  margin-bottom: 2px;
+  font-size: 12px; /* smaller category labels */
+}
+
+.submenuList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.submenuItem {
+  padding: 3px 0; /* tighter spacing */
+}
+
+.submenuItem a {
+  color: #666;
+  font-size: 12px; /* slightly smaller link text */
+  text-decoration: none;
+  transition: color 0.14s ease, padding-left 0.14s ease;
+}
+
+.submenuItem a:hover {
+  color: #000;
+  padding-left: 3px; /* smaller hover shift */
+  border-left: 1.5px solid #000; /* thinner accent */
+}
+
+@media (min-width: 768px) {
+  .submenuInner {
+    grid-template-columns: repeat(2, 1fr); /* two columns on tablets and up */
+  }
+}
+
+@media (min-width: 1200px) {
+  .submenuInner {
+    grid-template-columns: repeat(3, 1fr); /* three columns on large screens (compact) */
+  }
 }
 .activeCategory {
   color: var(--color-accent);

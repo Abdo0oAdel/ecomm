@@ -14,6 +14,7 @@ import {
     FiWatch,
     FiCamera,
     FiHeadphones as FiHeadphonesIcon,
+    FiChevronDown,
     //FiGamepad2,
 } from "react-icons/fi";
 
@@ -126,6 +127,57 @@ const Home = () => {
         "Health & Beauty",
     ];
 
+    // Submenu data for sidebar categories (add/change items as needed)
+    const sidebarSubmenus = {
+        "Woman's Fashion": [
+            { title: 'Clothing', items: ['Tops', 'Dresses', 'Pants', 'Skirts', 'Jumpsuits'] },
+            { title: 'Sportswear', items: ['Leggings', 'Sports Tops', 'Shorts', 'Sport Bras'] },
+            { title: 'Footwear', items: ['Sandals', 'Sneakers', 'Heels', 'Boots'] },
+            { title: 'Bags & Accessories', items: ['Totes', 'Crossbody Bags', 'Wallets', 'Belts', 'Jewelry'] },
+        ],
+        "Men's Fashion": [
+            { title: 'Clothing', items: ['Shirts', 'T-Shirts', 'Pants', 'Suits'] },
+            { title: 'Sportswear', items: ['Tracksuits', 'Shorts', 'Gym Tees'] },
+            { title: 'Footwear', items: ['Sneakers', 'Loafers', 'Boots'] },
+            { title: 'Accessories', items: ['Belts', 'Wallets', 'Watches'] },
+        ],
+        Electronics: [
+            { title: 'Phones', items: ['Smartphones', 'Cases', 'Chargers'] },
+            { title: 'Computers', items: ['Laptops', 'Monitors', 'Peripherals'] },
+            { title: 'Audio', items: ['Headphones', 'Speakers', 'Microphones'] },
+        ],
+        'Home & Lifestyle': [
+            { title: 'Home', items: ['Decor', 'Bedding', 'Furniture'] },
+            { title: 'Kitchen', items: ['Cookware', 'Appliances', 'Utensils'] },
+        ],
+        Medicine: [
+            { title: 'Supplements', items: ['Vitamins', 'Herbal', 'Protein'] },
+            { title: 'First Aid', items: ['Bandages', 'Disinfectants'] },
+        ],
+        'Sports & Outdoor': [
+            { title: 'Outdoor', items: ['Tents', 'Camping Gear'] },
+            { title: 'Fitness', items: ['Yoga Mats', 'Dumbbells'] },
+        ],
+        "Baby's & Toys": [
+            { title: 'Baby', items: ['Diapers', 'Strollers'] },
+            { title: 'Toys', items: ['Educational Toys', 'Action Figures'] },
+        ],
+        'Groceries & Pets': [
+            { title: 'Groceries', items: ['Snacks', 'Beverages'] },
+            { title: 'Pets', items: ['Dog Food', 'Cat Litter'] },
+        ],
+        'Health & Beauty': [
+            { title: 'Skincare', items: ['Moisturizers', 'Serums'] },
+            { title: 'Makeup', items: ['Lipstick', 'Foundation'] },
+        ],
+        // other categories may be added here with empty arrays or specific items
+    };
+
+    const [openCategory, setOpenCategory] = useState(null);
+    const toggleCategory = (name) => {
+        setOpenCategory((prev) => (prev === name ? null : name));
+    };
+
     return (
         <div className={styles.home}>
             {/* Hero Section */}
@@ -135,12 +187,53 @@ const Home = () => {
                     <div className={styles.categorySidebar}>
                         {/*  <h3>Categories</h3> */}
                         <ul className={styles.categoryList}>
-                            {sidebarCategories.map((category, index) => (
-                                <li key={index} className={styles.categoryItem}>
-                                    <span>{category}</span>
-                                    <FiChevronRight />
-                                </li>
-                            ))}
+                            {sidebarCategories.map((category, index) => {
+                                const hasSub = Boolean(sidebarSubmenus[category]);
+                                const opened = openCategory === category;
+                                const submenu = sidebarSubmenus[category] || [];
+                                return (
+                                    <li key={index} className={styles.categoryItem}>
+                                        <button
+                                            className={styles.categoryButton}
+                                            onClick={() => (hasSub ? toggleCategory(category) : null)}
+                                            aria-expanded={hasSub ? opened : undefined}
+                                        >
+                                            <span>{category}</span>
+                                            {hasSub ? (
+                                                <FiChevronDown
+                                                    className={`${styles.arrowDown} ${opened ? styles.rotated : ''}`}
+                                                />
+                                            ) : (
+                                                <FiChevronRight />
+                                            )}
+                                        </button>
+
+                                        {/* Accordion submenu for categories that have submenu data */}
+                                        {hasSub && (
+                                            <div
+                                                className={`${styles.submenu} ${opened ? styles.active : ''}`}
+                                                role="region"
+                                                aria-hidden={!opened}
+                                            >
+                                                <div className={styles.submenuInner}>
+                                                    {submenu.map((col, cidx) => (
+                                                        <div key={cidx} className={styles.submenuColumn}>
+                                                            <div className={styles.submenuCategory}>{col.title}</div>
+                                                            <ul className={styles.submenuList}>
+                                                                {col.items.map((item, iidx) => (
+                                                                    <li key={iidx} className={styles.submenuItem}>
+                                                                        <a href={`/#/search?cat=${encodeURIComponent(item)}`}>{item}</a>
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
 
