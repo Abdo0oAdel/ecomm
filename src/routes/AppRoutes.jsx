@@ -43,7 +43,7 @@ const routes = [
       // { path: "/checkout", element: <Checkout /> },
       { path: "/ShippingMap", element: <ShippingMap /> },
       // { path: "/account", element: <Account /> },
-      // { path: "/*", element: <Error /> },
+      { path: "/*", element: <Error /> },
     ],
   },
   {
