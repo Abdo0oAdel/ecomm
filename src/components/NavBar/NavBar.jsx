@@ -1,4 +1,4 @@
-import {FiHeart, FiShoppingCart, FiX} from "react-icons/fi";
+import { FiHeart, FiShoppingCart, FiX } from "react-icons/fi";
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link, useLocation } from "react-router-dom";
@@ -211,7 +211,7 @@ const NavBar = () => {
               to="/signup"
               className={`${styles.navLink} ${
                 location.pathname === "/signup" ? styles.active : ""
-              }`}
+              } ${isAuthenticated === true ? styles.disabled : ""} `}
               onClick={() => setMobileMenuOpen(false)}
             >
               {t("nav.signup")}
@@ -221,7 +221,7 @@ const NavBar = () => {
               to="/account"
               className={`${styles.navLink} ${
                 location.pathname === "/account" ? styles.active : ""
-              }`}
+              } ${isAuthenticated === false ? styles.disabled : ""}`}
               onClick={() => setMobileMenuOpen(false)}
             >
               {t("nav.myAccount")}
