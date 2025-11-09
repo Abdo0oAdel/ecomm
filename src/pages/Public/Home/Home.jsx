@@ -2,20 +2,8 @@ import React, { useState, useEffect } from "react";
 import styles from "./Home.module.css";
 import ProductCard from "../../../components/ProductCard/ProductCard";
 import {
-    FiChevronRight,
-    FiChevronLeft,
-    FiTruck,
-    FiHeadphones,
-    FiShield,
-} from "react-icons/fi";
-import {
-    FiSmartphone,
-    FiMonitor,
-    FiWatch,
-    FiCamera,
-    FiHeadphones as FiHeadphonesIcon,
-    FiChevronDown,
-    //FiGamepad2,
+    FiChevronRight, FiChevronLeft, FiTruck, FiHeadphones, FiShield,
+    FiSmartphone, FiMonitor, FiWatch, FiCamera, FiChevronDown,
 } from "react-icons/fi";
 
 const Home = () => {
@@ -111,7 +99,7 @@ const Home = () => {
         { name: "Computers", icon: <FiMonitor />, active: false },
         { name: "SmartWatch", icon: <FiWatch />, active: false },
         { name: "Camera", icon: <FiCamera />, active: true },
-        { name: "HeadPhones", icon: <FiHeadphonesIcon />, active: false },
+        { name: "HeadPhones", icon: <FiHeadphones />, active: false },
         //{ name: "Gaming", icon: <FiGamepad2 />, active: false },
     ];
 

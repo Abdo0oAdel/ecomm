@@ -1,6 +1,6 @@
 import { fetchWithAuth } from "./helpers";
 
-const API_BASE_URL = "http://depiproject.runasp.net/api";
+const API_BASE_URL = "https://depiproject.runasp.net/api";
 // Auth API calls
 export const authAPI = {
   login: async (userEmail, userPassword) => {

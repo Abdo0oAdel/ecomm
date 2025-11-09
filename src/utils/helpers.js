@@ -1,6 +1,6 @@
 import { tokenManager } from "./tokenManager";
 
-const API_BASE_URL = "http://depiproject.runasp.net/api";
+const API_BASE_URL = "https://depiproject.runasp.net/api";
 
 // Internal helper: call refresh endpoint with stored refresh token
 const refreshAccessToken = async () => {
