@@ -3,7 +3,7 @@ import { FiUser } from "react-icons/fi";
 import styles from "./AccountDrop.module.css";
 import { useNavigate } from "react-router-dom";
 
-const AccountDrop = ({closeMenu, onLogout}) => {
+const AccountDrop = ({ closeMenu, onLogout }) => {
   const navigate = useNavigate();
 
   return (
@@ -11,11 +11,21 @@ const AccountDrop = ({closeMenu, onLogout}) => {
       <div className={styles.container}>
         <div className={styles.inner}>
           <ul>
-            <li onClick={() => {navigate ("/account");closeMenu();}}>
+            <li
+              onClick={() => {
+                navigate("/account");
+                closeMenu();
+              }}
+            >
               <FiUser size={24} />
               Manage My Account
             </li>
-            <li onClick={() => {navigate ("/orders");closeMenu();}}>
+            <li
+              onClick={() => {
+                navigate("/MyOrder");
+                closeMenu();
+              }}
+            >
               <svg
                 width="24"
                 height="24"
@@ -39,7 +49,12 @@ const AccountDrop = ({closeMenu, onLogout}) => {
               </svg>
               My Orders
             </li>
-            <li onClick={() => {navigate ("/cancellations");closeMenu();}}>
+            <li
+              onClick={() => {
+                navigate("/cancellation");
+                closeMenu();
+              }}
+            >
               <svg
                 width="24"
                 height="24"
@@ -71,7 +86,12 @@ const AccountDrop = ({closeMenu, onLogout}) => {
               </svg>
               My Cancellations
             </li>
-            <li onClick={() => {navigate ("/reviews");closeMenu();}}>
+            <li
+              onClick={() => {
+                navigate("/Reviews");
+                closeMenu();
+              }}
+            >
               <svg
                 width="24"
                 height="24"
@@ -87,7 +107,12 @@ const AccountDrop = ({closeMenu, onLogout}) => {
               </svg>
               My Reviews
             </li>
-            <li onClick={() => {onLogout();closeMenu();}}>
+            <li
+              onClick={() => {
+                onLogout();
+                closeMenu();
+              }}
+            >
               <svg
                 width="24"
                 height="24"

@@ -19,6 +19,9 @@ import Cart from "../pages/Protected/Cart/Cart";
 import Wishlist from "../pages/Protected/Wishlist/Wishlist";
 import Checkout from "../pages/Protected/CheckOut/CheckOut";
 import Account from "../pages/Protected/Account/Account";
+import Cancellation from "../pages/Protected/Account/Cancellation.jsx";
+import Reviews from "../pages/Protected/Account/Reviews.jsx";
+import MyOrder from "../pages/Protected/Account/MyOrder.jsx";
 import Error from "../pages/Error/Error";
 import ShippingMap from "../pages/Protected/ShippingMap/ShippingMap";
 
@@ -78,6 +81,30 @@ const routes = [
         element: (
           <ProtectedRoute>
             <Account />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/Cancellation",
+        element: (
+          <ProtectedRoute>
+            <Cancellation />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/Reviews",
+        element: (
+          <ProtectedRoute>
+            <Reviews />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/MyOrder",
+        element: (
+          <ProtectedRoute>
+            <MyOrder />
           </ProtectedRoute>
         ),
       },
