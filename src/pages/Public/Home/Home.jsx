@@ -118,16 +118,14 @@ const Home = () => {
     // Submenu data for sidebar categories (add/change items as needed)
     const sidebarSubmenus = {
         "Woman's Fashion": [
-            { title: 'Clothing', items: ['Tops', 'Dresses', 'Pants', 'Skirts', 'Jumpsuits'] },
-            { title: 'Sportswear', items: ['Leggings', 'Sports Tops', 'Shorts', 'Sport Bras'] },
-            { title: 'Footwear', items: ['Sandals', 'Sneakers', 'Heels', 'Boots'] },
-            { title: 'Bags & Accessories', items: ['Totes', 'Crossbody Bags', 'Wallets', 'Belts', 'Jewelry'] },
+            { title: 'Clothing', items: ['Dresses', 'Tops', 'Skirts'] },
+            { title: 'Footwear', items: ['Sneakers', 'Heels'] },
+            { title: 'Bags & Accessories', items: ['Totes', 'Wallets'] },
         ],
         "Men's Fashion": [
-            { title: 'Clothing', items: ['Shirts', 'T-Shirts', 'Pants', 'Suits'] },
-            { title: 'Sportswear', items: ['Tracksuits', 'Shorts', 'Gym Tees'] },
-            { title: 'Footwear', items: ['Sneakers', 'Loafers', 'Boots'] },
-            { title: 'Accessories', items: ['Belts', 'Wallets', 'Watches'] },
+            { title: 'Clothing', items: ['Shirts', 'Trousers', 'T-Shirts'] },
+            { title: 'Footwear', items: ['Sneakers', 'Loafers'] },
+            { title: 'Accessories', items: ['Belts', 'Watches'] },
         ],
         Electronics: [
             { title: 'Phones', items: ['Smartphones', 'Cases', 'Chargers'] },
@@ -166,6 +164,9 @@ const Home = () => {
         setOpenCategory((prev) => (prev === name ? null : name));
     };
 
+    // hoveredCategory controls the desktop mega-panel on hover
+    const [hoveredCategory, setHoveredCategory] = useState(null);
+
     return (
         <div className={styles.home}>
             {/* Hero Section */}
@@ -180,7 +181,12 @@ const Home = () => {
                                 const opened = openCategory === category;
                                 const submenu = sidebarSubmenus[category] || [];
                                 return (
-                                    <li key={index} className={styles.categoryItem}>
+                                    <li
+                                        key={index}
+                                        className={styles.categoryItem}
+                                        onMouseEnter={() => hasSub && setHoveredCategory(category)}
+                                        onMouseLeave={() => hasSub && setHoveredCategory((prev) => (prev === category ? null : prev))}
+                                    >
                                         <button
                                             className={styles.categoryButton}
                                             onClick={() => (hasSub ? toggleCategory(category) : null)}
@@ -196,7 +202,27 @@ const Home = () => {
                                             )}
                                         </button>
 
-                                        {/* Accordion submenu for categories that have submenu data */}
+                                        {/* Desktop: floating mega panel on hover (hidden on small screens via CSS) */}
+                                        {hasSub && hoveredCategory === category && (
+                                            <div className={styles.megaPanel} role="dialog" aria-label={`${category} subcategories`}>
+                                                <div className={styles.megaPanelInner}>
+                                                    {submenu.map((col, cidx) => (
+                                                        <div key={cidx} className={styles.megaPanelColumn}>
+                                                            <div className={styles.megaPanelCategory}>{col.title}</div>
+                                                            <ul className={styles.megaPanelList}>
+                                                                {col.items.map((item, iidx) => (
+                                                                    <li key={iidx} className={styles.megaPanelItem}>
+                                                                        <a href={`/#/search?cat=${encodeURIComponent(item)}`}>{item}</a>
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Mobile / click: inline accordion submenu */}
                                         {hasSub && (
                                             <div
                                                 className={`${styles.submenu} ${opened ? styles.active : ''}`}

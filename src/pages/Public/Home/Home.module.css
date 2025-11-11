@@ -29,6 +29,7 @@
   border-radius: 4px;
   padding: 12px; /* reduce outer padding for more compact look */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative; /* so floating panels can position relative to sidebar */
 }
 
 .categorySidebar h3 {
@@ -148,6 +149,66 @@
 @media (min-width: 1200px) {
   .submenuInner {
     grid-template-columns: repeat(3, 1fr); /* three columns on large screens (compact) */
+  }
+}
+
+/* Mega panel (floating) - appears on desktop when hovering a category */
+.megaPanel {
+  position: absolute;
+  left: calc(100% + 12px); /* sit to the right of the sidebar with a 12px gap */
+  top: 6px; /* small top offset so it doesn't touch the top edge */
+  width: 320px;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  padding: 10px;
+  z-index: 40;
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  display: none; /* hidden by default; shown via inline render when hovered */
+}
+
+.megaPanelInner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px 12px;
+}
+
+.megaPanelColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.megaPanelCategory {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.megaPanelList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.megaPanelItem {
+  padding: 6px 4px;
+}
+
+.megaPanelItem a {
+  color: #444;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.megaPanelItem a:hover {
+  color: #000;
+}
+
+/* Show megaPanel only on desktop - mobile uses inline accordion */
+@media (min-width: 768px) {
+  .megaPanel {
+    display: block;
   }
 }
 .activeCategory {
