@@ -5,6 +5,7 @@ import {
     FiChevronRight, FiChevronLeft, FiTruck, FiHeadphones, FiShield,
     FiSmartphone, FiMonitor, FiWatch, FiCamera, FiChevronDown,
 } from "react-icons/fi";
+import { useCategories } from "../../../hooks/useCategories";
 
 const Home = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -94,16 +95,20 @@ const Home = () => {
         },
     ];
 
-    const categories = [
+    // fetch categories from API (hook) - keep fallbacks to preserve UI/design
+    const { categories: apiCategories, loading, error } = useCategories();
+
+    // debug logs removed to avoid excessive re-renders/perf noise
+
+    const defaultCategories = [
         { name: "Phones", icon: <FiSmartphone />, active: false },
         { name: "Computers", icon: <FiMonitor />, active: false },
         { name: "SmartWatch", icon: <FiWatch />, active: false },
         { name: "Camera", icon: <FiCamera />, active: true },
         { name: "HeadPhones", icon: <FiHeadphones />, active: false },
-        //{ name: "Gaming", icon: <FiGamepad2 />, active: false },
     ];
 
-    const sidebarCategories = [
+    const defaultSidebarCategories = [
         "Woman's Fashion",
         "Men's Fashion",
         "Electronics",
@@ -115,8 +120,22 @@ const Home = () => {
         "Health & Beauty",
     ];
 
+    // Use safe fallbacks — ensure apiCategories is an array before mapping
+    const sidebarCategories = Array.isArray(apiCategories) && apiCategories.length > 0
+        ? apiCategories.map((cat) => cat.categoryName || cat.name)
+        : defaultSidebarCategories;
+
+    const categories = Array.isArray(apiCategories) && apiCategories.length > 0
+        ? apiCategories.slice(0, 6).map((cat, index) => ({
+            name: cat.categoryName || cat.name,
+            icon: <FiSmartphone />,
+            active: index === 0,
+        }))
+        : defaultCategories;
+
     // Submenu data for sidebar categories (add/change items as needed)
-    const sidebarSubmenus = {
+    // Build default submenus and then override/extend from API if available
+    const defaultSidebarSubmenus = {
         "Woman's Fashion": [
             { title: 'Clothing', items: ['Dresses', 'Tops', 'Skirts'] },
             { title: 'Footwear', items: ['Sneakers', 'Heels'] },
@@ -156,8 +175,25 @@ const Home = () => {
             { title: 'Skincare', items: ['Moisturizers', 'Serums'] },
             { title: 'Makeup', items: ['Lipstick', 'Foundation'] },
         ],
-        // other categories may be added here with empty arrays or specific items
     };
+
+    // Build submenus from API if available (expected shape: { categoryName, subcategories: [{title, items:[]}, ...] })
+    const apiSidebarSubmenus = {};
+    if (Array.isArray(apiCategories)) {
+        apiCategories.forEach((cat) => {
+            if (cat && Array.isArray(cat.subcategories) && cat.subcategories.length > 0) {
+                apiSidebarSubmenus[cat.categoryName || cat.name] = cat.subcategories.map((sc) => ({
+                    title: sc.title || sc.category || sc.name || '',
+                    items: Array.isArray(sc.items) ? sc.items : [],
+                }));
+            }
+        });
+    }
+
+    // Merge API-provided submenus over defaults (API wins)
+    const sidebarSubmenus = Object.keys(apiSidebarSubmenus).length > 0
+        ? { ...defaultSidebarSubmenus, ...apiSidebarSubmenus }
+        : defaultSidebarSubmenus;
 
     const [openCategory, setOpenCategory] = useState(null);
     const toggleCategory = (name) => {
