@@ -1,87 +1,83 @@
+import axios from "axios";
 import { tokenManager } from "./tokenManager";
 
-const API_BASE_URL = "https://depiproject.runasp.net/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+console.log("API_BASE_URL:", API_BASE_URL)
 
-// Internal helper: call refresh endpoint with stored refresh token
-const refreshAccessToken = async () => {
-  const refreshToken = tokenManager.getRefreshToken();
-  if (!refreshToken) return null;
-
-  const res = await fetch(`${API_BASE_URL}/Authentication/refresh-token`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ refreshToken }),
-  });
-
-  if (!res.ok) {
-    // don't throw here; caller will handle null
-    return null;
-  }
-
-  const result = await res.json();
-  // New backend returns { success, message, data: { accessToken, refreshToken, ... }, errors }
-  if (result.success && result.data?.accessToken) {
-    tokenManager.setTokens(result.data.accessToken, result.data.refreshToken || refreshToken);
-    return result.data.accessToken;
-  }
-
-  return null;
-};
-
-// Helper function to make authenticated requests using access token from tokenManager.
-// On 401 it will attempt to refresh the access token using refresh token and retry once.
-export const fetchWithAuth = async (url, options = {}) => {
-  const accessToken = tokenManager.getAccessToken();
-
-  const headers = {
+// Create axios instance with auth
+export const axiosWithAuth = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
     "Content-Type": "application/json",
-    ...options.headers,
-  };
+  },
+});
 
-  if (accessToken) {
-    headers["Authorization"] = `Bearer ${accessToken}`;
+// Request interceptor to add auth token
+axiosWithAuth.interceptors.request.use(
+  (config) => {
+    const accessToken = tokenManager.getAccessToken();
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
+);
 
-  const makeRequest = async () => {
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
-
+// Response interceptor to handle 401 errors and refresh token
+axiosWithAuth.interceptors.response.use(
+  (response) => {
     return response;
-  };
+  },
+  async (error) => {
+    const originalRequest = error.config;
 
-  let response = await makeRequest();
+    // If error is 401 and we haven't retried yet
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-  if (response.status === 401) {
-    // Try to refresh token
-    const newAccessToken = await refreshAccessToken();
-    if (newAccessToken) {
-      // retry original request with new token
-      headers["Authorization"] = `Bearer ${newAccessToken}`;
-      response = await makeRequest();
-    } else {
-      // Refresh failed -> clear tokens
-      tokenManager.clearTokens();
+      try {
+        const refreshToken = tokenManager.getRefreshToken();
+        if (!refreshToken) {
+          tokenManager.clearTokens();
+          return Promise.reject(error);
+        }
+
+        // Try to refresh the token
+        const response = await axios.post(
+          `${API_BASE_URL}/Authentication/refresh-token`,
+          { refreshToken },
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        const result = response.data;
+
+        if (result.success && result.data?.accessToken) {
+          // Store new tokens
+          tokenManager.setTokens(
+            result.data.accessToken,
+            result.data.refreshToken || refreshToken
+          );
+
+          // Update the authorization header with new token
+          originalRequest.headers.Authorization = `Bearer ${result.data.accessToken}`;
+
+          // Retry the original request
+          return axiosWithAuth(originalRequest);
+        } else {
+          tokenManager.clearTokens();
+          return Promise.reject(error);
+        }
+      } catch (refreshError) {
+        tokenManager.clearTokens();
+        return Promise.reject(refreshError);
+      }
     }
-  }
 
-  if (!response.ok) {
-    // Attempt to parse JSON error, but guard if no json
-    let errorText = "Request failed";
-    try {
-      const err = await response.json();
-      errorText = err.error || err.message || errorText;
-    } catch (e) {
-      // ignore parse error
-    }
-    throw new Error(errorText);
+    return Promise.reject(error);
   }
-
-  // parse response body safely
-  try {
-    return await response.json();
-  } catch (e) {
-    return null;
-  }
-};
+);

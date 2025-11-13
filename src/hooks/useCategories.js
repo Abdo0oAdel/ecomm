@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import categoriesService from "../services/categories";
-import productsMock from "../data/products";
 
 // Simple hook to fetch categories and expose a fallback when API fails
 export const useCategories = () => {
@@ -29,16 +28,11 @@ export const useCategories = () => {
           setError(null);
         }
       } catch (err) {
-        // fallback: derive categories from local products mock
-        if (mounted) {
-          const fallback = Array.from(
-            new Map(
-              productsMock.map((p) => [p.category, { id: p.category, name: p.category }])
-            ).values()
-          );
-          setCategories(fallback);
-          setError(err);
-        }
+          // On error, expose empty categories and the error (no local mock fallback)
+          if (mounted) {
+            setCategories([]);
+            setError(err);
+          }
       } finally {
         if (mounted) setLoading(false);
       }

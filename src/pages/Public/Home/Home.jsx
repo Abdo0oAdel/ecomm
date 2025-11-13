@@ -6,6 +6,10 @@ import {
     FiSmartphone, FiMonitor, FiWatch, FiCamera, FiChevronDown,
 } from "react-icons/fi";
 import { useCategories } from "../../../hooks/useCategories";
+import { useNavigate } from "react-router-dom";
+import useProducts from "../../../hooks/useProducts";
+import { useWishlist } from "../../../hooks/useWishlist";
+import { useCart } from "../../../hooks/useCart";
 
 const Home = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -15,6 +19,10 @@ const Home = () => {
         minutes: 19,
         seconds: 56,
     });
+    const navigate = useNavigate();
+    const { wishlist, toggleWishlist } = useWishlist();
+    const { cart, addToCart } = useCart();
+    const { products, loading: loadingProducts, error: errorProducts } = useProducts();
 
     // Countdown timer effect
     useEffect(() => {
@@ -36,69 +44,8 @@ const Home = () => {
         return () => clearInterval(timer);
     }, []);
 
-    // Sample data
-    const flashSaleProducts = [
-        {
-            id: 1,
-            name: "HAVIT HV-G92 Gamepad",
-            image:
-                "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=300&h=300&fit=crop",
-            originalPrice: 160,
-            currentPrice: 120,
-            discount: 20,
-            rating: 5,
-            reviews: 88,
-            isNew: false,
-            category: "Gaming",
-            colors: ["black", "red"],
-        },
-        {
-            id: 2,
-            name: "AK-200 Wired Keyboard",
-            image:
-                "https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=300&h=300&fit=crop",
-            originalPrice: 1160,
-            currentPrice: 960,
-            discount: 20,
-            rating: 5,
-            reviews: 75,
-            isNew: false,
-            category: "Gaming",
-            colors: ["black"],
-        },
-        {
-            id: 3,
-            name: "IPS LCD Gaming Monitor",
-            image:
-                "https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=300&h=300&fit=crop",
-            originalPrice: 400,
-            currentPrice: 370,
-            discount: 20,
-            rating: 5,
-            reviews: 99,
-            isNew: false,
-            category: "Electronics",
-        },
-        {
-            id: 4,
-            name: "S-Series Comfort Chair",
-            image:
-                "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=300&fit=crop",
-            originalPrice: 400,
-            currentPrice: 370,
-            discount: 20,
-            rating: 5,
-            reviews: 99,
-            isNew: false,
-            category: "Furniture",
-            colors: ["green", "red"],
-        },
-    ];
-
     // fetch categories from API (hook) - keep fallbacks to preserve UI/design
     const { categories: apiCategories, loading, error } = useCategories();
-
-    // debug logs removed to avoid excessive re-renders/perf noise
 
     const defaultCategories = [
         { name: "Phones", icon: <FiSmartphone />, active: false },
@@ -238,6 +185,8 @@ const Home = () => {
     const [hoveredCategory, setHoveredCategory] = useState(null);
     // small timeout to avoid flicker when moving mouse between the list item and the floating panel
     const hoverTimeoutRef = useRef(null);
+
+    // products are provided by useProducts() already mapped to the UI shape
 
     return (
         <div className={styles.home}>
@@ -416,7 +365,7 @@ const Home = () => {
                         </button>
 
                         <div className={styles.productsGrid}>
-                            {flashSaleProducts.map((product) => (
+                            {products.slice(0, 4).map((product) => (
                                 <ProductCard key={product.id} product={product} />
                             ))}
                         </div>
@@ -430,7 +379,9 @@ const Home = () => {
                     </div>
 
                     <div className={styles.viewAllBtn}>
-                        <button className={styles.redButton}>View All Products</button>
+                        <button className={styles.redButton} onClick={() => navigate('/products')}>
+                            View All Products
+                        </button>
                     </div>
                 </div>
             </section>
@@ -491,7 +442,7 @@ const Home = () => {
                     </div>
 
                     <div className={styles.productsGrid}>
-                        {flashSaleProducts.slice(0, 4).map((product) => (
+                        {products.slice(0, 4).map((product) => (
                             <ProductCard key={product.id} product={product} />
                         ))}
                     </div>
@@ -561,16 +512,31 @@ const Home = () => {
                         </div>
                     </div>
 
-                    <div className={`${styles.productsGrid} ${styles.exploreGrid}`}>
-                        {[...flashSaleProducts, ...flashSaleProducts]
-                            .slice(0, 8)
-                            .map((product, index) => (
-                                <ProductCard key={`explore-${index}`} product={product} />
+                    {loadingProducts ? (
+                        <div>Loading products...</div>
+                    ) : errorProducts ? (
+                        <div style={{ color: 'red' }}>{errorProducts}</div>
+                    ) : (
+                        <div className={`${styles.productsGrid} ${styles.exploreGrid}`}>
+                            {products.slice(0, 8).map((product) => (
+                                <ProductCard
+                                    key={`explore-${product.id}`}
+                                    product={product}
+                                    onToggleWishlist={() => toggleWishlist(product)}
+                                    onAddToCart={() => addToCart(product)}
+                                    onViewDetails={() => navigate(`/products/${product.id}`, { state: { product } })}
+                                />
                             ))}
-                    </div>
+                        </div>
+                    )}
 
                     <div className={styles.viewAllBtn}>
-                        <button className={styles.redButton}>View All Products</button>
+                        <button
+                            className={styles.redButton}
+                            onClick={() => navigate("/products", { state: { products } })}
+                        >
+                            View All Products
+                        </button>
                     </div>
                 </div>
             </section>
@@ -697,3 +663,4 @@ const Home = () => {
 };
 
 export default Home;
+
