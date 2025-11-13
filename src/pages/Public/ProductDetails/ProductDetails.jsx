@@ -3,23 +3,29 @@ import { useParams, useLocation, Link } from "react-router-dom";
 import styles from "./ProductDetails.module.css";
 import { AiFillStar } from "react-icons/ai";
 import { FiChevronLeft, FiShoppingCart, FiHeart } from "react-icons/fi";
-import products from "../../../data/products";
+import useProduct from "../../../hooks/useProduct";
+import useProducts from "../../../hooks/useProducts";
 import ProductCard from "../../../components/ProductCard/ProductCard";
 
 const ProductDetail = () => {
     const { id } = useParams();
     const location = useLocation();
-    const fallback = products.find((p) => String(p.id) === String(id));
-    const product = location.state?.product || fallback;
+    // Try to get product from navigation state, otherwise fetch from API
+    const { product: apiProduct, loading, error } = useProduct(id);
+    // Always call all hooks before any return!
+    const { products: allProducts } = useProducts();
+    const product = location.state?.product || apiProduct;
 
     const [mainIndex, setMainIndex] = useState(0);
-    const [selectedColor, setSelectedColor] = useState(
-        product?.colors?.[0] || null
-    );
-    const [selectedSize, setSelectedSize] = useState(
-        product?.sizes?.includes("M") ? "M" : product?.sizes?.[0] || null
-    );
+    const [selectedColor, setSelectedColor] = useState(null);
+    const [selectedSize, setSelectedSize] = useState(null);
     const [qty, setQty] = useState(1);
+
+    // Set default color/size when product loads
+    React.useEffect(() => {
+        if (product?.colors?.length) setSelectedColor(product.colors[0]);
+        if (product?.sizes?.length) setSelectedSize(product.sizes.includes("M") ? "M" : product.sizes[0]);
+    }, [product]);
 
     const renderStars = (rating) =>
         Array.from({ length: 5 }).map((_, i) => (
@@ -29,7 +35,10 @@ const ProductDetail = () => {
             />
         ));
 
-    if (!product) {
+    if (loading) {
+        return <div className={styles.container}><div>Loading product...</div></div>;
+    }
+    if (error || !product) {
         return (
             <div className={styles.container}>
                 <div className={styles.headerRow}>
@@ -46,7 +55,10 @@ const ProductDetail = () => {
 
     const imgs = product.images && product.images.length ? product.images : [product.image];
 
-    const related = products.filter((p) => p.id !== product.id).slice(0, 4);
+    // Fetch all products for related items (already called at top)
+    const related = allProducts
+        .filter((p) => p.id !== product.id && p.category === product.category)
+        .slice(0, 4);
 
     return (
         <div className={styles.container}>

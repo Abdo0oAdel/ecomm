@@ -13,7 +13,7 @@ import FAQ from "../pages/Public/FAQ/FAQ";
 import Terms from "../pages/Public/Terms/Terms";
 import Privacy from "../pages/Public/Privacy/Privacy";
 import Support from "../pages/Public/Support/Support";
-import Products from "../pages/Public/products/Products";
+import Products from "../pages/Public/Products/Products";
 import ProductDetails from "../pages/Public/ProductDetails/ProductDetails";
 
 import Cart from "../pages/Protected/Cart/Cart";

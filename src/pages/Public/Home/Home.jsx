@@ -67,103 +67,37 @@ const Home = () => {
         "Health & Beauty",
     ];
 
-    // Use safe fallbacks — ensure apiCategories is an array before mapping
+    // Use only API categories for sidebar and Browse By Category
     const sidebarCategories = Array.isArray(apiCategories) && apiCategories.length > 0
         ? apiCategories.map((cat) => cat.categoryName || cat.name)
-        : defaultSidebarCategories;
+        : [];
 
-    const categories = Array.isArray(apiCategories) && apiCategories.length > 0
-        ? apiCategories.slice(0, 6).map((cat, index) => ({
+    // For Browse By Category, show all API categories (paginated, 6 at a time)
+    const browseCategories = Array.isArray(apiCategories) && apiCategories.length > 0
+        ? apiCategories.map((cat, index) => ({
             name: cat.categoryName || cat.name,
             icon: <FiSmartphone />,
-            active: index === 0,
+            id: cat.categoryID || cat.id,
         }))
-        : defaultCategories;
+        : [];
 
-    // Submenu data for sidebar categories (add/change items as needed)
-    // Build default submenus and then override/extend from API if available
-    const defaultSidebarSubmenus = {
-        "Woman's Fashion": [
-            { title: 'Clothing', items: ['Dresses', 'Tops', 'Skirts'] },
-            { title: 'Footwear', items: ['Sneakers', 'Heels'] },
-            { title: 'Bags & Accessories', items: ['Totes', 'Wallets'] },
-        ],
-        "Men's Fashion": [
-            { title: 'Clothing', items: ['Shirts', 'Trousers', 'T-Shirts'] },
-            { title: 'Footwear', items: ['Sneakers', 'Loafers'] },
-            { title: 'Accessories', items: ['Belts', 'Watches'] },
-        ],
-        "Electronics": [
-            { title: 'Phones', items: ['Smartphones', 'Cases', 'Chargers'] },
-            { title: 'Computers', items: ['Laptops', 'Monitors', 'Peripherals'] },
-            { title: 'Audio', items: ['Headphones', 'Speakers', 'Microphones'] },
-        ],
-        'Home & Lifestyle': [
-            { title: 'Home', items: ['Decor', 'Bedding', 'Furniture'] },
-            { title: 'Kitchen', items: ['Cookware', 'Appliances', 'Utensils'] },
-        ],
-        'Medicine': [
-            { title: 'Supplements', items: ['Vitamins', 'Herbal', 'Protein'] },
-            { title: 'First Aid', items: ['Bandages', 'Disinfectants'] },
-        ],
-        'Sports & Outdoor': [
-            { title: 'Outdoor', items: ['Tents', 'Camping Gear'] },
-            { title: 'Fitness', items: ['Yoga Mats', 'Dumbbells'] },
-        ],
-        "Baby's & Toys": [
-            { title: 'Baby', items: ['Diapers', 'Strollers'] },
-            { title: 'Toys', items: ['Educational Toys', 'Action Figures'] },
-        ],
-        'Groceries & Pets': [
-            { title: 'Groceries', items: ['Snacks', 'Beverages', 'Dairy'] },
-            { title: 'Pets', items: ['Dog Food', 'Cat Litter', 'Pet Toys'] },
-        ],
-        'Health & Beauty': [
-            { title: 'Skincare', items: ['Moisturizers', 'Serums', 'Cleansers'] },
-            { title: 'Makeup', items: ['Lipstick', 'Foundation', 'Eyeshadow'] },
-        ],
-        // Additional categories requested to ensure submenus exist for sidebar items
-        'Toys & Games': [
-            { title: 'Toys by Age', items: ['0-2 Years', '3-5 Years', '6-8 Years'] },
-            { title: 'Games', items: ['Puzzles', 'Board Games', 'Action Figures'] },
-        ],
-        'Sports & Outdoors': [
-            { title: 'Sports', items: ['Football', 'Tennis', 'Fitness Gear'] },
-            { title: 'Outdoor', items: ['Camping', 'Cycling', 'Hiking'] },
-        ],
-        'Books': [
-            { title: 'Genres', items: ['Fiction', 'Non-Fiction', 'Science'] },
-            { title: 'Educational', items: ['School', 'University', 'Reference'] },
-        ],
-        'animals': [
-            { title: 'Pets', items: ['Dogs', 'Cats', 'Birds'] },
-            { title: 'Supplies', items: ['Food', 'Beds', 'Toys'] },
-        ],
-        'Fashion': [
-            { title: 'Men', items: ['Shirts', 'Trousers', 'Shoes'] },
-            { title: 'Women', items: ['Dresses', 'Handbags', 'Heels'] },
-        ],
-        // ✅ أضف الـ Categories الجديدة اللي من API
-        'flashSale': [
-            { title: 'Daily Deals', items: ['Best Sellers', 'New Arrivals', 'Limited Time'] },
-            { title: 'Offers', items: ['Clearance', 'Discounts', 'Flash Deals'] },
-        ],
-        'Baby Products': [
-            { title: 'Essentials', items: ['Diapers', 'Bottles', 'Formula'] },
-            { title: 'Toys', items: ['Rattles', 'Teethers', 'Mobiles'] },
-        ],
-        'Automotive': [
-            { title: 'Accessories', items: ['Seat Covers', 'Mats', 'Air Fresheners'] },
-            { title: 'Parts', items: ['Battery', 'Filters', 'Wipers'] },
-        ],
-    };
+    // Pagination for Browse By Category
+    const CATEGORIES_PER_PAGE = 6;
+    const [categoryPage, setCategoryPage] = useState(0);
+    const totalCategoryPages = Math.ceil(browseCategories.length / CATEGORIES_PER_PAGE);
+    const pagedCategories = browseCategories.slice(
+        categoryPage * CATEGORIES_PER_PAGE,
+        (categoryPage + 1) * CATEGORIES_PER_PAGE
+    );
 
-    // Build submenus from API if available (expected shape: { categoryName, subcategories: [{title, items:[]}, ...] })
-    const apiSidebarSubmenus = {};
+    // Selected category state (null = all)
+    const [selectedCategory, setSelectedCategory] = useState(null);
+
+    const sidebarSubmenus = {};
     if (Array.isArray(apiCategories)) {
         apiCategories.forEach((cat) => {
             if (cat && Array.isArray(cat.subcategories) && cat.subcategories.length > 0) {
-                apiSidebarSubmenus[cat.categoryName || cat.name] = cat.subcategories.map((sc) => ({
+                sidebarSubmenus[cat.categoryName || cat.name] = cat.subcategories.map((sc) => ({
                     title: sc.title || sc.category || sc.name || '',
                     items: Array.isArray(sc.items) ? sc.items : [],
                 }));
@@ -171,109 +105,92 @@ const Home = () => {
         });
     }
 
-    // Merge API-provided submenus over defaults (API wins)
-    const sidebarSubmenus = Object.keys(apiSidebarSubmenus).length > 0
-        ? { ...defaultSidebarSubmenus, ...apiSidebarSubmenus }
-        : defaultSidebarSubmenus;
-
     const [openCategory, setOpenCategory] = useState(null);
     const toggleCategory = (name) => {
         setOpenCategory((prev) => (prev === name ? null : name));
     };
 
-    // hoveredCategory controls the desktop mega-panel on hover
     const [hoveredCategory, setHoveredCategory] = useState(null);
-    // small timeout to avoid flicker when moving mouse between the list item and the floating panel
+    // Timeout ref to avoid flicker when moving mouse between sidebar and submenu
     const hoverTimeoutRef = useRef(null);
 
-    // products are provided by useProducts() already mapped to the UI shape
+    const handleSidebarMouseEnter = (category) => {
+        if (hoverTimeoutRef.current) {
+            clearTimeout(hoverTimeoutRef.current);
+            hoverTimeoutRef.current = null;
+        }
+        setHoveredCategory(category);
+    };
+
+    const handleSidebarMouseLeave = () => {
+        hoverTimeoutRef.current = setTimeout(() => {
+            setHoveredCategory(null);
+        }, 120); // 120ms delay
+    };
+
+    const exploreFilteredProducts = selectedCategory
+        ? products.filter((p) => {
+            // Support both categoryName and category fields
+            return (
+                (p.categoryName && p.categoryName === selectedCategory) ||
+                (p.category && p.category === selectedCategory)
+            );
+        })
+        : products;
 
     return (
         <div className={styles.home}>
             {/* Hero Section */}
             <section className={styles.heroSection}>
+
                 <div className={styles.heroContainer}>
                     {/* Left Sidebar - Categories */}
                     <div className={styles.categorySidebar}>
-                        {/*  <h3>Categories</h3> */}
                         <ul className={styles.categoryList}>
                             {sidebarCategories.map((category, index) => {
-                                const submenu = sidebarSubmenus[category] || [];
-                                const hasSub = Array.isArray(submenu) && submenu.length > 0 && submenu.some(col => Array.isArray(col.items) ? col.items.length > 0 : false);
-                                const opened = openCategory === category;
+                                const isActive = selectedCategory === category;
+                                const categoryProducts = products.filter(
+                                    (p) => (p.categoryName === category || p.category === category)
+                                );
+                                // Use a parent div with relative positioning and hover handlers
                                 return (
-                                    <li
+                                    <div
                                         key={index}
-                                        className={styles.categoryItem}
-                                        onMouseEnter={() => {
-                                            if (!hasSub) return;
-                                            if (hoverTimeoutRef.current) {
-                                                clearTimeout(hoverTimeoutRef.current);
-                                                hoverTimeoutRef.current = null;
-                                            }
-                                            setHoveredCategory(category);
-                                        }}
-                                        onMouseLeave={() => {
-                                            if (!hasSub) return;
-                                            hoverTimeoutRef.current = setTimeout(() => {
-                                                setHoveredCategory((prev) => (prev === category ? null : prev));
-                                                hoverTimeoutRef.current = null;
-                                            }, 150);
-                                        }}
+                                        className={styles.sidebarCategoryWrapper}
+                                        style={{ position: 'relative', width: '100%' }}
+                                        onMouseEnter={() => handleSidebarMouseEnter(category)}
+                                        onMouseLeave={handleSidebarMouseLeave}
                                     >
-                                        <button
-                                            className={styles.categoryButton}
-                                            aria-expanded={hasSub ? opened : undefined}
-                                        >
-                                            <span>{category}</span>
-                                            {hasSub ? (
-                                                <FiChevronDown
-                                                    className={`${styles.arrowDown} ${opened ? styles.rotated : ''}`}
-                                                />
-                                            ) : (
-                                                <FiChevronRight />
-                                            )}
-                                        </button>
-
-                                        {/* Desktop: floating mega panel on hover (hidden on small screens via CSS) */}
-                                        {hasSub && hoveredCategory === category && (
-                                            <div
-                                                className={styles.megaPanel}
-                                                role="dialog"
-                                                aria-label={`${category} subcategories`}
-                                                onMouseEnter={() => {
-                                                    if (hoverTimeoutRef.current) {
-                                                        clearTimeout(hoverTimeoutRef.current);
-                                                        hoverTimeoutRef.current = null;
-                                                    }
-                                                    setHoveredCategory(category);
-                                                }}
-                                                onMouseLeave={() => {
-                                                    hoverTimeoutRef.current = setTimeout(() => {
-                                                        setHoveredCategory((prev) => (prev === category ? null : prev));
-                                                        hoverTimeoutRef.current = null;
-                                                    }, 150);
-                                                }}
+                                        <li className={styles.categoryItem} style={{ listStyle: 'none' }}>
+                                            <button
+                                                className={styles.categoryButton + (isActive ? ' ' + styles.active : '')}
+                                                onClick={() => setSelectedCategory(category === selectedCategory ? null : category)}
                                             >
-                                                <div className={styles.megaPanelInner}>
-                                                    {submenu.map((col, cidx) => (
-                                                        <div key={cidx} className={styles.megaPanelColumn}>
-                                                            <div className={styles.megaPanelCategory}>{col.title}</div>
-                                                            <ul className={styles.megaPanelList}>
-                                                                {col.items.map((item, iidx) => (
-                                                                    <li key={iidx} className={styles.megaPanelItem}>
-                                                                        <a href={`/#/search?cat=${encodeURIComponent(item)}`}>{item}</a>
-                                                                    </li>
-                                                                ))}
-                                                            </ul>
+                                                <span>{category}</span>
+                                            </button>
+                                        </li>
+                                        {/* Floating panel with products on hover */}
+                                        {hoveredCategory === category && categoryProducts.length > 0 && (
+                                            <div
+                                                className={styles.sidebarProductPanel}
+                                                style={{ position: 'absolute', left: '100%', top: 0, zIndex: 100 }}
+                                            >
+                                                <div className={styles.sidebarProductGrid}>
+                                                    {categoryProducts.slice(0, 8).map((product) => (
+                                                        <div
+                                                            key={product.id}
+                                                            className={styles.sidebarProductCard}
+                                                            onClick={() => navigate(`/products/${product.id}`, { state: { product } })}
+                                                            style={{ cursor: 'pointer' }}
+                                                        >
+                                                            <img src={product.image} alt={product.name} className={styles.sidebarProductImg} />
+                                                            <div className={styles.sidebarProductName}>{product.name}</div>
                                                         </div>
                                                     ))}
                                                 </div>
                                             </div>
                                         )}
-
-                                        {/* Mobile accordion removed: click-to-open accordion disabled so clicking won't open submenus. Hover mega-panel remains for desktop. */}
-                                    </li>
+                                    </div>
                                 );
                             })}
                         </ul>
@@ -292,11 +209,6 @@ const Home = () => {
                                     alt="iPhone 14 Pro"
                                 />
                             </div>
-                        </div>
-                        <div className={styles.bannerPagination}>
-                            <span className={styles.paginationDot}></span>
-                            <span className={styles.paginationDot}></span>
-                            <span className={styles.paginationDot}></span>
                         </div>
                     </div>
                 </div>
@@ -318,30 +230,30 @@ const Home = () => {
                         <div className={styles.centerSection}>
                             <div className={styles.countdownTimer}>
                                 <div className={styles.timeUnit}>
-                  <span className={styles.timeNumber}>
-                    {timeLeft.days.toString().padStart(2, "0")}
-                  </span>
+                                    <span className={styles.timeNumber}>
+                                        {timeLeft.days.toString().padStart(2, "0")}
+                                    </span>
                                     <span className={styles.timeLabel}>Days</span>
                                 </div>
                                 <span className={styles.timeSeparator}>:</span>
                                 <div className={styles.timeUnit}>
-                  <span className={styles.timeNumber}>
-                    {timeLeft.hours.toString().padStart(2, "0")}
-                  </span>
+                                    <span className={styles.timeNumber}>
+                                        {timeLeft.hours.toString().padStart(2, "0")}
+                                    </span>
                                     <span className={styles.timeLabel}>Hours</span>
                                 </div>
                                 <span className={styles.timeSeparator}>:</span>
                                 <div className={styles.timeUnit}>
-                  <span className={styles.timeNumber}>
-                    {timeLeft.minutes.toString().padStart(2, "0")}
-                  </span>
+                                    <span className={styles.timeNumber}>
+                                        {timeLeft.minutes.toString().padStart(2, "0")}
+                                    </span>
                                     <span className={styles.timeLabel}>Minutes</span>
                                 </div>
                                 <span className={styles.timeSeparator}>:</span>
                                 <div className={styles.timeUnit}>
-                  <span className={styles.timeNumber}>
-                    {timeLeft.seconds.toString().padStart(2, "0")}
-                  </span>
+                                    <span className={styles.timeNumber}>
+                                        {timeLeft.seconds.toString().padStart(2, "0")}
+                                    </span>
                                     <span className={styles.timeLabel}>Seconds</span>
                                 </div>
                             </div>
@@ -400,22 +312,35 @@ const Home = () => {
                             </div>
                         </div>
                         <div className={styles.navigationSection}>
-                            <button className={styles.carouselBtn}>
+                            <button
+                                className={styles.carouselBtn}
+                                onClick={() => setCategoryPage((prev) => Math.max(0, prev - 1))}
+                                disabled={categoryPage === 0}
+                                aria-label="Previous categories"
+                            >
                                 <FiChevronLeft />
                             </button>
-                            <button className={styles.carouselBtn}>
+                            <button
+                                className={styles.carouselBtn}
+                                onClick={() => setCategoryPage((prev) => Math.min(totalCategoryPages - 1, prev + 1))}
+                                disabled={categoryPage >= totalCategoryPages - 1}
+                                aria-label="Next categories"
+                            >
                                 <FiChevronRight />
                             </button>
                         </div>
                     </div>
 
                     <div className={styles.categoriesGrid}>
-                        {categories.map((category, index) => (
+                        {pagedCategories.map((category, index) => (
                             <div
-                                key={index}
-                                className={`${styles.categoryCard} ${
-                                    category.active ? styles.active : ""
-                                }`}
+                                key={category.id || index}
+                                className={
+                                    styles.categoryCard +
+                                    (selectedCategory === category.name ? ' ' + styles.active : '')
+                                }
+                                onClick={() => setSelectedCategory(selectedCategory === category.name ? null : category.name)}
+                                style={{ cursor: 'pointer' }}
                             >
                                 <div className={styles.categoryIcon}>{category.icon}</div>
                                 <span className={styles.categoryName}>{category.name}</span>
@@ -425,26 +350,54 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Best Selling Products */}
-            <section className={styles.bestSelling}>
+            {/* Explore Our Products */}
+            <section className={styles.exploreProducts}>
                 <div className={styles.container}>
                     <div className={styles.sectionHeader}>
                         <div className={styles.sectionTitle}>
                             <div className={styles.titleContainer}>
-                                <div className={styles.thisMonthRow}>
+                                <div className={styles.categoriesRow}>
                                     <div className={styles.titleAccent}></div>
-                                    <span className={styles.thisMonthLabel}>This Month</span>
+                                    <span className={styles.categoriesLabel}>Our Products</span>
                                 </div>
-                                <h2>Best Selling Products</h2>
+                                <h2>Explore Our Products</h2>
                             </div>
                         </div>
-                        <button className={styles.viewAllBtn}>View All</button>
+                        <div className={styles.exploreHeaderRight}>
+                            <button className={styles.lightIconBtn}>
+                                <FiChevronLeft />
+                            </button>
+                            <button className={styles.lightIconBtn}>
+                                <FiChevronRight />
+                            </button>
+                        </div>
                     </div>
 
-                    <div className={styles.productsGrid}>
-                        {products.slice(0, 4).map((product) => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
+                    {loadingProducts ? (
+                        <div>Loading products...</div>
+                    ) : errorProducts ? (
+                        <div style={{ color: 'red' }}>{errorProducts}</div>
+                    ) : (
+                        <div className={`${styles.productsGrid} ${styles.exploreGrid}`}>
+                            {exploreFilteredProducts.slice(0, 8).map((product) => (
+                                <ProductCard
+                                    key={`explore-${product.id}`}
+                                    product={product}
+                                    onToggleWishlist={() => toggleWishlist(product)}
+                                    onAddToCart={() => addToCart(product)}
+                                    onViewDetails={() => navigate(`/products/${product.id}`, { state: { product } })}
+                                />
+                            ))}
+                        </div>
+                    )}
+
+                    <div className={styles.viewAllBtn}>
+                        <button
+                            className={styles.redButton}
+                            onClick={() => navigate("/products", { state: { products } })}
+                        >
+                            View All Products
+                        </button>
                     </div>
                 </div>
             </section>
@@ -489,54 +442,26 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Explore Our Products */}
-            <section className={styles.exploreProducts}>
+            {/* Best Selling Products */}
+            <section className={styles.bestSelling}>
                 <div className={styles.container}>
                     <div className={styles.sectionHeader}>
                         <div className={styles.sectionTitle}>
                             <div className={styles.titleContainer}>
-                                <div className={styles.categoriesRow}>
+                                <div className={styles.thisMonthRow}>
                                     <div className={styles.titleAccent}></div>
-                                    <span className={styles.categoriesLabel}>Our Products</span>
+                                    <span className={styles.thisMonthLabel}>This Month</span>
                                 </div>
-                                <h2>Explore Our Products</h2>
+                                <h2>Best Selling Products</h2>
                             </div>
                         </div>
-                        <div className={styles.exploreHeaderRight}>
-                            <button className={styles.lightIconBtn}>
-                                <FiChevronLeft />
-                            </button>
-                            <button className={styles.lightIconBtn}>
-                                <FiChevronRight />
-                            </button>
-                        </div>
+                        <button className={styles.viewAllBtn}>View All</button>
                     </div>
 
-                    {loadingProducts ? (
-                        <div>Loading products...</div>
-                    ) : errorProducts ? (
-                        <div style={{ color: 'red' }}>{errorProducts}</div>
-                    ) : (
-                        <div className={`${styles.productsGrid} ${styles.exploreGrid}`}>
-                            {products.slice(0, 8).map((product) => (
-                                <ProductCard
-                                    key={`explore-${product.id}`}
-                                    product={product}
-                                    onToggleWishlist={() => toggleWishlist(product)}
-                                    onAddToCart={() => addToCart(product)}
-                                    onViewDetails={() => navigate(`/products/${product.id}`, { state: { product } })}
-                                />
-                            ))}
-                        </div>
-                    )}
-
-                    <div className={styles.viewAllBtn}>
-                        <button
-                            className={styles.redButton}
-                            onClick={() => navigate("/products", { state: { products } })}
-                        >
-                            View All Products
-                        </button>
+                    <div className={styles.productsGrid}>
+                        {products.slice(0, 4).map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
                     </div>
                 </div>
             </section>
@@ -663,4 +588,3 @@ const Home = () => {
 };
 
 export default Home;
-
