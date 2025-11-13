@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./Home.module.css";
 import ProductCard from "../../../components/ProductCard/ProductCard";
 import {
@@ -236,6 +236,8 @@ const Home = () => {
 
     // hoveredCategory controls the desktop mega-panel on hover
     const [hoveredCategory, setHoveredCategory] = useState(null);
+    // small timeout to avoid flicker when moving mouse between the list item and the floating panel
+    const hoverTimeoutRef = useRef(null);
 
     return (
         <div className={styles.home}>
@@ -254,8 +256,21 @@ const Home = () => {
                                     <li
                                         key={index}
                                         className={styles.categoryItem}
-                                        onMouseEnter={() => hasSub && setHoveredCategory(category)}
-                                        onMouseLeave={() => hasSub && setHoveredCategory((prev) => (prev === category ? null : prev))}
+                                        onMouseEnter={() => {
+                                            if (!hasSub) return;
+                                            if (hoverTimeoutRef.current) {
+                                                clearTimeout(hoverTimeoutRef.current);
+                                                hoverTimeoutRef.current = null;
+                                            }
+                                            setHoveredCategory(category);
+                                        }}
+                                        onMouseLeave={() => {
+                                            if (!hasSub) return;
+                                            hoverTimeoutRef.current = setTimeout(() => {
+                                                setHoveredCategory((prev) => (prev === category ? null : prev));
+                                                hoverTimeoutRef.current = null;
+                                            }, 150);
+                                        }}
                                     >
                                         <button
                                             className={styles.categoryButton}
@@ -273,7 +288,24 @@ const Home = () => {
 
                                         {/* Desktop: floating mega panel on hover (hidden on small screens via CSS) */}
                                         {hasSub && hoveredCategory === category && (
-                                            <div className={styles.megaPanel} role="dialog" aria-label={`${category} subcategories`}>
+                                            <div
+                                                className={styles.megaPanel}
+                                                role="dialog"
+                                                aria-label={`${category} subcategories`}
+                                                onMouseEnter={() => {
+                                                    if (hoverTimeoutRef.current) {
+                                                        clearTimeout(hoverTimeoutRef.current);
+                                                        hoverTimeoutRef.current = null;
+                                                    }
+                                                    setHoveredCategory(category);
+                                                }}
+                                                onMouseLeave={() => {
+                                                    hoverTimeoutRef.current = setTimeout(() => {
+                                                        setHoveredCategory((prev) => (prev === category ? null : prev));
+                                                        hoverTimeoutRef.current = null;
+                                                    }, 150);
+                                                }}
+                                            >
                                                 <div className={styles.megaPanelInner}>
                                                     {submenu.map((col, cidx) => (
                                                         <div key={cidx} className={styles.megaPanelColumn}>
