@@ -50,9 +50,20 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 0; /* reduced vertical padding to make list tighter */
-  border-bottom: 1px solid var(--color-border);
   cursor: pointer;
   transition: color 0.2s ease;
+}
+
+/* add spacing between items and keep subtle divider except last */
+.categoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* increased space between items */
+}
+
+.categoryItem:not(:last-child) {
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 12px; /* extra breathing room before divider */
 }
 
 .categoryItem:hover {
@@ -106,7 +117,7 @@
 .submenuColumn {
   display: flex;
   flex-direction: column;
-  padding: 0 2px; /* minimal padding to separate columns when larger screens */
+  padding: 0 5px; /* minimal padding to separate columns when larger screens */
 }
 
 .submenuCategory {

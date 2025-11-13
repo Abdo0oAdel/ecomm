@@ -146,7 +146,7 @@ const Home = () => {
             { title: 'Footwear', items: ['Sneakers', 'Loafers'] },
             { title: 'Accessories', items: ['Belts', 'Watches'] },
         ],
-        Electronics: [
+        "Electronics": [
             { title: 'Phones', items: ['Smartphones', 'Cases', 'Chargers'] },
             { title: 'Computers', items: ['Laptops', 'Monitors', 'Peripherals'] },
             { title: 'Audio', items: ['Headphones', 'Speakers', 'Microphones'] },
@@ -155,7 +155,7 @@ const Home = () => {
             { title: 'Home', items: ['Decor', 'Bedding', 'Furniture'] },
             { title: 'Kitchen', items: ['Cookware', 'Appliances', 'Utensils'] },
         ],
-        Medicine: [
+        'Medicine': [
             { title: 'Supplements', items: ['Vitamins', 'Herbal', 'Protein'] },
             { title: 'First Aid', items: ['Bandages', 'Disinfectants'] },
         ],
@@ -168,12 +168,46 @@ const Home = () => {
             { title: 'Toys', items: ['Educational Toys', 'Action Figures'] },
         ],
         'Groceries & Pets': [
-            { title: 'Groceries', items: ['Snacks', 'Beverages'] },
-            { title: 'Pets', items: ['Dog Food', 'Cat Litter'] },
+            { title: 'Groceries', items: ['Snacks', 'Beverages', 'Dairy'] },
+            { title: 'Pets', items: ['Dog Food', 'Cat Litter', 'Pet Toys'] },
         ],
         'Health & Beauty': [
-            { title: 'Skincare', items: ['Moisturizers', 'Serums'] },
-            { title: 'Makeup', items: ['Lipstick', 'Foundation'] },
+            { title: 'Skincare', items: ['Moisturizers', 'Serums', 'Cleansers'] },
+            { title: 'Makeup', items: ['Lipstick', 'Foundation', 'Eyeshadow'] },
+        ],
+        // Additional categories requested to ensure submenus exist for sidebar items
+        'Toys & Games': [
+            { title: 'Toys by Age', items: ['0-2 Years', '3-5 Years', '6-8 Years'] },
+            { title: 'Games', items: ['Puzzles', 'Board Games', 'Action Figures'] },
+        ],
+        'Sports & Outdoors': [
+            { title: 'Sports', items: ['Football', 'Tennis', 'Fitness Gear'] },
+            { title: 'Outdoor', items: ['Camping', 'Cycling', 'Hiking'] },
+        ],
+        'Books': [
+            { title: 'Genres', items: ['Fiction', 'Non-Fiction', 'Science'] },
+            { title: 'Educational', items: ['School', 'University', 'Reference'] },
+        ],
+        'animals': [
+            { title: 'Pets', items: ['Dogs', 'Cats', 'Birds'] },
+            { title: 'Supplies', items: ['Food', 'Beds', 'Toys'] },
+        ],
+        'Fashion': [
+            { title: 'Men', items: ['Shirts', 'Trousers', 'Shoes'] },
+            { title: 'Women', items: ['Dresses', 'Handbags', 'Heels'] },
+        ],
+        // ✅ أضف الـ Categories الجديدة اللي من API
+        'flashSale': [
+            { title: 'Daily Deals', items: ['Best Sellers', 'New Arrivals', 'Limited Time'] },
+            { title: 'Offers', items: ['Clearance', 'Discounts', 'Flash Deals'] },
+        ],
+        'Baby Products': [
+            { title: 'Essentials', items: ['Diapers', 'Bottles', 'Formula'] },
+            { title: 'Toys', items: ['Rattles', 'Teethers', 'Mobiles'] },
+        ],
+        'Automotive': [
+            { title: 'Accessories', items: ['Seat Covers', 'Mats', 'Air Fresheners'] },
+            { title: 'Parts', items: ['Battery', 'Filters', 'Wipers'] },
         ],
     };
 
