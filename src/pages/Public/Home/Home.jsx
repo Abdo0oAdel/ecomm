@@ -247,9 +247,9 @@ const Home = () => {
                         {/*  <h3>Categories</h3> */}
                         <ul className={styles.categoryList}>
                             {sidebarCategories.map((category, index) => {
-                                const hasSub = Boolean(sidebarSubmenus[category]);
-                                const opened = openCategory === category;
                                 const submenu = sidebarSubmenus[category] || [];
+                                const hasSub = Array.isArray(submenu) && submenu.length > 0 && submenu.some(col => Array.isArray(col.items) ? col.items.length > 0 : false);
+                                const opened = openCategory === category;
                                 return (
                                     <li
                                         key={index}
@@ -259,7 +259,6 @@ const Home = () => {
                                     >
                                         <button
                                             className={styles.categoryButton}
-                                            onClick={() => (hasSub ? toggleCategory(category) : null)}
                                             aria-expanded={hasSub ? opened : undefined}
                                         >
                                             <span>{category}</span>
@@ -292,29 +291,7 @@ const Home = () => {
                                             </div>
                                         )}
 
-                                        {/* Mobile / click: inline accordion submenu */}
-                                        {hasSub && (
-                                            <div
-                                                className={`${styles.submenu} ${opened ? styles.active : ''}`}
-                                                role="region"
-                                                aria-hidden={!opened}
-                                            >
-                                                <div className={styles.submenuInner}>
-                                                    {submenu.map((col, cidx) => (
-                                                        <div key={cidx} className={styles.submenuColumn}>
-                                                            <div className={styles.submenuCategory}>{col.title}</div>
-                                                            <ul className={styles.submenuList}>
-                                                                {col.items.map((item, iidx) => (
-                                                                    <li key={iidx} className={styles.submenuItem}>
-                                                                        <a href={`/#/search?cat=${encodeURIComponent(item)}`}>{item}</a>
-                                                                    </li>
-                                                                ))}
-                                                            </ul>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
+                                        {/* Mobile accordion removed: click-to-open accordion disabled so clicking won't open submenus. Hover mega-panel remains for desktop. */}
                                     </li>
                                 );
                             })}
