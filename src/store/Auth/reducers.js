@@ -11,6 +11,13 @@ export const logout = (state) => {
     state.error = null
 }
 
+export const restoreAuth = (state, action) => {
+    state.isAuthenticated = true
+    state.user = action.payload.user
+    state.error = null
+    state.loading = false
+}
+
 export const setLoading = (state, action) => {
     state.loading = action.payload
 }

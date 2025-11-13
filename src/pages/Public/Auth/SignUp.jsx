@@ -1,57 +1,59 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { authActions } from "../../../store/Auth/slice.js";
-import { authAPI } from "../../../utils/api.js";
+import { useAuth } from "../../../hooks/useAuth";
 import styles from "./SignUp.module.css";
 import loginImage from "../../../assets/imgs/Side Image.svg";
 
 const SignUp = () => {
   const { t } = useTranslation();
   const [email, setEmail] = useState("");
-  const [user, setUser] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const dispatch = useDispatch();
+  const { register, loading } = useAuth();
   const navigate = useNavigate();
-  const loading = useSelector((state) => state.auth.loading);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     // Simple validation - in production, you'd validate against your backend
-    if (!email || !user || !password) {
+    if (!email || !firstName || !lastName || !phone || !password || !confirmPassword) {
       setError("Please fill in all fields");
       return;
     }
 
-    // Set loading state
-    dispatch(authActions.setLoading(true));
+    // Validate password match
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
     try {
-      // Call backend API
-      const response = await authAPI.register({
-        email,
-        username: user,
-        password,
+      const {
+        success,
+        user: newUser,
+        error: registerError,
+      } = await register({
+        userEmail: email,
+        userPassword: password,
+        userFirstName: firstName,
+        userLastName: lastName,
+        userPhone: phone,
       });
 
-      if (response.success && response.user) {
-        // Dispatch login action with user data from backend
-        dispatch(authActions.login({ user: response.user }));
-
-        // Navigate to home or dashboard
+      if (success && newUser) {
+        // Registration successful, user is logged in and tokens are stored
         navigate("/");
       } else {
-        setError("Registration failed. Please try again.");
-        dispatch(authActions.setLoading(false));
+        setError(registerError || "Registration failed. Please try again.");
       }
     } catch (err) {
       setError(err.message || "Registration failed. Please try again.");
-      dispatch(authActions.setError(err.message));
-      dispatch(authActions.setLoading(false));
     }
   };
   return (
@@ -60,17 +62,35 @@ const SignUp = () => {
         <img src={loginImage} alt="Login Side" className={styles.sideImage} />
       </div>
       <div className={styles.loginForm}>
-        <h1>{t('auth.createAccount')}</h1>
-        <h2>{t('auth.enterDetails')}</h2>
+        <h1>{t("auth.createAccount")}</h1>
+        <h2>{t("auth.enterDetails")}</h2>
         {error && <div className={styles.errorMessage}>{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className={styles.inputForm}>
+            <div className={styles.nameInputs}>
+              <input
+                placeholder="First Name"
+                type="Text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+                disabled={loading}
+              ></input>
+              <input
+                placeholder="Last Name"
+                type="Text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+                disabled={loading}
+              ></input>
+            </div>
             <input
-              type="Text"
-              id="name"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-              placeholder={t('auth.username')}
+              type="tel"
+              id="phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Phone Number"
               required
               disabled={loading}
             />
@@ -79,7 +99,7 @@ const SignUp = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={t('auth.email')}
+              placeholder={t("auth.email")}
               required
               disabled={loading}
             />
@@ -88,16 +108,33 @@ const SignUp = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={t('auth.password')}
+              placeholder={t("auth.password")}
+              required
+              disabled={loading}
+            />
+            <input
+              type="password"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm Password"
               required
               disabled={loading}
             />
           </div>
           <div className={styles.formButtons}>
-            <button type="submit" className={styles.signUpButton} disabled={loading}>
-              {loading ? "Creating Account..." : t('auth.signup')}
+            <button
+              type="submit"
+              className={styles.signUpButton}
+              disabled={loading}
+            >
+              {loading ? "Creating Account..." : t("auth.signup")}
             </button>
-            <button type="button" className={styles.signUpGoogleButton} disabled={loading}>
+            <button
+              type="button"
+              className={styles.signUpGoogleButton}
+              disabled={loading}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="45"
@@ -126,9 +163,9 @@ const SignUp = () => {
           </div>
         </form>
         <div className={styles.backToLogIn}>
-          <a>{t('auth.alreadyHaveAccount')}</a>
+          <a>{t("auth.alreadyHaveAccount")}</a>
           <button className={styles.logIn} onClick={() => navigate("/login")}>
-            {t('auth.login')}
+            {t("auth.login")}
           </button>
         </div>
       </div>

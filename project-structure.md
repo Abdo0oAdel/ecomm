@@ -56,6 +56,7 @@ assets/
 ├── react.svg                  # React logo
 ├── imgs/                      # Image files
 │   ├── image_Sec.jpg          # Section background image
+│   ├── Side Image.svg         # Decorative side image
 │   ├── team-1.png             # Team member photo 1
 │   ├── team-2.png             # Team member photo 2
 │   └── team-3.png             # Team member photo 3
@@ -63,6 +64,7 @@ assets/
     ├── globals.css            # Global CSS styles
     ├── mixins.css             # CSS mixins and utilities
     ├── styles.css             # Main stylesheet
+    ├── rtl.css                # RTL overrides
     └── variables.css          # CSS variables (colors, spacing, etc.)
 ```
 
@@ -86,11 +88,28 @@ components/
 ```
 
 ### Hooks (`src/hooks/`)
-Custom React hooks:
+Custom React hooks found in the repo:
 
 ```
 hooks/
-└── useAuth.js                 # Custom authentication hook (Redux integration)
+├── useAuth.js                 # Custom authentication hook (Redux integration)
+├── useCart.js                 # Cart helper hook
+└── useWishlist.js             # Wishlist helper hook
+```
+
+### Internationalization (`src/i18n/`)
+Project contains a small i18n setup with locales and usage examples:
+
+```
+i18n/
+├── config.js                  # i18n configuration
+├── ExampleUsage.jsx           # Small example component showing usage
+├── QUICK_REFERENCE.md         # Quick reference (documentation)
+├── README.md                  # i18n notes
+└── locales/
+    ├── ar.json                # Arabic translations
+    ├── en.json                # English translations
+    └── fr.json                # French translations
 ```
 
 ### Layout (`src/layout/`)
@@ -183,6 +202,12 @@ store/
 ├── Auth/
 │   ├── reducers.js            # Authentication reducers
 │   └── slice.js               # Authentication slice
+├── Cart/
+│   ├── reducers.js            # Cart reducers
+│   └── slice.js               # Cart slice
+├── Wishlist/
+│   ├── reducers.js            # Wishlist reducers
+│   └── slice.js               # Wishlist slice
 └── Theme/
     ├── reducers.js            # Theme reducers (light/dark mode)
     └── slice.js               # Theme slice
@@ -192,7 +217,7 @@ store/
 Utility functions and API configuration:
 
 ```
-Utility functions and helpers:
+utils/
 ├── api.js                     # API endpoints and authentication calls
 └── helpers.js                 # Helper functions (HTTP-only cookie support)
 ```
@@ -354,5 +379,5 @@ NODE_ENV=development
 
 ---
 
-*Last Updated: October 18, 2025*
+*Last Updated: November 2, 2025*
 *Architecture: Redux-based state management with HTTP-only cookie authentication*

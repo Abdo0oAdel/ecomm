@@ -1,0 +1,30 @@
+/* Product.module.css: styles for the products grid page */
+.productsPage {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2rem 1rem;
+}
+
+.title {
+	font-size: 2.2rem;
+	font-weight: 700;
+	margin-bottom: 2rem;
+	text-align: center;
+	color: #222;
+}
+
+.loading,
+.error,
+.noProducts {
+	text-align: center;
+	font-size: 1.2rem;
+	color: #888;
+	margin: 2rem 0;
+}
+
+.productsGrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 2rem;
+	margin-top: 1rem;
+}
