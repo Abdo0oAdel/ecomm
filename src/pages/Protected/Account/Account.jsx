@@ -1,166 +1,151 @@
-import React, { useState } from "react";
-import styles from "./Account.module.css";
-import { Link } from "react-router-dom";
-export default function Account() {
-  const [formData, setFormData] = useState({
-    firstName: "Md",
-    lastName: "Rimel",
-    email: "rimellll@gmail.com",
-    address: "Kingston, 5236, United State",
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
+import React, { useEffect, useState } from "react";
+import userAPI from "../services/userAPI";
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+const Account = ({ userId }) => {
+  const [profile, setProfile] = useState(null);
+  const [addresses, setAddresses] = useState([]);
+  const [loadingProfile, setLoadingProfile] = useState(false);
+  const [loadingAddresses, setLoadingAddresses] = useState(false);
+  const [error, setError] = useState("");
+
+  const [editingAddress, setEditingAddress] = useState(null); // null or {id, userID, fullAddress, city, country}
+  const [newAddress, setNewAddress] = useState({ fullAddress: "", city: "", country: "" });
+
+  // ---------------------- Load Profile ----------------------
+  const loadProfile = async () => {
+    setLoadingProfile(true);
+    setError("");
+    try {
+      const data = await userAPI.getProfile();
+      setProfile(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoadingProfile(false);
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Profile Updated:", formData);
-    alert("Profile saved successfully!");
+  // ---------------------- Load Addresses ----------------------
+  const loadAddresses = async () => {
+    setLoadingAddresses(true);
+    setError("");
+    try {
+      const data = await userAPI.getAddresses(userId);
+      setAddresses(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoadingAddresses(false);
+    }
+  };
+
+  useEffect(() => {
+    loadProfile();
+    loadAddresses();
+  }, [userId]);
+
+  // ---------------------- Handle Address Save (Create or Update) ----------------------
+  const handleSaveAddress = async () => {
+    setError("");
+    try {
+      const addressData = {
+        userID: userId,
+        fullAddress: editingAddress ? editingAddress.fullAddress : newAddress.fullAddress,
+        city: editingAddress ? editingAddress.city : newAddress.city,
+        country: editingAddress ? editingAddress.country : newAddress.country,
+      };
+
+      const result = await userAPI.updateAddress(
+        userId,
+        editingAddress?.id,
+        addressData
+      );
+
+      // Refresh addresses after save
+      await loadAddresses();
+
+      // Clear form
+      setEditingAddress(null);
+      setNewAddress({ fullAddress: "", city: "", country: "" });
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  // ---------------------- Handle Edit ----------------------
+  const handleEditAddress = (address) => {
+    setEditingAddress({ ...address });
+  };
+
+  // ---------------------- Handle Cancel ----------------------
+  const handleCancelEdit = () => {
+    setEditingAddress(null);
+    setNewAddress({ fullAddress: "", city: "", country: "" });
   };
 
   return (
-    <div className={styles.container}>
-      {/* Sidebar */}
-      <aside className={styles.sidebar}>
-        <h2>Manage My Account</h2>
-        <div className={styles.navSection}>
-          <Link to="#" className={`${styles.navLink} ${styles.navLinkActive}`}>
-            My Profile
-          </Link>
-          <Link to="#" className={styles.navLink}>
-            Address Book
-          </Link>
-          <Link to="#" className={styles.navLink}>
-            My Payment Options
-          </Link>
+    <div style={{ padding: "1rem", maxWidth: "600px", margin: "auto" }}>
+      <h2>Account</h2>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      {loadingProfile ? (
+        <p>Loading profile...</p>
+      ) : profile ? (
+        <div style={{ marginBottom: "2rem" }}>
+          <p><strong>Name:</strong> {profile.name}</p>
+          <p><strong>Email:</strong> {profile.email}</p>
         </div>
+      ) : null}
 
-        <h2>My Orders</h2>
-        <div className={styles.navSection}>
-          <Link to="#" className={styles.navLink}>
-            My Returns
-          </Link>
-          <Link to="/Cancellation" className={styles.navLink}>
-            My Cancellations
-          </Link>
-        </div>
+      <h3>Addresses</h3>
+      {loadingAddresses ? (
+        <p>Loading addresses...</p>
+      ) : (
+        <ul>
+          {addresses.map((addr) => (
+            <li key={addr.id}>
+              {addr.fullAddress}, {addr.city}, {addr.country}{" "}
+              <button onClick={() => handleEditAddress(addr)}>Edit</button>
+            </li>
+          ))}
+        </ul>
+      )}
 
-        <h2>My Wishlist</h2>
-        <a href="#" className={styles.navLink}>
-          View Wishlist
-        </a>
-      </aside>
+      <h3>{editingAddress ? "Edit Address" : "Add New Address"}</h3>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "1rem" }}>
+        <input
+          type="text"
+          placeholder="Full Address"
+          value={editingAddress ? editingAddress.fullAddress : newAddress.fullAddress}
+          onChange={(e) => editingAddress 
+            ? setEditingAddress({ ...editingAddress, fullAddress: e.target.value })
+            : setNewAddress({ ...newAddress, fullAddress: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="City"
+          value={editingAddress ? editingAddress.city : newAddress.city}
+          onChange={(e) => editingAddress 
+            ? setEditingAddress({ ...editingAddress, city: e.target.value })
+            : setNewAddress({ ...newAddress, city: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Country"
+          value={editingAddress ? editingAddress.country : newAddress.country}
+          onChange={(e) => editingAddress 
+            ? setEditingAddress({ ...editingAddress, country: e.target.value })
+            : setNewAddress({ ...newAddress, country: e.target.value })}
+        />
+      </div>
 
-      {/* Main Content */}
-      <main className={styles.main}>
-        <div className={styles.topBar}>
-          <p className={styles.breadcrumb}>Home / My Account</p>
-          <p className={styles.welcomeText}>
-            Welcome! <span className={styles.username}>Md Rimel</span>
-          </p>
-        </div>
-
-        <div className={styles.profileCard}>
-          <h3>Edit Your Profile</h3>
-
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.formGrid}>
-              <div>
-                <label className={styles.label}>First Name</label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  className={styles.input}
-                />
-              </div>
-
-              <div>
-                <label className={styles.label}>Last Name</label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  className={styles.input}
-                />
-              </div>
-
-              <div>
-                <label className={styles.label}>Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  readOnly
-                  className={`${styles.input} ${styles.inputDisabled}`}
-                />
-              </div>
-
-              <div>
-                <label className={styles.label}>Address</label>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  className={styles.input}
-                />
-              </div>
-            </div>
-
-            <div className={styles.passwordSection}>
-              <h4>Password Changes</h4>
-              <div className={styles.formGrid}>
-                <div>
-                  <input
-                    type="password"
-                    name="currentPassword"
-                    placeholder="Current Password"
-                    value={formData.currentPassword}
-                    onChange={handleChange}
-                    className={styles.input}
-                  />
-                </div>
-                <div>
-                  <input
-                    type="password"
-                    name="newPassword"
-                    placeholder="New Password"
-                    value={formData.newPassword}
-                    onChange={handleChange}
-                    className={styles.input}
-                  />
-                </div>
-                <div>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="Confirm New Password"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className={styles.input}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.buttonRow}>
-              <button type="button" className={styles.cancelBtn}>
-                Cancel
-              </button>
-              <button type="submit" className={styles.saveBtn}>
-                Save Changes
-              </button>
-            </div>
-          </form>
-        </div>
-      </main>
+      <button onClick={handleSaveAddress}>
+        {editingAddress ? "Update Address" : "Add Address"}
+      </button>
+      {editingAddress && <button onClick={handleCancelEdit} style={{ marginLeft: "1rem" }}>Cancel</button>}
     </div>
   );
-}
+};
+
+export default Account;
