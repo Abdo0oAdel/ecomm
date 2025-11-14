@@ -51,7 +51,7 @@ const AccountDrop = ({ closeMenu, onLogout }) => {
             </li>
             <li
               onClick={() => {
-                navigate("/cancellation");
+                navigate("/Cancellation");
                 closeMenu();
               }}
             >
