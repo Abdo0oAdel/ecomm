@@ -29,6 +29,7 @@ import ShippingMap from "../pages/Protected/ShippingMap/ShippingMap";
 const routes = [
   {
     element: <PublicLayout />,
+    errorElement: <Error />,
     children: [
       { path: "/", element: <Home /> },
       { path: "/about", element: <About /> },
@@ -47,6 +48,7 @@ const routes = [
   },
   {
     element: <ProtectedLayout />,
+    errorElement: <Error />,
     children: [
       {
         path: "/cart",
@@ -105,10 +107,6 @@ const routes = [
         ),
       },
     ],
-  },
-  {
-    path: "*",
-    element: <Error />,
   },
 ];
 
