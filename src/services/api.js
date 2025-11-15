@@ -39,7 +39,6 @@ apiClient.interceptors.response.use(
 
 export const apiFetch = async (path, options = {}) => {
   const url = path.startsWith("http") ? path : path;
-  console.log("url:", url)
   // Convert fetch-style options to axios config
   const axiosConfig = {
     url,

@@ -24,6 +24,7 @@ const NavBar = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const user = useSelector((state) => state.auth.user);
   const cartItems = useSelector((state) => state.cart.items);
+  const cartCount = useSelector((state) => state.cart.count);
   const wishlistItems = useSelector((state) => state.wishlist.items);
 
   const changeLanguage = (lng) => {
@@ -277,8 +278,8 @@ const NavBar = () => {
                 title="Cart"
               >
                 <FiShoppingCart size={20} />
-                {cartItems.length > 0 && (
-                  <span className={styles.badge}>{cartItems.length}</span>
+                {(cartCount > 0 || cartItems.length > 0) && (
+                  <span className={styles.badge}>{cartCount ?? cartItems.length}</span>
                 )}
               </button>
 

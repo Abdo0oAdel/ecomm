@@ -43,8 +43,9 @@ const LogIn = () => {
             wishlistAPI.getWishlist(),
           ]);
 
-          if (cartResponse.cart) {
-            dispatch(cartActions.setCart(cartResponse.cart));
+          // Set only the cart count after login
+          if (cartResponse && typeof cartResponse.totalQuantity === 'number') {
+            dispatch(cartActions.setCartCount(cartResponse.totalQuantity));
           }
 
           if (wishlistResponse.wishlist) {

@@ -1,16 +1,26 @@
-import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { axiosWithAuth } from "../utils/helpers";
+
 
 export const getCategories = async () => {
-  const response = await axios.get(`${API_BASE_URL}/Categories`);
-  return response.data;
+  try {
+    const response = await axiosWithAuth.get(`/Categories`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch categories');
+  }
 };
 
+
 export const getCategoryById = async (id) => {
-  const response = await axios.get(`${API_BASE_URL}/Categories/${id}`);
-  return response.data;
+  try {
+    const response = await axiosWithAuth.get(`/Categories/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch category');
+  }
 };
+
 
 export default {
   getCategories,

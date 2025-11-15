@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addToCart, removeFromCart, updateQuantity, clearCart, setCouponCode, setCart } from "./reducers.js";
+import { addToCart, removeFromCart, updateQuantity, clearCart, setCouponCode, setCart, setCartCount } from "./reducers.js";
 
 const initialCartState = {
     items: [],
     couponCode: "",
+    count: 0,
 }
 
 const cartSlice = createSlice({
@@ -15,7 +16,8 @@ const cartSlice = createSlice({
         updateQuantity,
         clearCart,
         setCouponCode,
-        setCart
+        setCart,
+        setCartCount
     }
 })
 

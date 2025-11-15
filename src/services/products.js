@@ -1,17 +1,29 @@
 
-import axios from "axios";
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+import { axiosWithAuth } from "../utils/helpers";
+
 
 export const getProductById = async (id) => {
-  const response = await axios.get(`${API_BASE_URL}/Product/${id}`);
-  return response.data;
+  try {
+    const response = await axiosWithAuth.get(`/Product/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch product');
+  }
 };
 
+
 export const getProducts = async () => {
-  const response = await axios.get(`${API_BASE_URL}/Product`);
-  return response.data;
+  try {
+    const response = await axiosWithAuth.get(`/Product`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch products');
+  }
 };
+
 
 export default {
   getProducts,
+  getProductById,
 };

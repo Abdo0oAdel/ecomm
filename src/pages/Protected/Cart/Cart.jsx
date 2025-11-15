@@ -4,7 +4,9 @@ import { cartActions } from "../../../store/Cart/slice.js";
 import styles from "./Cart.module.css";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import { getCart } from "../../../services/cart";
+import { getCart, updateCartItemQuantity, removeCartItem } from "../../../services/cart";
+import Swal from "sweetalert2";
+import { getProductById } from "../../../services/products";
 
 const Cart = () => {
     const { t } = useTranslation();
@@ -17,8 +19,23 @@ const Cart = () => {
         async function fetchCart() {
             try {
                 const data = await getCart();
-                // Assuming data.items is the array of cart items from API
-                dispatch(cartActions.setCart(data));
+                // Fetch product details for each cart item to get imageURL
+                const itemsWithImages = await Promise.all(
+                    (data.items || []).map(async (item) => {
+                        try {
+                            const product = await getProductById(item.productId);
+                            return {
+                                ...item,
+                                imageURL: product.imageURL,
+                                name: product.productName || item.productName,
+                            };
+                        } catch (e) {
+                            // fallback if product fetch fails
+                            return item;
+                        }
+                    })
+                );
+                dispatch(cartActions.setCart({ ...data, items: itemsWithImages }));
             } catch (err) {
                 // Optionally handle error
                 console.error('Failed to fetch cart', err);
@@ -29,18 +46,64 @@ const Cart = () => {
 
     // Cart data is now loaded from backend on login - no need for demo data
 
-    const updateQuantity = (id, delta) => {
-        const item = cartItems.find(item => item.id === id);
-        if (item) {
-            dispatch(cartActions.updateQuantity({
-                id,
-                quantity: item.quantity + delta
-            }));
-        }
+    // Only update Redux state (UI) locally
+    const updateQuantity = (productId, delta) => {
+        const item = cartItems.find(item => item.productId === productId || item.id === productId);
+        if (!item) return;
+        const newQuantity = item.quantity + delta;
+        if (newQuantity < 1) return;
+        dispatch(cartActions.updateQuantity({
+            id: productId,
+            quantity: newQuantity
+        }));
     };
 
-    const removeItem = (id) => {
-        dispatch(cartActions.removeFromCart(id));
+    const removeItem = async (productId) => {
+        const item = cartItems.find(item => item.productId === productId || item.id === productId);
+        const productName = item?.productName || item?.name || 'this item';
+        const result = await Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure?',
+            text: `Are you sure you want to delete '${productName}'?`,
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+        });
+        if (!result.isConfirmed) return;
+        try {
+            await removeCartItem(productId);
+            // Refetch cart to get updated data and images
+            const data = await getCart();
+            const itemsWithImages = await Promise.all(
+                (data.items || []).map(async (cartItem) => {
+                    try {
+                        const product = await getProductById(cartItem.productId);
+                        return {
+                            ...cartItem,
+                            imageURL: product.imageURL,
+                            name: product.productName || cartItem.productName,
+                        };
+                    } catch (e) {
+                        return cartItem;
+                    }
+                })
+            );
+            dispatch(cartActions.setCart({ ...data, items: itemsWithImages }));
+            Swal.fire({
+                icon: 'success',
+                title: 'Removed',
+                text: 'Item removed from cart.',
+                timer: 1200,
+                showConfirmButton: false
+            });
+        } catch (err) {
+            console.error('Failed to remove cart item', err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Remove failed',
+                text: err?.message || 'Failed to remove item from cart',
+            });
+        }
     };
 
     const subtotal = cartItems.reduce(
@@ -84,9 +147,9 @@ const Cart = () => {
                                 <p className={`${styles.textLg} ${styles.opacity60}`}>{t('cart.emptyCart')}</p>
                             </li>
                         ) : (
-                            cartItems.map((item) => (
+                            cartItems.map((item, idx) => (
                                 <li
-                                    key={item.id}
+                                    key={item.id ?? `${item.name}-${idx}`}
                                     className={styles.cartItem}
                                 >
                                     <article className={styles.cartItemGrid}>
@@ -94,7 +157,7 @@ const Cart = () => {
                                         <section className={styles.productColumn}>
                                             {/* Remove Button */}
                                             <button
-                                                onClick={() => removeItem(item.id)}
+                                                onClick={() => removeItem(item.productId ?? item.id)}
                                                 className={styles.removeButton}
                                                 aria-label="Remove item"
                                             >
@@ -104,8 +167,8 @@ const Cart = () => {
                                             {/* Product Image */}
                                             <figure className={styles.productImage}>
                                                 <img
-                                                    src={item.image}
-                                                    alt={item.name}
+                                                    src={item.imageURL}
+                                                    alt={item.productName || item.name}
                                                     className={styles.productImageImg}
                                                 />
                                             </figure>
@@ -113,7 +176,7 @@ const Cart = () => {
                                             {/* Product Name */}
                                             <header className={styles.productName}>
                                                 <h3 className={styles.productNameH3}>
-                                                    {item.name}
+                                                    {item.productName || item.name}
                                                 </h3>
                                             </header>
                                         </section>
@@ -129,7 +192,7 @@ const Cart = () => {
                                             <span className={styles.infoLabel}>Quantity:</span>
                                             <div className={styles.quantityControls}>
                                                 <button
-                                                    onClick={() => updateQuantity(item.id, -1)}
+                                                    onClick={() => updateQuantity(item.productId ?? item.id, -1)}
                                                     className={styles.quantityButton}
                                                     disabled={item.quantity <= 1}
                                                     aria-label="Decrease quantity"
@@ -140,7 +203,7 @@ const Cart = () => {
                           {String(item.quantity).padStart(2, "0")}
                         </span>
                                                 <button
-                                                    onClick={() => updateQuantity(item.id, 1)}
+                                                    onClick={() => updateQuantity(item.productId ?? item.id, 1)}
                                                     className={styles.quantityButton}
                                                     aria-label="Increase quantity"
                                                 >
@@ -172,6 +235,47 @@ const Cart = () => {
                             <button
                                 className={`${styles.button} ${styles.buttonOutline} ${styles.outlineButton}`}
                                 type="button"
+                                onClick={async () => {
+                                    try {
+                                        // Persist all cart item quantities to backend
+                                        await Promise.all(
+                                            cartItems.map(item =>
+                                                updateCartItemQuantity(item.productId ?? item.id, item.quantity)
+                                            )
+                                        );
+                                        // Refetch cart to get updated data and images
+                                        const data = await getCart();
+                                        const itemsWithImages = await Promise.all(
+                                            (data.items || []).map(async (cartItem) => {
+                                                try {
+                                                    const product = await getProductById(cartItem.productId);
+                                                    return {
+                                                        ...cartItem,
+                                                        imageURL: product.imageURL,
+                                                        name: product.productName || cartItem.productName,
+                                                    };
+                                                } catch (e) {
+                                                    return cartItem;
+                                                }
+                                            })
+                                        );
+                                        dispatch(cartActions.setCart({ ...data, items: itemsWithImages }));
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Cart updated',
+                                            text: 'Your cart has been updated successfully!',
+                                            timer: 1500,
+                                            showConfirmButton: false
+                                        });
+                                    } catch (err) {
+                                        console.error('Failed to update cart', err);
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Update failed',
+                                            text: err?.message || 'Failed to update cart',
+                                        });
+                                    }
+                                }}
                             >
                                 Update Cart
                             </button>
