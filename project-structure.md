@@ -36,7 +36,6 @@ backend/
 ## Public Directory
 ```
 public/
-├── vite.svg                   # Vite logo
 ├── Zenon.png                  # Brand logo (PNG format)
 └── Zenon.svg                  # Brand logo (SVG format)
 ```

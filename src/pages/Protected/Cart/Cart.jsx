@@ -3,12 +3,29 @@ import { useTranslation } from "react-i18next";
 import { cartActions } from "../../../store/Cart/slice.js";
 import styles from "./Cart.module.css";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { getCart } from "../../../services/cart";
 
 const Cart = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const cartItems = useSelector((state) => state.cart.items);
     const couponCode = useSelector((state) => state.cart.couponCode);
+
+    // Fetch cart data from API on mount
+    useEffect(() => {
+        async function fetchCart() {
+            try {
+                const data = await getCart();
+                // Assuming data.items is the array of cart items from API
+                dispatch(cartActions.setCart(data));
+            } catch (err) {
+                // Optionally handle error
+                console.error('Failed to fetch cart', err);
+            }
+        }
+        fetchCart();
+    }, [dispatch]);
 
     // Cart data is now loaded from backend on login - no need for demo data
 

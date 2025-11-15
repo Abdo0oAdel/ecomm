@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./ProductCard.module.css";
+import { addToCart, getCart } from "../../services/cart";
+import { useDispatch } from "react-redux";
+import { cartActions } from "../../store/Cart/slice";
 import { FiHeart, FiEye, FiShoppingCart } from "react-icons/fi";
 import { AiFillStar } from "react-icons/ai";
 
@@ -19,6 +22,22 @@ const ProductCard = ({
   },
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleAddToCart = async () => {
+    setAdding(true);
+    try {
+      await addToCart(product.id, 1);
+      // Immediately fetch updated cart and update Redux state
+      const data = await getCart();
+      dispatch(cartActions.setCart(data));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setAdding(false);
+    }
+  };
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
@@ -105,12 +124,12 @@ const ProductCard = ({
         ) : null}
 
         <button
-          className={`${styles.addToCartBtn} ${
-            isHovered ? styles.visible : ""
-          }`}
+          className={`${styles.addToCartBtn} ${isHovered ? styles.visible : ""}`}
+          onClick={handleAddToCart}
+          disabled={adding}
         >
           <FiShoppingCart className={styles.cartIcon} />
-          Add To Cart
+          {adding ? "Adding..." : "Add To Cart"}
         </button>
       </div>
     </div>
