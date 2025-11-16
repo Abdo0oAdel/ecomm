@@ -5,32 +5,34 @@ import { Link } from "react-router-dom";
 import StatCard from "./StatCard";
 import TeamWork from "./TeamWork";
 import ServicesSection from "./ServicesSection";
+import { useTranslation } from "react-i18next";
 
 const About = () => {
+  const { t } = useTranslation();
   const statsData = [
     {
       id: 1,
       icon: "ri-store-2-line",
       number: 10500,
-      label: "Sellers active on our site",
+      label: t("about.stats.sellers"),
     },
     {
       id: 2,
       icon: "ri-money-dollar-circle-line",
       number: 33000,
-      label: "Monthly Product Sale",
+      label: t("about.stats.monthlySale"),
     },
     {
       id: 3,
       icon: "ri-gift-line",
       number: 45500,
-      label: "Customers active on our site",
+      label: t("about.stats.customers"),
     },
     {
       id: 4,
       icon: "bi bi-cash-coin",
       number: 25000,
-      label: "Annual gross sale on our site",
+      label: t("about.stats.annualSale"),
     },
   ];
 
@@ -39,11 +41,11 @@ const About = () => {
       {/* link handelling */}
       <div className={`mx-9 mt-3 text-md text-black pb-5 cursor-pointer`}>
         <Link to="/" className=" text-gray-500 ">
-          Home
+          {t("about.breadcrumb.home")}
         </Link>
         <span> / </span>
         <Link to="/about" className={"  "}>
-          About
+          {t("about.breadcrumb.about")}
         </Link>
       </div>
       {/* start of about content */}
@@ -52,26 +54,20 @@ const About = () => {
       >
         <div className="w-full md:w-[45%] max-w-[600px] px-6 md:px-16 py-12 md:py-24">
           <h2 className="text-5xl font-semibold text-gray-900 mb-6">
-            Our Story
+            {t("about.ourStory.title")}
           </h2>
           <p className="text-black leading-relaxed pb-4 text-[15px] md:text-[16px]">
-            Launced in 2015, Exclusive is South Asia’s premier online shopping
-            makterplace with an active presense in Bangladesh. Supported by wide
-            range of tailored marketing, data and service solutions, Exclusive
-            has 10,500 sallers and 300 brands and serves 3 millioons customers
-            across the region.
+            {t("about.ourStory.paragraph1")}
           </p>
           <p className="text-black leading-relaxed text-[15px] md:text-[16px]">
-            Zenon has more than 1 Million products to offer, growing at a
-            very fast. Exclusive offers a diverse assotment in categories
-            ranging from consumer.
+            {t("about.ourStory.paragraph2")}
           </p>
         </div>
         <div className="w-full md:w-1/2 h-[300px] md:h-1/2">
           <img
             className="w-full h-full object-cover object-center md:rounded-none"
             src={ImagClass}
-            alt="About Zenon"
+            alt={t("about.imageAlt")}
           />
         </div>
       </div>

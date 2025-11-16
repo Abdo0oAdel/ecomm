@@ -3,21 +3,23 @@ import styles from "./Contact.module.css";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useTranslation } from "react-i18next";
 
 const Contact = () => {
+  const { t } = useTranslation();
   const [submitSuccess, setSubmitSuccess] = useState(false);
   // validation schema using Yup
   const validationSchema = Yup.object({
-    name: Yup.string().trim().required("Name is required"),
+    name: Yup.string().trim().required(t("contact.nameRequired")),
     email: Yup.string()
       .trim()
-      .email("Email is invalid")
-      .required("Email is required"),
+      .email(t("contact.emailInvalid"))
+      .required(t("contact.emailRequired")),
     phone: Yup.string()
       .trim()
-      .matches(/^\+?[\d\s-()]+$/, "Phone number is invalid")
-      .required("Phone is required"),
-    message: Yup.string().trim().required("Message is required"),
+      .matches(/^\+?[\d\s-()]+$/, t("contact.phoneInvalid"))
+      .required(t("contact.phoneRequired")),
+    message: Yup.string().trim().required(t("contact.messageRequired")),
   });
 
   // send form data to the server testing with a mock API endpoint
@@ -47,11 +49,11 @@ const Contact = () => {
         className={`${styles.aboutContainer} mx-9 mt-3 flex flex-row flex-start text-md text-black pb-5 cursor-pointer`}
       >
         <Link to="/" className=" text-gray-300 mx-1 ">
-          Home
+          {t("nav.home")}
         </Link>
         <span> / </span>
         <Link to="/Contact" className=" mx-1">
-          Contact
+          {t("nav.contact")}
         </Link>
       </div>
       <div className="min-h-screen bg-white">
@@ -65,14 +67,18 @@ const Contact = () => {
                   <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
                     <i className="fas fa-phone text-white"></i>
                   </div>
-                  <h3 className="text-base font-semibold">Call To Us</h3>
+                  <h3 className="text-base font-semibold">
+                    {t("contact.callToUs")}
+                  </h3>
                 </div>
 
                 <p className="text-sm text-gray-700 mb-4">
-                  We are available 24/7, 7 days a week.
+                  {t("contact.availability")}
                 </p>
 
-                <p className="text-sm text-gray-900">Phone: +201145968517</p>
+                <p className="text-sm text-gray-900">
+                  {t("contact.phone")}: +201145968517
+                </p>
               </div>
 
               {/* Write To Us */}
@@ -81,18 +87,19 @@ const Contact = () => {
                 <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
                   <i className="fas fa-envelope text-white"></i>
                 </div>
-                <h3 className="text-base font-semibold">Write To Us</h3>
+                <h3 className="text-base font-semibold">
+                  {t("contact.writeToUs")}
+                </h3>
                 <p className="text-sm text-start text-gray-700 mb-4">
-                  Fill out our form
-                  <br /> and we will contact you within 24 hours.
+                  {t("contact.formDescription")}
                 </p>
 
                 <p className="text-sm text-gray-900 mb-2">
-                  Emails: Bisho.milad77@gmail.com
+                  {t("contact.emails")}: Bisho.milad77@gmail.com
                 </p>
 
                 <p className="text-sm  text-gray-900">
-                  Emails: support@exclusive.com
+                  {t("contact.emails")}: support@exclusive.com
                 </p>
               </div>
             </div>
@@ -100,7 +107,7 @@ const Contact = () => {
             <div className="lg:col-span-2">
               {submitSuccess && (
                 <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded mb-6">
-                  ✓ Message sent successfully!
+                  {t("contact.successMessage")}
                 </div>
               )}
 
@@ -123,7 +130,7 @@ const Contact = () => {
                         <Field
                           type="text"
                           name="name"
-                          placeholder="Your Name *"
+                          placeholder={t("contact.yourName")}
                           className="w-full px-4 py-3 bg-gray-100 rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                         />
                         <ErrorMessage
@@ -138,7 +145,7 @@ const Contact = () => {
                         <Field
                           type="email"
                           name="email"
-                          placeholder="Your Email *"
+                          placeholder={t("contact.yourEmail")}
                           className="w-full px-4 py-3 bg-gray-100 rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                         />
                         <ErrorMessage
@@ -153,7 +160,7 @@ const Contact = () => {
                         <Field
                           type="tel"
                           name="phone"
-                          placeholder="Your Phone *"
+                          placeholder={t("contact.yourPhone")}
                           className="w-full px-4 py-3 bg-gray-100 rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                         />
                         <ErrorMessage
@@ -169,7 +176,7 @@ const Contact = () => {
                       <Field
                         as="textarea"
                         name="message"
-                        placeholder="Your Message"
+                        placeholder={t("contact.yourMessage")}
                         rows="8"
                         className="w-full px-4 py-3 bg-gray-100 rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
                       />
@@ -187,7 +194,9 @@ const Contact = () => {
                         disabled={isSubmitting}
                         className="bg-red-500 hover:bg-red-600 text-white px-12 py-4 rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {isSubmitting ? "Sending..." : "Send Message"}
+                        {isSubmitting
+                          ? t("contact.sending")
+                          : t("contact.sendMessage")}
                       </button>
                     </div>
                   </Form>

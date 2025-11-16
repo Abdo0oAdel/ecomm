@@ -1,7 +1,10 @@
 import React from 'react';
 import { FiTruck, FiHeadphones, FiShield } from 'react-icons/fi';
+import { useTranslation } from 'react-i18next';
 
 const ServiceFeatures = ({ styles }) => {
+  const { t } = useTranslation();
+
   return (
     <section className={styles.serviceFeatures}>
       <div className={styles.container}>
@@ -11,8 +14,8 @@ const ServiceFeatures = ({ styles }) => {
               <FiTruck />
             </div>
             <div className={styles.featureContent}>
-              <h3>FREE AND FAST DELIVERY</h3>
-              <p>Free delivery for all orders over $140</p>
+              <h3>{t('serviceFeatures.delivery.title')}</h3>
+              <p>{t('serviceFeatures.delivery.description')}</p>
             </div>
           </div>
 
@@ -21,8 +24,8 @@ const ServiceFeatures = ({ styles }) => {
               <FiHeadphones />
             </div>
             <div className={styles.featureContent}>
-              <h3>24/7 CUSTOMER SERVICE</h3>
-              <p>Friendly 24/7 customer</p>
+              <h3>{t('serviceFeatures.service.title')}</h3>
+              <p>{t('serviceFeatures.service.description')}</p>
             </div>
           </div>
 
@@ -31,8 +34,8 @@ const ServiceFeatures = ({ styles }) => {
               <FiShield />
             </div>
             <div className={styles.featureContent}>
-              <h3>MONEY BACK GUARANTEE</h3>
-              <p>We return money within 30 days</p>
+              <h3>{t('serviceFeatures.guarantee.title')}</h3>
+              <p>{t('serviceFeatures.guarantee.description')}</p>
             </div>
           </div>
         </div>

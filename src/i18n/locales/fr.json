@@ -34,7 +34,26 @@
   },
   "contact": {
     "title": "Contactez-nous",
-    "description": "Entrez en contact avec nous"
+    "description": "Entrez en contact avec nous",
+    "callToUs": "Appelez-nous",
+    "availability": "Nous sommes disponibles 24/7, 7 jours sur 7.",
+    "phone": "Téléphone",
+    "writeToUs": "Écrivez-nous",
+    "formDescription": "Remplissez notre formulaire et nous vous contacterons dans les 24 heures.",
+    "emails": "E-mails",
+    "successMessage": "✓ Message envoyé avec succès!",
+    "yourName": "Votre nom *",
+    "yourEmail": "Votre e-mail *",
+    "yourPhone": "Votre téléphone *",
+    "yourMessage": "Votre message",
+    "sendMessage": "Envoyer le message",
+    "sending": "Envoi...",
+    "nameRequired": "Le nom est requis",
+    "emailRequired": "L'e-mail est requis",
+    "emailInvalid": "L'e-mail est invalide",
+    "phoneRequired": "Le téléphone est requis",
+    "phoneInvalid": "Le numéro de téléphone est invalide",
+    "messageRequired": "Le message est requis"
   },
   "auth": {
     "login": "Connexion",
@@ -47,11 +66,23 @@
     "firstName": "Prénom",
     "lastName": "Nom de famille",
     "username": "Nom d'utilisateur",
+    "phone": "Numéro de téléphone",
     "forgotPassword": "Mot de passe oublié?",
     "alreadyHaveAccount": "Vous avez déjà un compte?",
     "dontHaveAccount": "Vous n'avez pas de compte?",
     "submit": "Soumettre",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "signupWithGoogle": "S'inscrire avec Google",
+    "creatingAccount": "Création du compte...",
+    "errors": {
+      "enterCredentials": "Veuillez saisir votre e-mail et votre mot de passe",
+      "loginFailed": "La connexion a échoué. Veuillez réessayer.",
+      "invalidCredentials": "E-mail ou mot de passe invalide",
+      "fillAllFields": "Veuillez remplir tous les champs",
+      "passwordsDontMatch": "Les mots de passe ne correspondent pas",
+      "registrationFailed": "L'inscription a échoué. Veuillez réessayer."
+    },
+    "loggingIn": "Connexion en cours..."
   },
   "cart": {
     "title": "Panier",
@@ -119,6 +150,64 @@
     "outOfStock": "Rupture de stock",
     "sale": "Solde",
     "new": "Nouveau"
+  },
+  "newArrival": {
+    "featured": "En vedette",
+    "title": "Nouveauté",
+    "shopNow": "Acheter maintenant",
+    "ps5": {
+      "title": "PlayStation 5",
+      "description": "Version noir et blanc de la PS5 en vente.",
+      "alt": "PlayStation 5"
+    },
+    "women": {
+      "title": "Collections pour femmes",
+      "description": "Collections pour femmes en vedette qui vous donnent une autre ambiance.",
+      "alt": "Collection pour femmes"
+    },
+    "speakers": {
+      "title": "Haut-parleurs",
+      "description": "Haut-parleurs sans fil Amazon",
+      "alt": "Haut-parleurs"
+    },
+    "perfume": {
+      "title": "Parfum",
+      "description": "GUCCI INTENSE OUD EDP",
+      "alt": "Parfum"
+    }
+  },
+  "productExplorer": {
+    "ourProducts": "Nos produits",
+    "title": "Découvrez nos produits",
+    "viewAll": "Voir tous les produits"
+  },
+  "serviceFeatures": {
+    "delivery": {
+      "title": "LIVRAISON GRATUITE ET RAPIDE",
+      "description": "Livraison gratuite pour toutes les commandes de plus de 140 $"
+    },
+    "service": {
+      "title": "SERVICE CLIENT 24/7",
+      "description": "Support client amical 24/7"
+    },
+    "guarantee": {
+      "title": "GARANTIE DE REMBOURSEMENT",
+      "description": "Nous remboursons l'argent dans les 30 jours"
+    }
+  },
+  "team": {
+    "tom": {
+      "name": "Tom Cruise",
+      "title": "Fondateur et président"
+    },
+    "emma": {
+      "name": "Emma Watson",
+      "title": "Directrice générale"
+    },
+    "will": {
+      "name": "Will Smith",
+      "title": "Concepteur de produits"
+    }
   }
 }
 

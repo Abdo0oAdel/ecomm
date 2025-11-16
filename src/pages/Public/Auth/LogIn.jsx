@@ -23,93 +23,92 @@ const LogIn = () => {
     e.preventDefault();
     setError("");
 
-    // Simple validation - in production, you'd validate against your backend
-    if (!userEmail || !userPassword) {
-      setError("Please enter both email and password");
-      return;
-    }
-
-    try {
-      // Call login from useAuth hook
-      const { success, user, error: loginError } = await login(userEmail, userPassword);
-
-      if (success && user) {
-        // User is now logged in and tokens are stored
-
-        // Load cart and wishlist from backend
+          // Simple validation - in production, you'd validate against your backend
+        if (!userEmail || !userPassword) {
+          setError(t("auth.errors.enterCredentials"));
+          return;
+        }
+    
         try {
-          const [cartResponse, wishlistResponse] = await Promise.all([
-            cartAPI.getCart(),
-            wishlistAPI.getWishlist(),
-          ]);
-
-          // Set only the cart count after login
-          if (cartResponse && typeof cartResponse.totalQuantity === 'number') {
-            dispatch(cartActions.setCartCount(cartResponse.totalQuantity));
-          }
-
-          if (wishlistResponse.wishlist) {
-            dispatch(wishlistActions.setWishlist(wishlistResponse.wishlist));
+          // Call login from useAuth hook
+          const { success, user, error: loginError } = await login(userEmail, userPassword);
+    
+          if (success && user) {
+            // User is now logged in and tokens are stored
+    
+            // Load cart and wishlist from backend
+            try {
+              const [cartResponse, wishlistResponse] = await Promise.all([
+                cartAPI.getCart(),
+                wishlistAPI.getWishlist(),
+              ]);
+    
+              // Set only the cart count after login
+              if (cartResponse && typeof cartResponse.totalQuantity === 'number') {
+                dispatch(cartActions.setCartCount(cartResponse.totalQuantity));
+              }
+    
+              if (wishlistResponse.wishlist) {
+                dispatch(wishlistActions.setWishlist(wishlistResponse.wishlist));
+              }
+            } catch (err) {
+              console.error("❌ LOGIN - Error loading cart/wishlist:", err);
+            }
+    
+            // Redirect to the page user was trying to access, or home
+            const from = location.state?.from?.pathname || "/";
+            navigate(from, { replace: true });
+          } else {
+            setError(t("auth.errors.loginFailed"));
           }
         } catch (err) {
-          console.error("❌ LOGIN - Error loading cart/wishlist:", err);
+          setError(err.message || t("auth.errors.invalidCredentials"));
+          // useAuth handles auth state; show error to the user
         }
-
-        // Redirect to the page user was trying to access, or home
-        const from = location.state?.from?.pathname || "/";
-        navigate(from, { replace: true });
-      } else {
-        setError("Login failed. Please try again.");
-      }
-    } catch (err) {
-      setError(err.message || "Invalid email or password");
-      // useAuth handles auth state; show error to the user
-    }
-  };
-  return (
-    <div className={styles.loginContainer}>
-      <div>
-        <img src={loginImage} alt="Login Side" className={styles.sideImage} />
-      </div>
-      <div className={styles.loginForm}>
-        <h1>{t("auth.login")}</h1>
-        <h2>{t("auth.enterDetails")}</h2>
-        {error && <div className={styles.errorMessage}>{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className={styles.inputForm}>
-            <input
-              type="email"
-              id="email"
-              value={userEmail}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={t("auth.email")}
-              required
-              disabled={loading}
-            />
-            <input
-              type="password"
-              id="password"
-              value={userPassword}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder={t("auth.password")}
-              required
-              disabled={loading}
-            />
+      };
+      return (
+        <div className={styles.loginContainer}>
+          <div>
+            <img src={loginImage} alt="Login Side" className={styles.sideImage} />
           </div>
-          <div className={styles.formButtons}>
-            <button
-              type="submit"
-              className={styles.loginButton}
-              disabled={loading}
-            >
-              {loading ? "Logging in..." : t("auth.login")}
-            </button>
-            <button
-              type="button"
-              className={styles.forgotPassword}
-              disabled={loading}
-            >
-              {t("auth.forgotPassword")}
+          <div className={styles.loginForm}>
+            <h1>{t("auth.login")}</h1>
+            <h2>{t("auth.enterDetails")}</h2>
+            {error && <div className={styles.errorMessage}>{error}</div>}
+            <form onSubmit={handleSubmit}>
+              <div className={styles.inputForm}>
+                <input
+                  type="email"
+                  id="email"
+                  value={userEmail}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={t("auth.email")}
+                  required
+                  disabled={loading}
+                />
+                <input
+                  type="password"
+                  id="password"
+                  value={userPassword}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder={t("auth.password")}
+                  required
+                  disabled={loading}
+                />
+              </div>
+              <div className={styles.formButtons}>
+                <button
+                  type="submit"
+                  className={styles.loginButton}
+                  disabled={loading}
+                >
+                  {loading ? t("auth.loggingIn") : t("auth.login")}
+                </button>
+                <button
+                  type="button"
+                  className={styles.forgotPassword}
+                  disabled={loading}
+                >              {t("auth.forgotPassword")}
             </button>
           </div>
         </form>

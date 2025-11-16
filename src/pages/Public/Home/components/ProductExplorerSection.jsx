@@ -2,6 +2,7 @@ import React from 'react';
 import ProductCard from '../../../../components/ProductCard/ProductCard';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const ProductExplorerSection = ({
   styles,
@@ -13,6 +14,7 @@ const ProductExplorerSection = ({
   wishlist = [],
 }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <section className={styles.exploreProducts}>
@@ -22,9 +24,9 @@ const ProductExplorerSection = ({
             <div className={styles.titleContainer}>
               <div className={styles.categoriesRow}>
                 <div className={styles.titleAccent}></div>
-                <span className={styles.categoriesLabel}>Our Products</span>
+                <span className={styles.categoriesLabel}>{t('productExplorer.ourProducts')}</span>
               </div>
-              <h2>Explore Our Products</h2>
+              <h2>{t('productExplorer.title')}</h2>
             </div>
           </div>
           <div className={styles.exploreHeaderRight}>
@@ -38,7 +40,7 @@ const ProductExplorerSection = ({
         </div>
 
         {loadingProducts ? (
-          <div>Loading products...</div>
+          <div>{t('common.loading')}</div>
         ) : errorProducts ? (
           <div style={{ color: 'red' }}>{errorProducts}</div>
         ) : (
@@ -61,7 +63,7 @@ const ProductExplorerSection = ({
             className={styles.redButton}
             onClick={() => navigate("/products")}
           >
-            View All Products
+            {t('productExplorer.viewAll')}
           </button>
         </div>
       </div>

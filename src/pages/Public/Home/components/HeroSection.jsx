@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const HeroSection = ({
   styles,
@@ -8,6 +9,7 @@ const HeroSection = ({
   setSelectedCategory,
   products,
 }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const hoverTimeoutRef = useRef(null);
@@ -50,7 +52,7 @@ const HeroSection = ({
                       className={styles.categoryButton + (isActive ? ' ' + styles.active : '')}
                       onClick={() => setSelectedCategory(category === selectedCategory ? null : category)}
                     >
-                      <span>{category}</span>
+                      <span>{t(category)}</span>
                     </button>
                   </li>
                   {hoveredCategory === category && categoryProducts.length > 0 && (
@@ -83,8 +85,8 @@ const HeroSection = ({
         <div className={styles.mainBanner}>
           <div className={styles.bannerContent}>
             <div className={styles.bannerText}>
-              <h2>Up to 10% off Voucher</h2>
-              <button className={styles.shopNowBtn}>Shop Now</button>
+              <h2>{t('hero.voucher')}</h2>
+              <button className={styles.shopNowBtn}>{t('hero.shopNow')}</button>
             </div>
             <div className={styles.bannerImage}>
               <img

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import ProductCard from '../../../../components/ProductCard/ProductCard';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { useTranslation } from 'react-i18next';
 
 const FlashSalesSection = ({ styles, products, navigate, timeLeft }) => {
+  const { t } = useTranslation();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   return (
@@ -13,9 +15,9 @@ const FlashSalesSection = ({ styles, products, navigate, timeLeft }) => {
             <div className={styles.titleContainer}>
               <div className={styles.todayRow}>
                 <div className={styles.titleAccent}></div>
-                <span className={styles.todayLabel}>Today's</span>
+                <span className={styles.todayLabel}>{t('flashSales.today')}</span>
               </div>
-              <h2>Flash Sales</h2>
+              <h2>{t('flashSales.title')}</h2>
             </div>
           </div>
           <div className={styles.centerSection}>
@@ -24,28 +26,28 @@ const FlashSalesSection = ({ styles, products, navigate, timeLeft }) => {
                 <span className={styles.timeNumber}>
                   {timeLeft.days.toString().padStart(2, "0")}
                 </span>
-                <span className={styles.timeLabel}>Days</span>
+                <span className={styles.timeLabel}>{t('flashSales.days')}</span>
               </div>
               <span className={styles.timeSeparator}>:</span>
               <div className={styles.timeUnit}>
                 <span className={styles.timeNumber}>
                   {timeLeft.hours.toString().padStart(2, "0")}
                 </span>
-                <span className={styles.timeLabel}>Hours</span>
+                <span className={styles.timeLabel}>{t('flashSales.hours')}</span>
               </div>
               <span className={styles.timeSeparator}>:</span>
               <div className={styles.timeUnit}>
                 <span className={styles.timeNumber}>
                   {timeLeft.minutes.toString().padStart(2, "0")}
                 </span>
-                <span className={styles.timeLabel}>Minutes</span>
+                <span className={styles.timeLabel}>{t('flashSales.minutes')}</span>
               </div>
               <span className={styles.timeSeparator}>:</span>
               <div className={styles.timeUnit}>
                 <span className={styles.timeNumber}>
                   {timeLeft.seconds.toString().padStart(2, "0")}
                 </span>
-                <span className={styles.timeLabel}>Seconds</span>
+                <span className={styles.timeLabel}>{t('flashSales.seconds')}</span>
               </div>
             </div>
           </div>
@@ -83,7 +85,7 @@ const FlashSalesSection = ({ styles, products, navigate, timeLeft }) => {
 
         <div className={styles.viewAllBtn}>
           <button className={styles.redButton} onClick={() => navigate('/products')}>
-            View All Products
+            {t('flashSales.viewAll')}
           </button>
         </div>
       </div>

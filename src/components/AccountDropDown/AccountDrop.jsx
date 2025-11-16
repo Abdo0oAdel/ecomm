@@ -2,9 +2,11 @@ import React from "react";
 import { FiUser } from "react-icons/fi";
 import styles from "./AccountDrop.module.css";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const AccountDrop = ({ closeMenu, onLogout }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -18,7 +20,7 @@ const AccountDrop = ({ closeMenu, onLogout }) => {
               }}
             >
               <FiUser size={24} />
-              Manage My Account
+              {t("nav.manageAccount")}
             </li>
             <li
               onClick={() => {
@@ -47,7 +49,7 @@ const AccountDrop = ({ closeMenu, onLogout }) => {
                   stroke-linejoin="round"
                 />
               </svg>
-              My Orders
+              {t("nav.myOrder")}
             </li>
             <li
               onClick={() => {
@@ -84,7 +86,7 @@ const AccountDrop = ({ closeMenu, onLogout }) => {
                   </clipPath>
                 </defs>
               </svg>
-              My Cancellations
+              {t("nav.myCancellations")}
             </li>
             <li
               onClick={() => {
@@ -105,7 +107,7 @@ const AccountDrop = ({ closeMenu, onLogout }) => {
                   stroke-width="1.5"
                 />
               </svg>
-              My Reviews
+              {t("nav.myReviews")}
             </li>
             <li
               onClick={() => {
@@ -128,7 +130,7 @@ const AccountDrop = ({ closeMenu, onLogout }) => {
                   stroke-linejoin="round"
                 />
               </svg>
-              Logout
+              {t("nav.logout")}
             </li>
           </ul>
         </div>
