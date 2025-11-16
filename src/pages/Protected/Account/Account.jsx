@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./Account.module.css";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import {addressAPI} from "../../../utils/api.js";
+
 
 export default function Account() {
     const { user: reduxUser } = useSelector((state) => state.auth);
