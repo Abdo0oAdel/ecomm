@@ -132,22 +132,32 @@ export const cartAPI = {
   },
 };
 
-// Wishlist API calls
+
+// Wishlist API calls (RESTful, matches Swagger)
 export const wishlistAPI = {
+  // GET /Wishlist
   getWishlist: async () => {
-    return axiosWithAuth.get("/wishlist");
+    return axiosWithAuth.get("/Wishlist");
   },
 
-  addToWishlist: async (item) => {
-    return axiosWithAuth.post("/wishlist", item);
+  // POST /Wishlist/{productId}
+  addToWishlist: async (productId) => {
+    return axiosWithAuth.post(`/Wishlist/${productId}`);
   },
 
-  removeFromWishlist: async (itemId) => {
-    return axiosWithAuth.delete(`/wishlist/${itemId}`);
+  // DELETE /Wishlist/{productId}
+  removeFromWishlist: async (productId) => {
+    return axiosWithAuth.delete(`/Wishlist/${productId}`);
   },
 
+  // DELETE /Wishlist
   clearWishlist: async () => {
-    return axiosWithAuth.delete("/wishlist");
+    return axiosWithAuth.delete("/Wishlist");
+  },
+
+  // GET /Wishlist/{productId}
+  getWishlistItem: async (productId) => {
+    return axiosWithAuth.get(`/Wishlist/${productId}`);
   },
 };
 

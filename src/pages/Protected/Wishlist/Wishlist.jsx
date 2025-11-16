@@ -1,9 +1,12 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useWishlist } from '../../../hooks/useWishlist';
 import { useTranslation } from 'react-i18next';
 import { wishlistActions } from '../../../store/Wishlist/slice.js';
 import { cartActions } from '../../../store/Cart/slice.js';
 import styles from './Wishlist.module.css';
+import ProductCard from '../../../components/ProductCard/ProductCard';
+import { FiTrash2 } from 'react-icons/fi';
 
 // Just For You data
 export const justForYouData = [
@@ -47,9 +50,11 @@ export const justForYouData = [
 const Wishlist = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const wishlistItems = useSelector((state) => state.wishlist.items);
+    const { items: wishlistItems, fetchWishlist } = useWishlist();
 
-    // Wishlist data is now loaded from backend on login - no need for demo data
+    useEffect(() => {
+        fetchWishlist();
+    }, []);
 
     const handleMoveAllToBag = () => {
         wishlistItems.forEach(item => {
@@ -87,37 +92,22 @@ const Wishlist = () => {
 
                 <div className={styles.productsGrid}>
                     {wishlistItems.map((product) => (
-                        <article key={product.id} className={styles.productCard}>
-                            <div className={styles.productImageContainer}>
-                                {product.discount && (
-                                    <span className={styles.discountBadge}>-{product.discount}%</span>
-                                )}
-                                <button
-                                    className={styles.deleteButton}
-                                    onClick={() => handleRemoveFromWishlist(product.id)}
-                                    aria-label="Remove from wishlist"
-                                >
-                                    <i className="bi bi-trash"></i>
-                                </button>
-                                <img src={product.image} alt={product.name} className={styles.productImage} />
-                                <button
-                                    className={styles.addToCartButton}
-                                    onClick={() => handleAddToCart(product.id)}
-                                >
-                                    <i className="bi bi-cart"></i>
-                                    <span>Add To Cart</span>
-                                </button>
-                            </div>
-                            <div className={styles.productInfo}>
-                                <h3 className={styles.productName}>{product.name}</h3>
-                                <div className={styles.priceContainer}>
-                                    <span className={styles.currentPrice}>${product.currentPrice}</span>
-                                    {product.originalPrice && (
-                                        <span className={styles.originalPrice}>${product.originalPrice}</span>
-                                    )}
-                                </div>
-                            </div>
-                        </article>
+                        <div key={product.id} style={{ position: 'relative' }}>
+                            <ProductCard
+                                product={product}
+                                onAddToCart={() => handleAddToCart(product.id)}
+                                isWishlisted={true}
+                                onToggleWishlist={() => {}}
+                            />
+                            <button
+                                className={styles.deleteButton}
+                                style={{ position: 'absolute', top: 10, right: 10, zIndex: 2 }}
+                                onClick={() => handleRemoveFromWishlist(product.id)}
+                                aria-label="Remove from wishlist"
+                            >
+                                <FiTrash2 size={20} />
+                            </button>
+                        </div>
                     ))}
                 </div>
             </section>
@@ -150,12 +140,17 @@ const Wishlist = () => {
                                     <i className="bi bi-eye"></i>
                                 </button>
                                 <img src={product.image} alt={product.name} className={styles.productImage} />
+                                {(!product.isInStock || product.stock === 0) && (
+                                    <span className={styles.outOfStockBadge}>Out of Stock</span>
+                                )}
                                 <button
                                     className={styles.addToCartButton}
                                     onClick={() => handleAddToCart(product.id)}
+                                    disabled={!product.isInStock || product.stock === 0}
+                                    title={!product.isInStock || product.stock === 0 ? 'Out of Stock' : ''}
                                 >
                                     <i className="bi bi-cart"></i>
-                                    <span>Add To Cart</span>
+                                    <span>{(!product.isInStock || product.stock === 0) ? 'Out of Stock' : 'Add To Cart'}</span>
                                 </button>
                             </div>
                             <div className={styles.productInfo}>

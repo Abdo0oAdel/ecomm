@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const Products = () => {
 	const { products, loading, error } = useProducts();
-	const { wishlist, toggleWishlist } = useWishlist();
+	const { items: wishlist, toggleWishlist } = useWishlist();
 	const { cart, addToCart } = useCart();
 	const navigate = useNavigate();
 
@@ -31,6 +31,7 @@ const Products = () => {
 								onToggleWishlist={() => toggleWishlist(product)}
 								onAddToCart={() => addToCart(product)}
 								onViewDetails={() => navigate(`/products/${product.id}`, { state: { product } })}
+								isWishlisted={wishlist.some(w => w.id === product.id)}
 							/>
 						))
 					)}

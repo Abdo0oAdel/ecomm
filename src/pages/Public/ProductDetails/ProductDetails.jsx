@@ -1,25 +1,48 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { cartActions } from "../../../store/Cart/slice";
+import { addToCart, getCart } from "../../../services/cart";
 import { useParams, useLocation, Link } from "react-router-dom";
 import styles from "./ProductDetails.module.css";
 import { AiFillStar } from "react-icons/ai";
 import { FiChevronLeft, FiShoppingCart, FiHeart } from "react-icons/fi";
+import { AiFillHeart } from "react-icons/ai";
 import useProduct from "../../../hooks/useProduct";
 import useProducts from "../../../hooks/useProducts";
 import ProductCard from "../../../components/ProductCard/ProductCard";
+import { useWishlist } from '../../../hooks/useWishlist';
 
 const ProductDetail = () => {
+    const dispatch = useDispatch();
+    const [adding, setAdding] = useState(false);
     const { id } = useParams();
     const location = useLocation();
     // Try to get product from navigation state, otherwise fetch from API
     const { product: apiProduct, loading, error } = useProduct(id);
     // Always call all hooks before any return!
     const { products: allProducts } = useProducts();
+    const { items: wishlist, toggleWishlist } = useWishlist();
     const product = location.state?.product || apiProduct;
 
     const [mainIndex, setMainIndex] = useState(0);
     const [selectedColor, setSelectedColor] = useState(null);
     const [selectedSize, setSelectedSize] = useState(null);
     const [qty, setQty] = useState(1);
+
+    const handleAddToCart = async () => {
+        if (!product.isInStock || product.stock === 0) return;
+        setAdding(true);
+        try {
+            await addToCart(product.id, qty);
+            const data = await getCart();
+            dispatch(cartActions.setCart(data));
+        } catch (err) {
+            // Optionally show error
+            console.error(err);
+        } finally {
+            setAdding(false);
+        }
+    };
 
     // Set default color/size when product loads
     React.useEffect(() => {
@@ -91,7 +114,7 @@ const ProductDetail = () => {
                     <div className={styles.ratingRow}>
                         <div className={styles.stars}>{renderStars(product.rating)}</div>
                         <span className={styles.reviews}>({product.reviews} Reviews)</span>
-                        <span className={styles.stock}>{product.inStock ? "In Stock" : "Out of Stock"}</span>
+                        <span className={styles.stock}>{product.isInStock ? "In Stock" : "Out of Stock"}</span>
                     </div>
 
                     <div className={styles.priceRow}>
@@ -138,15 +161,32 @@ const ProductDetail = () => {
 
                     <div className={styles.buyRow}>
                         <div className={styles.qtyControl}>
-                            <button onClick={() => setQty(Math.max(1, qty - 1))}>-</button>
+                            <button onClick={() => setQty(Math.max(1, qty - 1))} disabled={!product.isInStock || product.stock === 0}>-</button>
                             <span className={styles.qty}>{qty}</span>
-                            <button onClick={() => setQty(qty + 1)}>+</button>
+                            <button onClick={() => setQty(qty + 1)} disabled={!product.isInStock || product.stock === 0}>+</button>
                         </div>
-                        <button className={styles.buyBtn}>
-                            <FiShoppingCart /> Buy Now
+                        <button
+                            className={styles.buyBtn}
+                            disabled={adding || !product.isInStock || product.stock === 0}
+                            title={!product.isInStock || product.stock === 0 ? 'Out of Stock' : ''}
+                            onClick={handleAddToCart}
+                        >
+                            <FiShoppingCart />
+                            {(!product.isInStock || product.stock === 0)
+                                ? 'Out of Stock'
+                                : adding ? 'Adding...' : 'Add To Cart'}
                         </button>
-                        <button className={styles.wishBtn} title="Add to wishlist">
-                            <FiHeart />
+                        <button
+                            className={styles.wishBtn}
+                            title={wishlist.some(w => w.id === product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                            disabled={!product.isInStock || product.stock === 0}
+                            onClick={() => toggleWishlist(product)}
+                        >
+                            {wishlist.some(w => w.id === product.id) ? (
+                                <AiFillHeart style={{ color: '#e63946' }} />
+                            ) : (
+                                <FiHeart />
+                            )}
                         </button>
                     </div>
 

@@ -10,6 +10,7 @@ const ProductExplorerSection = ({
   errorProducts,
   toggleWishlist,
   addToCart,
+  wishlist = [],
 }) => {
   const navigate = useNavigate();
 
@@ -49,6 +50,7 @@ const ProductExplorerSection = ({
                 onToggleWishlist={() => toggleWishlist(product)}
                 onAddToCart={() => addToCart(product)}
                 onViewDetails={() => navigate(`/products/${product.id}`, { state: { product } })}
+                isWishlisted={wishlist.some(w => w.id === product.id)}
               />
             ))}
           </div>

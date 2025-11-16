@@ -155,7 +155,7 @@ const Footer = () => {
           <div className={styles.qrCode} aria-hidden>
             <img
                 className={styles.qrPlaceholder}
-                src="https://s3-alpha-sig.figma.com/img/9913/87c0/5dd6d44594e01b675513068803e2426d?Expires=1762128000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=ECdF6r9PnOPgZxX6vHZc0RFYs74bt~DzWyLu0HWV05PAFtI3vdJ-Lo9RuLa9QvdZhNqMVpc1OUHe6qlO22Wo5wVkm2j0lFxENVE8l6pRRmL~jiFkq~KDDNaR6eCE7ZPn2XXksKIpvNv3CGivxMvEovBkcxIx6S79ovo365sUmkrp63cFhGudSTVwQwHDeb7YO-FMF4x9i~-Tn3e6~16U~NxgblgF0cOkIiF-YGFZio39plJ89n3v~FTJRhrrH6amIoYWpmYafb4KSg-XOtUrOi9jp7uOorhuWMWcPY-knPjPtHQtLNUJFwTaDfdt5KNmG-xhBdeAntoXmRpNMjLqEA__"
+                src="text=QR+Code"
                 alt="QR Code"
             />
           </div>
@@ -168,7 +168,7 @@ const Footer = () => {
             </a>
             <a href="#" className={styles.storeLink}>
               <img
-                src="https://s3-alpha-sig.figma.com/img/3893/2d5a/ccb54c528f9bcf326ca48ea29bd6d890?Expires=1762128000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=NCzgtrj28Imlufq~FoaQmanPln4-PgImg0h8iQaETHg4PBTG1yln-GbiJCLD6Viot8EgN05-zoL-bGUtcAFwpRIpOo74pH1MMXxtrJZuqR2ZzH~iYzi94Trh5g9xqOR6C5yICCtXhfvax2RkkiUS-MQe1~CFtglvayAmYz3yM-TRARG3Gauaz1HV2FJUqn~byBEXiZ20IKqpGXDJGhXe7pzfODh72WHnZH~2mSVS~qx3x6Ymgdcem5BOnzP3bq0s~yfKeQ7tlyvhlSUDqgoSyLl11qHRx7n0O1KZfMcW4OC7A0XABCum-9zLMUX5iXcdNJfn48oO6FavM2U5Bym~Ag__"
+                src="text=App+Store"
                 alt="App Store"
               />
             </a>

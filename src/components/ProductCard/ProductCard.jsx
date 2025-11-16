@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./ProductCard.module.css";
-import { addToCart, getCart } from "../../services/cart";
-import { useDispatch } from "react-redux";
-import { cartActions } from "../../store/Cart/slice";
 import { FiHeart, FiEye, FiShoppingCart } from "react-icons/fi";
+import { AiFillHeart } from "react-icons/ai";
 import { AiFillStar } from "react-icons/ai";
+
 
 const ProductCard = ({
   product = {
@@ -20,24 +19,13 @@ const ProductCard = ({
     isNew: true,
     category: "Gaming",
   },
+  onAddToCart,
+  onToggleWishlist,
+  onViewDetails,
+  isWishlisted = false
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [adding, setAdding] = useState(false);
-  const dispatch = useDispatch();
-
-  const handleAddToCart = async () => {
-    setAdding(true);
-    try {
-      await addToCart(product.id, 1);
-      // Immediately fetch updated cart and update Redux state
-      const data = await getCart();
-      dispatch(cartActions.setCart(data));
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setAdding(false);
-    }
-  };
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
@@ -77,15 +65,21 @@ const ProductCard = ({
 
         {/* Action Buttons */}
         <div
-          className={`${styles.actionButtons} ${
-            isHovered ? styles.visible : ""
-          }`}
+          className={`${styles.actionButtons} ${isHovered ? styles.visible : ""}`}
         >
-          <button className={styles.actionButton}>
-            <FiHeart />
-          </button>
-          <button className={styles.actionButton}>
-            <FiEye />
+          <button
+            className={styles.actionButton}
+            onClick={() => {
+              if (onToggleWishlist) onToggleWishlist(product);
+            }}
+            title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            disabled={!product.isInStock || product.stock === 0}
+          >
+            {isWishlisted ? (
+              <AiFillHeart style={{ color: '#e63946' }} />
+            ) : (
+              <FiHeart />
+            )}
           </button>
         </div>
       </div>
@@ -123,13 +117,25 @@ const ProductCard = ({
           </div>
         ) : null}
 
+        {(!product.isInStock || product.stock === 0) && (
+          <div className={styles.outOfStockBadge}>Out of Stock</div>
+        )}
         <button
           className={`${styles.addToCartBtn} ${isHovered ? styles.visible : ""}`}
-          onClick={handleAddToCart}
-          disabled={adding}
+          onClick={async () => {
+            if (onAddToCart) {
+              setAdding(true);
+              await onAddToCart();
+              setAdding(false);
+            }
+          }}
+          disabled={adding || !product.isInStock || product.stock === 0}
+          title={!product.isInStock || product.stock === 0 ? 'Out of Stock' : ''}
         >
           <FiShoppingCart className={styles.cartIcon} />
-          {adding ? "Adding..." : "Add To Cart"}
+          {(!product.isInStock || product.stock === 0)
+            ? "Out of Stock"
+            : adding ? "Adding..." : "Add To Cart"}
         </button>
       </div>
     </div>

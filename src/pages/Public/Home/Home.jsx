@@ -31,7 +31,7 @@ const Home = () => {
     seconds: 56,
   });
   const navigate = useNavigate();
-  const { toggleWishlist } = useWishlist();
+  const { items: wishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
   const {
     products,
@@ -132,6 +132,7 @@ const Home = () => {
         errorProducts={errorProducts}
         toggleWishlist={toggleWishlist}
         addToCart={addToCart}
+        wishlist={wishlist}
       />
 
       <BestSellingSection styles={styles} products={products} />
