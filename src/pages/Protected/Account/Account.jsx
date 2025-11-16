@@ -242,13 +242,15 @@ export default function Account() {
 
           {loadingProfile ? (
             <div style={{ textAlign: "center", padding: "2rem" }}>
-              Loading profile...
+              {t("account.loadingProfile")}
             </div>
           ) : (
             <form onSubmit={handleSubmit} className={styles.form}>
               <div className={styles.formGrid}>
                 <div>
-                  <label className={styles.label}>First Name</label>
+                  <label className={styles.label}>
+                    {t("account.firstName")}
+                  </label>
                   <input
                     type="text"
                     name="firstName"
@@ -259,7 +261,9 @@ export default function Account() {
                 </div>
 
                 <div>
-                  <label className={styles.label}>Last Name</label>
+                  <label className={styles.label}>
+                    {t("account.lastName")}
+                  </label>
                   <input
                     type="text"
                     name="lastName"
