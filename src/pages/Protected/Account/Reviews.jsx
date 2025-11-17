@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styles from "./Account.module.css";
+import styles from "./Reviews.module.css";
 
 const mockReviews = [
   {
@@ -32,7 +32,6 @@ const StarRating = ({ value = 0 }) => {
         <span
           key={i}
           className={i < value ? styles.filledStar : styles.emptyStar}
-          style={{ marginRight: 4 }}
         >
           ★
         </span>
@@ -50,48 +49,30 @@ const Reviews = () => {
 
   return (
     <div className={styles.container}>
-      <h1>My Reviews</h1>
+      <h1 className={styles.title}>My Reviews</h1>
 
       {reviews.length === 0 ? (
-        <p>You haven't left any reviews yet.</p>
+        <p className={styles.emptyMessage}>You haven't left any reviews yet.</p>
       ) : (
-        <ul
-          className={styles.reviewsList}
-          style={{ listStyle: "none", padding: 0 }}
-        >
+        <ul className={styles.reviewsList}>
           {reviews.map((r) => (
-            <li
-              key={r.id}
-              className={styles.reviewCard}
-              style={{ marginBottom: 16 }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
+            <li key={r.id} className={styles.reviewCard}>
+              <div className={styles.reviewHeader}>
                 <div>
-                  <strong>{r.product}</strong>
-                  <div
-                    className={styles.meta}
-                    style={{ color: "#666", fontSize: 12 }}
-                  >
-                    {r.date}
-                  </div>
+                  <div className={styles.productName}>{r.product}</div>
+                  <div className={styles.meta}>{r.date}</div>
                 </div>
-                <div style={{ textAlign: "right" }}>
+                <div>
                   <StarRating value={r.rating} />
                 </div>
               </div>
 
-              <p style={{ marginTop: 8 }}>{r.text}</p>
+              <p className={styles.reviewText}>{r.text}</p>
 
-              <div style={{ marginTop: 8 }}>
+              <div>
                 <button
                   type="button"
-                  className={styles.btn}
+                  className={styles.deleteButton}
                   onClick={() => handleDelete(r.id)}
                 >
                   Delete review

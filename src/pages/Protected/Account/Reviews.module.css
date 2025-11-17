@@ -1,0 +1,108 @@
+/* Container */
+.container {
+  padding: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+/* Empty State */
+.emptyMessage {
+  padding: 32px 16px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Reviews List */
+.reviewsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.reviewCard {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: box-shadow 0.2s ease;
+}
+
+.reviewCard:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Review Header */
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.productName {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.meta {
+  color: #999;
+  font-size: 12px;
+}
+
+/* Rating Stars */
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.filledStar {
+  color: #ffc107;
+  font-size: 16px;
+}
+
+.emptyStar {
+  color: #ddd;
+  font-size: 16px;
+}
+
+/* Review Text */
+.reviewText {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.5;
+  margin: 12px 0;
+}
+
+/* Delete Button */
+.deleteButton {
+  padding: 6px 12px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.deleteButton:hover {
+  background-color: #c82333;
+}
+
+.deleteButton:active {
+  background-color: #bd2130;
+}

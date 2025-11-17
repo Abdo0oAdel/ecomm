@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "./Account.module.css";
+import styles from "./MyOrder.module.css";
 
 const MyOrder = () => {
   const [orders, setOrders] = useState([]);
@@ -9,6 +9,7 @@ const MyOrder = () => {
   const pageSize = 10;
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [processingId, setProcessingId] = useState(null);
+  
 
   useEffect(() => {
     let cancelled = false;
@@ -91,118 +92,83 @@ const MyOrder = () => {
   }
 
   return (
-    <div style={{ padding: 16 }}>
-      <h2>My Orders</h2>
+    <div className={styles.container}>
+      <h2 className={styles.title}>My Orders</h2>
 
-      {loading && <div>Loading orders…</div>}
-      {error && <div style={{ color: "red" }}>Error: {error}</div>}
+      {loading && <div className={styles.loadingMessage}>Loading orders…</div>}
+      {error && <div className={styles.errorMessage}>Error: {error}</div>}
 
-      {!loading && !error && orders.length === 0 && <div>No orders found.</div>}
+      {!loading && !error && orders.length === 0 && (
+        <div className={styles.emptyMessage}>No orders found.</div>
+      )}
 
       {!loading && orders.length > 0 && (
         <>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
+          <div className={styles.tableWrapper}>
+            <table className={styles.table}>
+              <thead className={styles.tableHead}>
                 <tr>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #ddd",
-                      padding: 8,
-                    }}
-                  >
-                    Order #
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #ddd",
-                      padding: 8,
-                    }}
-                  >
-                    Date
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #ddd",
-                      padding: 8,
-                    }}
-                  >
-                    Items
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #ddd",
-                      padding: 8,
-                    }}
-                  >
-                    Total
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #ddd",
-                      padding: 8,
-                    }}
-                  >
-                    Status
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #ddd",
-                      padding: 8,
-                    }}
-                  >
-                    Actions
-                  </th>
+                  <th className={styles.tableHeadCell}>Order #</th>
+                  <th className={styles.tableHeadCell}>Date</th>
+                  <th className={styles.tableHeadCell}>Items</th>
+                  <th className={styles.tableHeadCell}>Total</th>
+                  <th className={styles.tableHeadCell}>Status</th>
+                  <th className={styles.tableHeadCell}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {orders.map((order) => (
-                  <tr
-                    key={order.id}
-                    style={{ borderBottom: "1px solid #f0f0f0" }}
-                  >
-                    <td style={{ padding: 8 }}>{order.number || order.id}</td>
-                    <td style={{ padding: 8 }}>
+                  <tr key={order.id} className={styles.tableRow}>
+                    <td className={styles.tableCell}>
+                      {order.number || order.id}
+                    </td>
+                    <td className={styles.tableCell}>
                       {formatDate(order.createdAt || order.date)}
                     </td>
-                    <td style={{ padding: 8 }}>
+                    <td className={styles.tableCell}>
                       {(order.items && order.items.length) ||
                         order.itemCount ||
                         0}
                     </td>
-                    <td style={{ padding: 8 }}>
+                    <td className={styles.tableCell}>
                       {order.total ? `$${order.total.toFixed(2)}` : order.total}
                     </td>
-                    <td style={{ padding: 8 }}>{order.status || "unknown"}</td>
-                    <td style={{ padding: 8 }}>
-                      <button
-                        onClick={() => handleView(order)}
-                        style={{ marginRight: 8 }}
+                    <td className={styles.tableCell}>
+                      <span
+                        className={`${styles.statusBadge} ${
+                          order.status === "completed"
+                            ? styles.statusCompleted
+                            : order.status === "pending"
+                            ? styles.statusPending
+                            : styles.statusCancelled
+                        }`}
                       >
-                        View
-                      </button>
-                      <button
-                        onClick={() => handleCancel(order.id)}
-                        disabled={
-                          processingId === order.id ||
-                          order.status === "cancelled"
-                        }
-                        style={{
-                          opacity: order.status === "cancelled" ? 0.6 : 1,
-                        }}
-                      >
-                        {processingId === order.id
-                          ? "Cancelling…"
-                          : order.status === "cancelled"
-                          ? "Cancelled"
-                          : "Cancel"}
-                      </button>
+                        {order.status || "unknown"}
+                      </span>
+                    </td>
+                    <td className={styles.tableCell}>
+                      <div className={styles.actionButtons}>
+                        <button
+                          onClick={() => handleView(order)}
+                          className={styles.button}
+                        >
+                          View
+                        </button>
+                        <button
+                          onClick={() => handleCancel(order.id)}
+                          disabled={
+                            processingId === order.id ||
+                            order.status === "cancelled"
+                          }
+                          className={`${styles.button} ${styles.buttonCancel}`}
+                        >
+                          {processingId === order.id
+                            ? "Cancelling…"
+                            : order.status === "cancelled"
+                            ? "Cancelled"
+                            : "Cancel"}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -210,15 +176,21 @@ const MyOrder = () => {
             </table>
           </div>
 
-          <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+          <div className={styles.pagination}>
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
+              className={styles.paginationButton}
             >
               Prev
             </button>
-            <span style={{ alignSelf: "center" }}>Page {page}</span>
-            <button onClick={() => setPage((p) => p + 1)}>Next</button>
+            <span className={styles.paginationInfo}>Page {page}</span>
+            <button
+              onClick={() => setPage((p) => p + 1)}
+              className={styles.paginationButton}
+            >
+              Next
+            </button>
           </div>
         </>
       )}
@@ -227,56 +199,52 @@ const MyOrder = () => {
         <div
           role="dialog"
           aria-modal="true"
-          style={{
-            position: "fixed",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "rgba(0,0,0,0.4)",
-            zIndex: 9999,
-          }}
+          className={styles.modalOverlay}
           onClick={closeModal}
         >
           <div
+            className={styles.modalContent}
             onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "#fff",
-              padding: 20,
-              maxWidth: 700,
-              width: "90%",
-              borderRadius: 6,
-            }}
           >
-            <h3>Order {selectedOrder.number || selectedOrder.id}</h3>
-            <div style={{ marginBottom: 8 }}>
-              Placed:{" "}
+            <h3 className={styles.modalTitle}>
+              Order {selectedOrder.number || selectedOrder.id}
+            </h3>
+            <div className={styles.modalInfo}>
+              <span className={styles.modalLabel}>Placed:</span>{" "}
               {formatDate(selectedOrder.createdAt || selectedOrder.date)}
             </div>
-            <div style={{ marginBottom: 8 }}>
-              Status: {selectedOrder.status}
+            <div className={styles.modalInfo}>
+              <span className={styles.modalLabel}>Status:</span>{" "}
+              {selectedOrder.status}
             </div>
-            <div style={{ marginBottom: 8 }}>
-              Total:{" "}
+            <div className={styles.modalInfo}>
+              <span className={styles.modalLabel}>Total:</span>{" "}
               {selectedOrder.total
                 ? `$${selectedOrder.total}`
                 : selectedOrder.total}
             </div>
 
-            <h4>Items</h4>
-            <ul>
+            <h4 className={styles.modalLabel} style={{ marginTop: 16 }}>
+              Items
+            </h4>
+            <ul className={styles.modalItemsList}>
               {(selectedOrder.items || []).map((it, i) => (
-                <li key={i}>
+                <li key={i} className={styles.modalListItem}>
                   {it.name} × {it.quantity || it.qty || 1}{" "}
                   {it.price ? `— $${it.price}` : ""}
                 </li>
               ))}
             </ul>
 
-            <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-              <button onClick={closeModal}>Close</button>
+            <div className={styles.modalActions}>
+              <button onClick={closeModal} className={styles.button}>
+                Close
+              </button>
               {selectedOrder.status !== "cancelled" && (
-                <button onClick={() => handleCancel(selectedOrder.id)}>
+                <button
+                  onClick={() => handleCancel(selectedOrder.id)}
+                  className={`${styles.button} ${styles.buttonCancel}`}
+                >
                   Cancel Order
                 </button>
               )}

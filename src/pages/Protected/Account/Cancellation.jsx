@@ -1,48 +1,125 @@
-import React, { useState } from "react";
-import styles from "./Account.module.css";
+import React, { useEffect, useState } from "react";
+import styles from "./Cancellation.module.css";
+import { tokenManager } from "../../../utils/tokenManager";
+
+const API_BASE_URL = "http://localhost:3001/api";
 
 const Cancellation = () => {
-  const [reason, setReason] = useState("");
-  const [comments, setComments] = useState("");
+  const [cancelledOrders, setCancelledOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log("Reason:", reason);
-    console.log("Comments:", comments);
-  };
+  useEffect(() => {
+    let cancelled = false;
+    async function loadCancelledOrders() {
+      setLoading(true);
+      setError(null);
+      try {
+        const token = tokenManager.getAccessToken();
+        const res = await fetch(
+          `${API_BASE_URL}/user/orders?status=cancelled`,
+          {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+          }
+        );
+
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || `${res.status} ${res.statusText}`);
+        }
+
+        const json = await res.json();
+        if (!cancelled) {
+          const payload = Array.isArray(json) ? { orders: json } : json;
+          setCancelledOrders(payload.orders || payload);
+        }
+      } catch (err) {
+        if (!cancelled)
+          setError(err.message || "Failed to load cancelled orders");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    loadCancelledOrders();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function formatDate(iso) {
+    try {
+      return new Date(iso).toLocaleString();
+    } catch {
+      return iso;
+    }
+  }
+
   return (
-    <div className={styles.cancelationContainer}>
-      <h2>Cancel Account</h2>
-      <form onSubmit={handleSubmit} className={styles.cancelationForm}></form>
-      <label>
-        Reason for Cancellation:
-        <select
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-          required
-        >
-          <option value="" disabled>
-            Select a reason
-          </option>
-          <option value="not_using">Not using the service</option>
-          <option value="too_expensive">Too expensive</option>
-          <option value="technical_issues">Technical issues</option>
-          <option value="other">Other</option>
-        </select>
-      </label>
-      <label>
-        Additional Comments:
-        <textarea
-          value={comments}
-          onChange={(e) => setComments(e.target.value)}
-          placeholder="Optional"
-        ></textarea>
-      </label>
-      <button type="submit" className={styles.cancelButton}>
-        Submit Cancellation
-      </button>
+    <div className={styles.container}>
+      <h2 className={styles.title}>Cancelled Orders</h2>
+
+      {loading && (
+        <div className={styles.loadingMessage}>Loading cancelled orders…</div>
+      )}
+      {error && <div className={styles.errorMessage}>Error: {error}</div>}
+
+      {!loading && !error && cancelledOrders.length === 0 && (
+        <p className={styles.emptyMessage}>No cancelled orders.</p>
+      )}
+
+      {!loading && cancelledOrders.length > 0 && (
+        <div className={styles.ordersGrid}>
+          {cancelledOrders.map((order) => (
+            <div key={order.id} className={styles.orderCard}>
+              <div className={styles.orderHeader}>
+                <div>
+                  <div className={styles.orderNumber}>
+                    Order #{order.number || order.id}
+                  </div>
+                  <div className={styles.orderDate}>
+                    {formatDate(order.createdAt || order.date)}
+                  </div>
+                </div>
+                <div className={styles.statusBadge}>Cancelled</div>
+              </div>
+
+              <div className={styles.orderDetails}>
+                <div className={styles.detailRow}>
+                  <span className={styles.label}>Items:</span>
+                  <span>
+                    {(order.items && order.items.length) ||
+                      order.itemCount ||
+                      0}
+                  </span>
+                </div>
+                <div className={styles.detailRow}>
+                  <span className={styles.label}>Total:</span>
+                  <span>
+                    {order.total ? `$${order.total.toFixed(2)}` : order.total}
+                  </span>
+                </div>
+              </div>
+
+              {order.items && order.items.length > 0 && (
+                <div className={styles.itemsList}>
+                  <div className={styles.itemsLabel}>Items:</div>
+                  <ul className={styles.items}>
+                    {order.items.map((item, idx) => (
+                      <li key={idx} className={styles.item}>
+                        {item.name} × {item.quantity || item.qty || 1}
+                        {item.price && ` — $${item.price}`}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
+
 export default Cancellation;
