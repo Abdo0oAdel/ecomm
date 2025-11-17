@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Cancellation.module.css";
-import { tokenManager } from "../../../utils/tokenManager";
-
-const API_BASE_URL = "http://localhost:3001/api";
+import { axiosWithAuth } from "../../../utils/helpers";
 
 const Cancellation = () => {
   const [cancelledOrders, setCancelledOrders] = useState([]);
@@ -15,23 +13,18 @@ const Cancellation = () => {
       setLoading(true);
       setError(null);
       try {
-        const token = tokenManager.getAccessToken();
-        const res = await fetch(
-          `${API_BASE_URL}/user/orders?status=cancelled`,
-          {
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-          }
-        );
+        // TODO: Uncomment when backend implements /api/orders?status=cancelled endpoint
+        // const response = await axiosWithAuth.get(
+        //   "api/orders?status=cancelled"
+        // );
+        // if (!cancelled) {
+        //   const payload = response.data;
+        //   setCancelledOrders(payload.data || payload);
+        // }
 
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(text || `${res.status} ${res.statusText}`);
-        }
-
-        const json = await res.json();
+        // Temporarily use empty data
         if (!cancelled) {
-          const payload = Array.isArray(json) ? { orders: json } : json;
-          setCancelledOrders(payload.orders || payload);
+          setCancelledOrders([]);
         }
       } catch (err) {
         if (!cancelled)

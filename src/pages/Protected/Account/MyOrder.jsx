@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./MyOrder.module.css";
+import { axiosWithAuth } from "../../../utils/helpers";
 
 const MyOrder = () => {
   const [orders, setOrders] = useState([]);
@@ -9,7 +10,6 @@ const MyOrder = () => {
   const pageSize = 10;
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [processingId, setProcessingId] = useState(null);
-  
 
   useEffect(() => {
     let cancelled = false;
@@ -17,24 +17,19 @@ const MyOrder = () => {
       setLoading(true);
       setError(null);
       try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(
-          `/api/user/orders?page=${page}&limit=${pageSize}`,
-          {
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-          }
-        );
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(text || `${res.status} ${res.statusText}`);
-        }
-        const json = await res.json();
+        // TODO: Uncomment when backend implements /api/orders endpoint
+        // const response = await axiosWithAuth.get(
+        //   `api/orders?page=${page}&limit=${pageSize}`
+        // );
+        // if (!cancelled) {
+        //   const payload = response.data;
+        //   setOrders(payload.data || payload);
+        // }
+
+        // Temporarily use empty data
         if (!cancelled) {
-          // expect server to return { orders: [...], total: number } or just [...]
-          const payload = Array.isArray(json)
-            ? { orders: json, total: json.length }
-            : json;
-          setOrders(payload.orders || payload);
+          setOrders([]);
+          setError(null);
         }
       } catch (err) {
         if (!cancelled) setError(err.message || "Failed to load orders");
@@ -60,22 +55,9 @@ const MyOrder = () => {
     if (!confirm("Cancel this order? This action may be irreversible.")) return;
     setProcessingId(orderId);
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`/api/orders/${orderId}`, {
-        method: "DELETE", // adjust to your API (PATCH/PUT with { status: 'cancelled' } etc.)
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-      });
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `${res.status} ${res.statusText}`);
-      }
-      // optimistic UI: remove or mark cancelled
-      setOrders((prev) =>
-        prev.map((o) => (o.id === orderId ? { ...o, status: "cancelled" } : o))
-      );
+      // TODO: Uncomment when backend implements DELETE /api/orders/{id} endpoint
+      // await axiosWithAuth.delete(`api/orders/${orderId}`);
+      alert("Order cancellation endpoint not yet implemented on backend.");
     } catch (err) {
       alert("Failed to cancel order: " + (err.message || err));
     } finally {

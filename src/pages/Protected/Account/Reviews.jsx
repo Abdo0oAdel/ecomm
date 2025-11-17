@@ -1,29 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Reviews.module.css";
-
-const mockReviews = [
-  {
-    id: 1,
-    product: "Classic White Tee",
-    rating: 5,
-    text: "Love this shirt — great fit and quality.",
-    date: "2025-10-02",
-  },
-  {
-    id: 2,
-    product: "Running Shoes",
-    rating: 4,
-    text: "Very comfortable, slightly narrow for me.",
-    date: "2025-09-15",
-  },
-  {
-    id: 3,
-    product: "Ceramic Mug",
-    rating: 3,
-    text: "Nice mug but arrived with a tiny chip.",
-    date: "2025-07-28",
-  },
-];
+import { axiosWithAuth } from "../../../utils/helpers";
 
 const StarRating = ({ value = 0 }) => {
   return (
@@ -41,46 +18,90 @@ const StarRating = ({ value = 0 }) => {
 };
 
 const Reviews = () => {
-  const [reviews, setReviews] = useState(mockReviews);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleDelete = (id) => {
-    setReviews((prev) => prev.filter((r) => r.id !== id));
+  useEffect(() => {
+    let cancelled = false;
+    async function loadReviews() {
+      setLoading(true);
+      setError(null);
+      try {
+        // TODO: Uncomment when backend implements /api/reviews endpoint
+        // const response = await axiosWithAuth.get("api/reviews");
+        // if (!cancelled) {
+        //   setReviews(response.data.data || response.data);
+        // }
+
+        // Temporarily use empty data
+        if (!cancelled) {
+          setReviews([]);
+        }
+      } catch (err) {
+        if (!cancelled) setError(err.message || "Failed to load reviews");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    loadReviews();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      // TODO: Uncomment when backend implements DELETE /api/reviews/{id} endpoint
+      // await axiosWithAuth.delete(`api/reviews/${id}`);
+      alert("Review deletion endpoint not yet implemented on backend.");
+    } catch (err) {
+      alert("Failed to delete review: " + (err.message || err));
+    }
   };
 
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>My Reviews</h1>
 
-      {reviews.length === 0 ? (
+      {loading && <div className={styles.emptyMessage}>Loading reviews…</div>}
+      {error && (
+        <div style={{ color: "#c33", padding: "20px" }}>Error: {error}</div>
+      )}
+
+      {!loading && !error && reviews.length === 0 ? (
         <p className={styles.emptyMessage}>You haven't left any reviews yet.</p>
       ) : (
-        <ul className={styles.reviewsList}>
-          {reviews.map((r) => (
-            <li key={r.id} className={styles.reviewCard}>
-              <div className={styles.reviewHeader}>
-                <div>
-                  <div className={styles.productName}>{r.product}</div>
-                  <div className={styles.meta}>{r.date}</div>
+        !loading &&
+        !error && (
+          <ul className={styles.reviewsList}>
+            {reviews.map((r) => (
+              <li key={r.id} className={styles.reviewCard}>
+                <div className={styles.reviewHeader}>
+                  <div>
+                    <div className={styles.productName}>{r.product}</div>
+                    <div className={styles.meta}>{r.date}</div>
+                  </div>
+                  <div>
+                    <StarRating value={r.rating} />
+                  </div>
                 </div>
+
+                <p className={styles.reviewText}>{r.text}</p>
+
                 <div>
-                  <StarRating value={r.rating} />
+                  <button
+                    type="button"
+                    className={styles.deleteButton}
+                    onClick={() => handleDelete(r.id)}
+                  >
+                    Delete review
+                  </button>
                 </div>
-              </div>
-
-              <p className={styles.reviewText}>{r.text}</p>
-
-              <div>
-                <button
-                  type="button"
-                  className={styles.deleteButton}
-                  onClick={() => handleDelete(r.id)}
-                >
-                  Delete review
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ul>
+        )
       )}
     </div>
   );
