@@ -11,7 +11,7 @@ import { useCategories } from "../../../hooks/useCategories";
 import { useNavigate } from "react-router-dom";
 import useProducts from "../../../hooks/useProducts";
 import { useWishlist } from "../../../hooks/useWishlist";
-import { useCart } from "../../../hooks/useCart";
+import useCart from "../../../hooks/useCart";
 
 // Import section components
 import HeroSection from "./components/HeroSection";
@@ -32,12 +32,8 @@ const Home = () => {
   });
   const navigate = useNavigate();
   const { items: wishlist, toggleWishlist } = useWishlist();
-  const { addToCart } = useCart();
-  const {
-    products,
-    loading: loadingProducts,
-    error: errorProducts,
-  } = useProducts();
+  const { handleAddToCart } = useCart();
+  const {products,loading: loadingProducts,error: errorProducts,} = useProducts();
 
   // Countdown timer effect
   useEffect(() => {
@@ -114,6 +110,9 @@ const Home = () => {
         products={products}
         navigate={navigate}
         timeLeft={timeLeft}
+        addToCart={handleAddToCart}
+        wishlist={wishlist}
+        toggleWishlist={toggleWishlist}
       />
 
       <CategoryBrowserSection
@@ -131,11 +130,11 @@ const Home = () => {
         loadingProducts={loadingProducts}
         errorProducts={errorProducts}
         toggleWishlist={toggleWishlist}
-        addToCart={addToCart}
+        addToCart={handleAddToCart}
         wishlist={wishlist}
       />
 
-      <BestSellingSection styles={styles} products={products} />
+      <BestSellingSection styles={styles} products={products} addToCart={handleAddToCart} wishlist={wishlist} toggleWishlist={toggleWishlist} />
 
       <MusicBannerSection styles={styles} />
 

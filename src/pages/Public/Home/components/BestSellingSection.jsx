@@ -2,7 +2,7 @@ import React from 'react';
 import ProductCard from '../../../../components/ProductCard/ProductCard';
 import { useTranslation } from 'react-i18next';
 
-const BestSellingSection = ({ styles, products }) => {
+const BestSellingSection = ({ styles, products, addToCart, toggleWishlist, wishlist }) => {
   const { t } = useTranslation();
 
   return (
@@ -23,7 +23,13 @@ const BestSellingSection = ({ styles, products }) => {
 
         <div className={styles.productsGrid}>
           {products.slice(0, 4).map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              onAddToCart={addToCart ? () => addToCart(product) : undefined}
+              onToggleWishlist={toggleWishlist ? () => toggleWishlist(product) : undefined}
+              isWishlisted={wishlist ? wishlist.some(w => w.id === product.id) : false}
+            />
           ))}
         </div>
       </div>

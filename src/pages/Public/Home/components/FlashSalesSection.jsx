@@ -3,7 +3,7 @@ import ProductCard from '../../../../components/ProductCard/ProductCard';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 
-const FlashSalesSection = ({ styles, products, navigate, timeLeft }) => {
+const FlashSalesSection = ({ styles, products, navigate, timeLeft, toggleWishlist, wishlist, addToCart }) => {
   const { t } = useTranslation();
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -71,7 +71,13 @@ const FlashSalesSection = ({ styles, products, navigate, timeLeft }) => {
 
           <div className={styles.productsGrid}>
             {products.slice(0, 4).map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={addToCart ? () => addToCart(product) : undefined}
+                onToggleWishlist={toggleWishlist ? () => toggleWishlist(product) : undefined}
+                isWishlisted={wishlist ? wishlist.some(w => w.id === product.id) : false}
+              />
             ))}
           </div>
 

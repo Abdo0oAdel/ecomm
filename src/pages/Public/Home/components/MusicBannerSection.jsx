@@ -26,7 +26,7 @@ const MusicBannerSection = ({ styles }) => {
                 <span className={styles.timeNumber}>59</span>
                 <span className={styles.timeLabel}>{t('musicBanner.minutes')}</span>
               </div>
-              <span className-={styles.timeSeparator}>:</span>
+              <span className={styles.timeSeparator}>:</span>
               <div className={styles.timeUnit}>
                 <span className={styles.timeNumber}>35</span>
                 <span className={styles.timeLabel}>{t('musicBanner.seconds')}</span>

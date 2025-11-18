@@ -370,5 +370,28 @@
       "title": "Changes to Terms",
       "content": "Zenon reserves the right to change, modify, add, or remove portions of these Terms of Use at any time without any prior notification. Changes will be effective when posted on the Site with no other notice provided. Please check these Terms of Use regularly for updates. Your continued use of the Site following the posting of changes to these Terms of Use constitutes your acceptance of those changes."
     }
+  },"productDetails":{
+  "back": "Back",
+  "loadingProduct": "Loading product...",
+  "notFound": "Product with id {{id}} not found.",
+  "inStock": "In Stock",
+  "outOfStock": "Out of Stock",
+  "reviews": "({{count}} reviews)",
+  "currentPriceLabel": "Price",
+  "originalPriceLabel": "Original Price",
+  "description": "Description",
+  "coloursLabel": "Colours",
+  "sizeLabel": "Size",
+  "qty": "Quantity",
+  "addToCart": "Add To Cart",
+  "adding": "Adding...",
+  "outOfStockBtn": "Out of Stock",
+  "addToWishlist": "Add to wishlist",
+  "removeFromWishlist": "Remove from wishlist",
+  "freeDeliveryTitle": "Free Delivery",
+  "freeDeliveryText": "Enter your postal code for delivery availability",
+  "returnDeliveryTitle": "Return Delivery",
+  "returnDeliveryText": "Free 30 Days Returns. Details",
+  "relatedItems": "Related Items"
   }
 }

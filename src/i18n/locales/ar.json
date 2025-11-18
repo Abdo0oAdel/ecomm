@@ -370,5 +370,29 @@
       "title": "حقوقك",
       "content": "لديك الحق في الوصول إلى معلوماتك الشخصية التي نحتفظ بها وتصحيحها أو حذفها. يمكنك أيضًا الاعتراض على معالجة معلوماتك الشخصية أو طلب تقييدها. للقيام بذلك، يرجى الاتصال بنا باستخدام معلومات الاتصال أدناه."
     }
+  },"productDetails":{
+  "back": "العودة",
+  "loadingProduct": "جارِ تحميل المنتج...",
+  "notFound": "لم يتم العثور على المنتج بالمعرّف {{id}}.",
+  "inStock": "متوفر",
+  "outOfStock": "غير متوفر",
+  "reviews": "({{count}} مراجعات)",
+  "currentPriceLabel": "السعر",
+  "originalPriceLabel": "السعر الأصلي",
+  "description": "الوصف",
+  "coloursLabel": "الألوان",
+  "sizeLabel": "المقاس",
+  "qty": "الكمية",
+  "addToCart": "أضف إلى السلة",
+  "adding": "جارِ الإضافة...",
+  "outOfStockBtn": "غير متوفر",
+  "addToWishlist": "أضف إلى المفضلة",
+  "removeFromWishlist": "إزالة من المفضلة",
+  "freeDeliveryTitle": "توصيل مجاني",
+  "freeDeliveryText": "أدخل الرمز البريدي للتحقق من التوصيل",
+  "returnDeliveryTitle": "إرجاع مجاني",
+  "returnDeliveryText": "إرجاع مجاني خلال 30 يومًا. التفاصيل",
+  "relatedItems": "منتجات ذات صلة"
   }
+
 }

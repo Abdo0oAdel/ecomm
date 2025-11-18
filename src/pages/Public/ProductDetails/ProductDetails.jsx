@@ -1,3 +1,4 @@
+import useCart from "../../../hooks/useCart";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { cartActions } from "../../../store/Cart/slice";
@@ -11,10 +12,12 @@ import useProduct from "../../../hooks/useProduct";
 import useProducts from "../../../hooks/useProducts";
 import ProductCard from "../../../components/ProductCard/ProductCard";
 import { useWishlist } from '../../../hooks/useWishlist';
+import { useTranslation } from 'react-i18next';
 
 const ProductDetail = () => {
     const dispatch = useDispatch();
-    const [adding, setAdding] = useState(false);
+    const { t } = useTranslation('productDetails');
+        const { handleAddToCart, adding } = useCart();
     const { id } = useParams();
     const location = useLocation();
     // Try to get product from navigation state, otherwise fetch from API
@@ -28,21 +31,6 @@ const ProductDetail = () => {
     const [selectedColor, setSelectedColor] = useState(null);
     const [selectedSize, setSelectedSize] = useState(null);
     const [qty, setQty] = useState(1);
-
-    const handleAddToCart = async () => {
-        if (!product.isInStock || product.stock === 0) return;
-        setAdding(true);
-        try {
-            await addToCart(product.id, qty);
-            const data = await getCart();
-            dispatch(cartActions.setCart(data));
-        } catch (err) {
-            // Optionally show error
-            console.error(err);
-        } finally {
-            setAdding(false);
-        }
-    };
 
     // Set default color/size when product loads
     React.useEffect(() => {
@@ -59,18 +47,18 @@ const ProductDetail = () => {
         ));
 
     if (loading) {
-        return <div className={styles.container}><div>Loading product...</div></div>;
+        return <div className={styles.container}><div>{t('loadingProduct')}</div></div>;
     }
     if (error || !product) {
         return (
             <div className={styles.container}>
                 <div className={styles.headerRow}>
                     <Link to="/" className={styles.backButton}>
-                        <FiChevronLeft /> العودة
+                        <FiChevronLeft /> {t('back')}
                     </Link>
                 </div>
                 <div className={styles.notFound}>
-                    <p>لم يتم العثور على المنتج بالمعرّف {id}.</p>
+                    <p> {t('notFound', { id })}</p>
                 </div>
             </div>
         );
@@ -87,7 +75,7 @@ const ProductDetail = () => {
         <div className={styles.container}>
             <div className={styles.headerRow}>
                 <Link to="/" className={styles.backButton}>
-                    <FiChevronLeft /> العودة
+                    <FiChevronLeft /> {t('back')}
                 </Link>
             </div>
 
@@ -114,7 +102,7 @@ const ProductDetail = () => {
                     <div className={styles.ratingRow}>
                         <div className={styles.stars}>{renderStars(product.rating)}</div>
                         <span className={styles.reviews}>({product.reviews} Reviews)</span>
-                        <span className={styles.stock}>{product.isInStock ? "In Stock" : "Out of Stock"}</span>
+                        <span className={styles.stock}>{product.isInStock ? t('inStock') : t('outOfStock')}</span>
                     </div>
 
                     <div className={styles.priceRow}>
@@ -128,7 +116,7 @@ const ProductDetail = () => {
 
                     {product.colors?.length ? (
                         <div className={styles.optionRow}>
-                            <label className={styles.optionLabel}>Colours:</label>
+                            <label className={styles.optionLabel}>{t('coloursLabel')}</label>
                             <div className={styles.colors}> 
                                 {product.colors.map((c) => (
                                     <button
@@ -144,7 +132,7 @@ const ProductDetail = () => {
 
                     {product.sizes?.length ? (
                         <div className={styles.optionRow}>
-                            <label className={styles.optionLabel}>Size:</label>
+                            <label className={styles.optionLabel}>{t('sizeLabel')}</label>
                             <div className={styles.sizes}>
                                 {product.sizes.map((s) => (
                                     <button
@@ -168,17 +156,17 @@ const ProductDetail = () => {
                         <button
                             className={styles.buyBtn}
                             disabled={adding || !product.isInStock || product.stock === 0}
-                            title={!product.isInStock || product.stock === 0 ? 'Out of Stock' : ''}
-                            onClick={handleAddToCart}
+                            title={!product.isInStock || product.stock === 0 ? t('outOfStockBtn')  : ''}
+                            onClick={() => handleAddToCart(product, qty)}
                         >
                             <FiShoppingCart />
                             {(!product.isInStock || product.stock === 0)
-                                ? 'Out of Stock'
-                                : adding ? 'Adding...' : 'Add To Cart'}
+                                ? t('outOfStockBtn') 
+                                : adding ?  t('adding') : t('addToCart')}
                         </button>
                         <button
                             className={styles.wishBtn}
-                            title={wishlist.some(w => w.id === product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                            title={wishlist.some(w => w.id === product.id) ? t('removeFromWishlist') : t('addToWishlist')}
                             disabled={!product.isInStock || product.stock === 0}
                             onClick={() => toggleWishlist(product)}
                         >
@@ -192,19 +180,19 @@ const ProductDetail = () => {
 
                     <div className={styles.deliveryBoxes}>
                         <div className={styles.box}>
-                            <strong>Free Delivery</strong>
-                            <p>Enter your postal code for Delivery Availability</p>
+                            <strong>{t('freeDeliveryTitle')}</strong>
+                            <p>{t('freeDeliveryText')}</p>
                         </div>
                         <div className={styles.box}>
-                            <strong>Return Delivery</strong>
-                            <p>Free 30 Days Delivery Returns. Details</p>
+                            <strong>{t('returnDeliveryTitle')}</strong>
++                            <p>{t('returnDeliveryText')}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <section className={styles.relatedSection}>
-                <h3 className={styles.relatedTitle}>Related Items</h3>
+                <h3 className={styles.relatedTitle}>{t('relatedItems')}</h3>
                 <div className={styles.relatedGrid}>
                     {related.map((r) => (
                         <ProductCard key={r.id} product={r} />

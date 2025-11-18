@@ -24,10 +24,11 @@ const Cart = () => {
                     (data.items || []).map(async (item) => {
                         try {
                             const product = await getProductById(item.productId);
+                            const prodData = product.data || {};
                             return {
                                 ...item,
-                                imageURL: product.imageURL,
-                                name: product.productName || item.productName,
+                                imageURL: prodData.imageURL,
+                                name: prodData.productName || item.productName,
                             };
                         } catch (e) {
                             // fallback if product fetch fails
@@ -78,10 +79,11 @@ const Cart = () => {
                 (data.items || []).map(async (cartItem) => {
                     try {
                         const product = await getProductById(cartItem.productId);
+                        const prodData = product.data || {};
                         return {
                             ...cartItem,
-                            imageURL: product.imageURL,
-                            name: product.productName || cartItem.productName,
+                            imageURL: prodData.imageURL,
+                            name: prodData.productName || cartItem.productName,
                         };
                     } catch (e) {
                         return cartItem;

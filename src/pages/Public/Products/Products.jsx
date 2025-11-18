@@ -3,13 +3,13 @@ import useProducts from "../../../hooks/useProducts";
 import ProductCard from "../../../components/ProductCard/ProductCard";
 import styles from "./Product.module.css";
 import { useWishlist } from "../../../hooks/useWishlist";
-import { useCart } from "../../../hooks/useCart";
+import useCart from "../../../hooks/useCart";
 import { useNavigate } from "react-router-dom";
 
 const Products = () => {
 	const { products, loading, error } = useProducts();
 	const { items: wishlist, toggleWishlist } = useWishlist();
-	const { cart, addToCart } = useCart();
+	const { handleAddToCart } = useCart();
 	const navigate = useNavigate();
 
 	return (
@@ -29,7 +29,7 @@ const Products = () => {
 								key={product.id}
 								product={product}
 								onToggleWishlist={() => toggleWishlist(product)}
-								onAddToCart={() => addToCart(product)}
+								onAddToCart={() => handleAddToCart(product)}
 								onViewDetails={() => navigate(`/products/${product.id}`, { state: { product } })}
 								isWishlisted={wishlist.some(w => w.id === product.id)}
 							/>
