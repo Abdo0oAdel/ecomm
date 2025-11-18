@@ -161,4 +161,5 @@ export const wishlistAPI = {
   },
 };
 
+
 export default authAPI;

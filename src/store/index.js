@@ -3,18 +3,34 @@ import themeReducer from "./Theme/slice.js";
 import authReducer from "./Auth/slice.js";
 import cartReducer from "./Cart/slice.js";
 import wishlistReducer from "./Wishlist/slice.js";
+import checkoutReducer from "./CheckOut/slice.js";
 import { tokenManager } from "../utils/tokenManager.js";
 import { authActions } from "./Auth/slice.js";
 import { cartActions } from "./Cart/slice.js";
 import { wishlistActions } from "./Wishlist/slice.js";
 import { cartAPI, wishlistAPI } from "../utils/api.js";
+import { loadState, saveState } from "../utils/localStorage.js";
+
+const persistedState = loadState();
 
 const store = configureStore({
     reducer: {
         theme : themeReducer,
         auth: authReducer,
         cart: cartReducer,
-        wishlist: wishlistReducer
+        wishlist: wishlistReducer,
+        checkout: checkoutReducer
+    },
+    preloadedState: persistedState
+});
+
+store.subscribe(() => {
+    const { auth, cart } = store.getState();
+    // Only save cart to localStorage if the user is not authenticated
+    if (!auth.isAuthenticated) {
+        saveState({
+            cart: cart
+        });
     }
 });
 
