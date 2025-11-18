@@ -161,5 +161,28 @@ export const wishlistAPI = {
   },
 };
 
+// Checkout API calls
+export const checkoutAPI = {
+  placeOrder: async (orderData) => {
+    const { items, user } = orderData;
+    const transformedOrder = {
+      userId: user?.userId,
+      orderItems: items.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      })),
+    };
+
+    console.log("Placing order with transformed data:", transformedOrder);
+    try {
+      const response = await axiosWithAuth.post("/orders", transformedOrder);
+      return response.data;
+    } catch (error) {
+      console.error("Error placing order:", error.response || error);
+      throw error;
+    }
+  },
+};
+
 
 export default authAPI;

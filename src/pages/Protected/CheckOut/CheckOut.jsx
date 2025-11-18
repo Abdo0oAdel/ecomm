@@ -60,6 +60,7 @@ const CheckOut = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
+  const user = useSelector((state) => state.auth.user);
   const { formData, saveInfo, couponCode, selectedPayment } = useSelector(
     (state) => state.checkout
   );
@@ -77,40 +78,40 @@ const CheckOut = () => {
     dispatch(checkoutActions.updateField({ field: name, value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const orderData = {
-      billingDetails: formData,
-      items: cartItems,
-      paymentMethod: selectedPayment,
-      couponCode,
-      subtotal,
-      shipping,
-      total,
+      const handleSubmit = async (e) => {
+      e.preventDefault();
+      const orderData = {
+        billingDetails: formData,
+        items: cartItems,
+        paymentMethod: selectedPayment,
+        couponCode,
+        subtotal,
+        shipping,
+        total,
+        user,
+      };
+      console.log("Order data:", orderData);
+      try {
+        await placeOrder(orderData);
+        Swal.fire({
+          icon: "success",
+          title: "Order Placed!",
+          text: "Your order has been placed successfully.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        dispatch(cartActions.clearCart());
+        dispatch(checkoutActions.clearCheckoutData());
+        navigate("/");
+      } catch (error) {
+        console.error("Failed to place order:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Order Failed",
+          text: error.message || "There was an issue placing your order.",
+        });
+      }
     };
-
-    try {
-      await placeOrder(orderData);
-      Swal.fire({
-        icon: "success",
-        title: "Order Placed!",
-        text: "Your order has been placed successfully.",
-        timer: 2000,
-        showConfirmButton: false,
-      });
-      dispatch(cartActions.clearCart());
-      dispatch(checkoutActions.clearCheckoutData());
-      navigate("/");
-    } catch (error) {
-      console.error("Failed to place order:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Order Failed",
-        text: error.message || "There was an issue placing your order.",
-      });
-    }
-  };
-
   return (
     <main className={styles.checkoutContainer}>
       <div className={styles.maxWidthContainer}>
