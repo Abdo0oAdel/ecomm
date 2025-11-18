@@ -19,7 +19,6 @@ const Cart = () => {
         async function fetchCart() {
             try {
                 const data = await getCart();
-                // Fetch product details for each cart item to get imageURL
                 const itemsWithImages = await Promise.all(
                     (data.items || []).map(async (item) => {
                         try {
@@ -44,8 +43,6 @@ const Cart = () => {
         }
         fetchCart();
     }, [dispatch]);
-
-    // Cart data is now loaded from backend on login - no need for demo data
 
     // Only update Redux state (UI) locally
     const updateQuantity = (productId, delta) => {
@@ -202,8 +199,8 @@ const Cart = () => {
                                                     <i className={`fas fa-minus ${styles.iconSmall}`}></i>
                                                 </button>
                                                 <span className={styles.quantityDisplay}>
-                          {String(item.quantity).padStart(2, "0")}
-                        </span>
+                                                {String(item.quantity).padStart(2, "0")}
+                                                </span>
                                                 <button
                                                     onClick={() => updateQuantity(item.productId ?? item.id, 1)}
                                                     className={styles.quantityButton}

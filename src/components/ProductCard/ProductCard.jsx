@@ -117,9 +117,6 @@ const ProductCard = ({
           </div>
         ) : null}
 
-        {(!product.isInStock || product.stock === 0) && (
-          <div className={styles.outOfStockBadge}>Out of Stock</div>
-        )}
         <button
           className={`${styles.addToCartBtn} ${isHovered ? styles.visible : ""}`}
           onClick={async () => {

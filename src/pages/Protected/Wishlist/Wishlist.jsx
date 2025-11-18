@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useWishlist } from '../../../hooks/useWishlist';
+import useProducts from '../../../hooks/useProducts';
+import Swal from 'sweetalert2';
 import { useTranslation } from 'react-i18next';
 import { wishlistActions } from '../../../store/Wishlist/slice.js';
 import { cartActions } from '../../../store/Cart/slice.js';
+import { addToCart as addToCartAPI, getCart as getCartAPI } from '../../../services/cart';
 import styles from './Wishlist.module.css';
 import ProductCard from '../../../components/ProductCard/ProductCard';
 import { FiTrash2 } from 'react-icons/fi';
@@ -50,7 +53,29 @@ export const justForYouData = [
 const Wishlist = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const { items: wishlistItems, fetchWishlist } = useWishlist();
+    const { items: wishlistItems, fetchWishlist, removeFromWishlist } = useWishlist();
+    const { products } = useProducts();
+
+    // Merge wishlist items with product details from Redux
+    const wishlistWithDetails = React.useMemo(() => {
+        return (wishlistItems || []).map(item => {
+            const prod = products.find(p => p.id === item.productId || p.id === item.id);
+            return {
+                ...item,
+                id: item.productId || item.id,
+                name: item.productName || item.name,
+                image: prod?.image || item.image || '',
+                currentPrice: prod?.currentPrice ?? prod?.price ?? item.currentPrice ?? item.price,
+                originalPrice: prod?.originalPrice ?? item.originalPrice,
+                discount: prod?.discount ?? item.discount,
+                isInStock: prod?.isInStock,
+                stock: prod?.stock,
+                rating: prod?.rating,
+                reviews: prod?.reviews,
+                category: prod?.category,
+            };
+        });
+    }, [wishlistItems, products]);
 
     useEffect(() => {
         fetchWishlist();
@@ -61,17 +86,49 @@ const Wishlist = () => {
             dispatch(cartActions.addToCart({ ...item, price: item.currentPrice, quantity: 1 }));
         });
         dispatch(wishlistActions.clearWishlist());
-    };
+    }
 
-    const handleRemoveFromWishlist = (id) => {
-        dispatch(wishlistActions.removeFromWishlist(id));
-    };
-
-    const handleAddToCart = (id) => {
+    const handleRemoveFromWishlist = async (id) => {
         const item = wishlistItems.find(item => item.id === id);
-        if (item) {
-            dispatch(cartActions.addToCart({ ...item, price: item.currentPrice, quantity: 1 }));
-            dispatch(wishlistActions.removeFromWishlist(id));
+        const productName = item?.name || 'this item';
+        const result = await Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure?',
+            text: `Are you sure you want to delete ${productName} from your wishlist?`,
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+        });
+        if (!result.isConfirmed) return;
+        try {
+            await removeFromWishlist(id);
+            Swal.fire({
+                icon: 'success',
+                title: 'Removed',
+                text: 'Item removed from wishlist.',
+                timer: 1200,
+                showConfirmButton: false
+            });
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Remove failed',
+                text: err?.message || 'Failed to remove item from wishlist',
+            });
+        }
+    };
+
+    const handleAddToCart = async (id) => {
+        const item = wishlistItems.find(item => item.id === id || item.productId === id);
+        if (!item) return;
+        try {
+            await addToCartAPI(id, 1);
+            const cartData = await getCartAPI();
+            dispatch(cartActions.setCart(cartData));
+            await removeFromWishlist(id);
+            fetchWishlist();
+        } catch (err) {
+            console.error(err);
         }
     };
 
@@ -84,28 +141,29 @@ const Wishlist = () => {
             {/* Wishlist Section */}
             <section className={styles.wishlistSection}>
                 <div className={styles.sectionHeader}>
-                    <h2 className={styles.sectionTitle}>{t('wishlist.title')} ({wishlistItems.length})</h2>
+                    <h2 className={styles.sectionTitle}>{t('wishlist.title')} ({wishlistWithDetails.length})</h2>
                     <button className={styles.moveAllButton} onClick={handleMoveAllToBag}>
                         {t('wishlist.addToCart')}
                     </button>
                 </div>
 
                 <div className={styles.productsGrid}>
-                    {wishlistItems.map((product) => (
+                    {wishlistWithDetails.map((product) => (
                         <div key={product.id} style={{ position: 'relative' }}>
                             <ProductCard
                                 product={product}
-                                onAddToCart={() => handleAddToCart(product.id)}
+                                onAddToCart={product.isInStock !== false && product.stock !== 0 ? () => handleAddToCart(product.id) : undefined}
                                 isWishlisted={true}
                                 onToggleWishlist={() => {}}
                             />
                             <button
-                                className={styles.deleteButton}
-                                style={{ position: 'absolute', top: 10, right: 10, zIndex: 2 }}
+                                className={`${styles.deleteButton} ${styles.deleteButtonCustom}`}
                                 onClick={() => handleRemoveFromWishlist(product.id)}
                                 aria-label="Remove from wishlist"
                             >
-                                <FiTrash2 size={20} />
+                                <span className={styles.deleteIconCircle}>
+                                    <FiTrash2 className={styles.deleteIcon} />
+                                </span>
                             </button>
                         </div>
                     ))}
@@ -140,9 +198,7 @@ const Wishlist = () => {
                                     <i className="bi bi-eye"></i>
                                 </button>
                                 <img src={product.image} alt={product.name} className={styles.productImage} />
-                                {(!product.isInStock || product.stock === 0) && (
-                                    <span className={styles.outOfStockBadge}>Out of Stock</span>
-                                )}
+
                                 <button
                                     className={styles.addToCartButton}
                                     onClick={() => handleAddToCart(product.id)}
