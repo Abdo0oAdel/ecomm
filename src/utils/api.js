@@ -184,5 +184,12 @@ export const checkoutAPI = {
   },
 };
 
+// Address API calls
+export const addressAPI = {
+    getAddress: async (userId) => {
+        return axiosWithAuth.get(`/Addresses/${userId}`);
+    }
+};
+
 
 export default authAPI;

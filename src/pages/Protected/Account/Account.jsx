@@ -3,7 +3,7 @@ import styles from "./Account.module.css";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-/* import {addressAPI} from "../../../utils/api.js"; */
+import {addressAPI} from "../../../utils/api.js";
 
 export default function Account() {
   const { t } = useTranslation();
@@ -42,12 +42,78 @@ export default function Account() {
         console.log("Current userId (number):", userIdNumber);
         setUserId(userIdNumber);
 
+          // Load addresses if userId is available
+          let addressText = "";
+          if (userIdNumber && !isNaN(userIdNumber)) {
+              try {
+                  console.log("Fetching addresses for userId:", userIdNumber);
+                  const addresses = await addressAPI.getAddress(userIdNumber);
+                  console.log("Addresses response:", addresses);
+                  console.log("Addresses type:", typeof addresses, "Is array:", Array.isArray(addresses));
+
+                  // API can return either a single AddressDto object or an array
+                  // Check for single object first (actual API behavior)
+                  if (addresses && typeof addresses === 'object' && !Array.isArray(addresses)) {
+                      // Handle single address object (actual API response)
+                      console.log("Single address object:", addresses);
+                      const extractedAddressId = addresses.data[0].addressID; //addresses.addressID || addresses.id || addresses.addressId;
+                      console.log("Extracted addressID:", extractedAddressId);
+                      setAddressObject(addresses.data[0]);
+                      setAddressId(extractedAddressId);
+
+                      // Show only the country in the address input
+                      // const country = addresses.data[0].country || "";
+                      // console.log("Address text (country only):", addressText);
+
+                      // Show only the fullAddress in the address input
+                      addressText = addresses.data[0].fullAddress || "";
+                      console.log("Address text (fullAddress only):", addressText);
+                  } else if (Array.isArray(addresses)) {
+                      // Handle array of addresses (per Swagger spec, but API returns single object)
+                      if (addresses.length > 0) {
+                          // Use the first address
+                          const firstAddress = addresses[0];
+                          console.log("First address from array:", firstAddress);
+
+                          // Store address object and ID for updates
+                          const extractedAddressId = firstAddress.addressID || firstAddress.id || firstAddress.addressId;
+                          console.log("Extracted addressID from array:", extractedAddressId);
+                          setAddressObject(firstAddress);
+                          setAddressId(extractedAddressId);
+
+                          // Show only the country in the address input
+                          if (typeof firstAddress === 'string') {
+                              addressText = firstAddress;
+                          } else {
+                              const fullAddress = firstAddress.fullAddress || "";
+                              addressText = fullAddress;
+                              console.log("Address text (fullAddress only):", addressText);
+                          }
+                      } else {
+                          console.log("Addresses array is empty");
+                      }
+                  } else {
+                      console.log("Unexpected addresses format:", typeof addresses, addresses);
+                  }
+              } catch (addressError) {
+                  console.error("Error loading addresses:", addressError);
+                  console.error("Address error details:", addressError.message, addressError.stack);
+                  // Don't fail the whole profile load if addresses fail
+                  setAddressObject(null);
+                  setAddressId(null);
+              }
+          } else {
+              console.warn("No userId available, cannot load addresses. Redux user:", reduxUser);
+          }
+
+          console.log("Final addressText before setting form:", addressText);
+
         // Map Redux user data to form data
         setFormData({
           firstName: reduxUser?.firstName || "",
           lastName: reduxUser?.lastName || "",
           email: reduxUser?.email || "",
-          address: "",
+          address: addressText,
           currentPassword: "",
           newPassword: "",
           confirmPassword: "",
