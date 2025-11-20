@@ -53,16 +53,16 @@ export default function Account() {
               !Array.isArray(addresses)
             ) {
               // Handle single address object (actual API response)
-              const extractedAddressId = addresses.data[0].addressID; //addresses.addressID || addresses.id || addresses.addressId;
-              setAddressObject(addresses.data[0]);
-              setAddressId(extractedAddressId);
-
-              // Show only the country in the address input
-              // const country = addresses.data[0].country || "";
-              // console.log("Address text (country only):", addressText);
-
-              // Show only the fullAddress in the address input
-              addressText = addresses.data[0].fullAddress || "";
+              if (
+                addresses.data &&
+                Array.isArray(addresses.data) &&
+                addresses.data.length > 0
+              ) {
+                const extractedAddressId = addresses.data[0].addressID;
+                setAddressObject(addresses.data[0]);
+                setAddressId(extractedAddressId);
+                addressText = addresses.data[0].fullAddress || "";
+              }
             } else if (Array.isArray(addresses)) {
               // Handle array of addresses (per Swagger spec, but API returns single object)
               if (addresses.length > 0) {
@@ -77,27 +77,19 @@ export default function Account() {
                 setAddressObject(firstAddress);
                 setAddressId(extractedAddressId);
 
-                // Show only the country in the address input
+                // Show full address in the address input
                 if (typeof firstAddress === "string") {
                   addressText = firstAddress;
                 } else {
-                  const fullAddress = firstAddress.fullAddress || "";
-                  addressText = fullAddress;
+                  addressText = firstAddress.fullAddress || "";
                 }
-              } else {
-                // no addresses returned
               }
-            } else {
-              // unexpected addresses format
             }
           } catch (addressError) {
             // address loading failed - continue without addresses
-            // Don't fail the whole profile load if addresses fail
             setAddressObject(null);
             setAddressId(null);
           }
-        } else {
-          // no userId available, skip loading addresses
         }
 
         // Map Redux user data to form data
