@@ -221,51 +221,31 @@ export const ordersAPI = {
 
 // Reviews API calls
 export const reviewsAPI = {
-  // Try to fetch reviews scoped to the current user first, then fall back.
-  getAllReviews: async (userId) => {
-    const endpoints = [];
-    if (userId) {
-      // common server patterns
-      endpoints.push(`/user/reviews`);
-      endpoints.push(`/reviews?userId=${userId}`);
-      endpoints.push(`/user/${userId}/reviews`);
-    }
-    endpoints.push(`/reviews`);
+  getAllReviews: async (productId) => {
+    if (!productId) return { data: [] }; // cannot fetch without productId
 
-    let lastError = null;
-    for (const ep of endpoints) {
-      try {
-        const res = await axiosWithAuth.get(ep);
-        return res;
-      } catch (err) {
-        // If endpoint not implemented or not allowed, try next
-        const status = err?.response?.status;
-        if (status === 400 || status === 404 || status === 405) {
-          lastError = err;
-          continue;
-        }
-        // For other errors propagate immediately
-        throw err;
+    try {
+      const res = await axiosWithAuth.get(`/Reviews/product/${productId}`);
+      return res;
+    } catch (err) {
+      const status = err?.response?.status;
+      if ([400, 404, 405].includes(status)) {
+        return { data: [] }; // treat as no reviews
       }
+      throw err; // propagate other errors
     }
-
-    // If we reach here all endpoints failed with 400/404/405 — return empty shape
-    if (lastError) {
-      return { data: [] };
-    }
-    return { data: [] };
   },
 
   getReview: async (reviewId) => {
-    return axiosWithAuth.get(`/reviews/${reviewId}`);
+    return axiosWithAuth.get(`/Reviews/${reviewId}`);
   },
 
   deleteReview: async (reviewId) => {
-    return axiosWithAuth.delete(`/reviews/${reviewId}`);
+    return axiosWithAuth.delete(`/Reviews/${reviewId}`);
   },
 
   createReview: async (reviewData) => {
-    return axiosWithAuth.post(`/reviews`, reviewData);
+    return axiosWithAuth.post(`/Reviews`, reviewData);
   },
 };
 
