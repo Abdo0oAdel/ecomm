@@ -25,47 +25,29 @@ const Reviews = () => {
   const reduxUser = useSelector((s) => s.auth?.user);
 
   useEffect(() => {
-    let cancelled = false;
-    async function loadReviews() {
-      setLoading(true);
-      setError(null);
-      try {
-        // get userId from Redux
-        const userIdFromRedux = reduxUser?.userId || reduxUser?.id || null;
-        const response = await reviewsAPI.getAllReviews(userIdFromRedux);
-        if (!cancelled) {
-          // Handle response - could be array or object with data property
-          const payload = Array.isArray(response.data)
-            ? response.data
-            : response.data?.data || response.data;
-          setReviews(Array.isArray(payload) ? payload : []);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          // If backend returns 400/404/405 it means reviews endpoint
-          // is not implemented — treat as "no reviews" instead of showing
-          // a hard error in the UI.
-          if (
-            err?.response?.status === 405 ||
-            err?.response?.status === 404 ||
-            err?.response?.status === 400
-          ) {
-            // Treat as no reviews available
-            setReviews([]);
-            setError(null);
-          } else {
-            setError(err.message || "Failed to load reviews");
-          }
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
+  if (!reduxUser?.productID) return; // wait for productId
+  let cancelled = false;
+
+  async function loadReviews() {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await reviewsAPI.getAllReviews(reduxUser.productID);
+      if (!cancelled) {
+        setReviews(Array.isArray(response.data) ? response.data : []);
       }
+    } catch (err) {
+      if (!cancelled) setError(err.message || "Failed to load reviews");
+    } finally {
+      if (!cancelled) setLoading(false);
     }
-    loadReviews();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  }
+
+  loadReviews();
+  return () => {
+    cancelled = true;
+  };
+}, [reduxUser?.productID]);
 
   const handleDelete = async (id) => {
     try {
