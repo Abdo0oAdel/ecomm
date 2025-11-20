@@ -20,13 +20,8 @@ export const useAuth = () => {
         tokenManager.setTokens(response.accessToken, response.refreshToken);
       }
 
-      // Build user object from response data
-      const user = {
-        userId: response.userId,
-        email: response.userEmail,
-        firstName: response.userFirstName,
-        lastName: response.userLastName,
-      };
+      // Extract user from token to include isAdmin and role
+      const user = tokenManager.getUserFromToken();
 
       // Update Redux state
       dispatch(

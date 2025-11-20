@@ -1,0 +1,9 @@
+
+.adminLayout {
+	display: flex;
+}
+
+.adminMain {
+	flex: 1;
+	padding: 2rem;
+}

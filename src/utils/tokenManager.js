@@ -72,6 +72,12 @@ export const tokenManager = {
       return null;
     }
 
+
+    // Include admin claim for role-based access
+    const adminClaimKey = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+
+    const roleValue = payload.role || payload[adminClaimKey];
+    const isAdmin = roleValue === "admin";
     const user = {
       userId:
         payload.userId ||
@@ -99,6 +105,12 @@ export const tokenManager = {
         payload.UserLastName ||
         payload.family_name ||
         payload.lastname,
+      // Add the admin claim directly
+      [adminClaimKey]: payload[adminClaimKey],
+      // Also add a generic role property for convenience
+      role: roleValue,
+      // Add isAdmin boolean for easy checks
+      isAdmin,
     };
 
     // Validate we have minimal required data
