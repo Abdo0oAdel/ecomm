@@ -98,32 +98,31 @@ const MyOrder = () => {
               </thead>
               <tbody>
                 {orders.map((order) => (
-                  <tr key={order.id} className={styles.tableRow}>
+                  <tr key={order.orderID} className={styles.tableRow}>
                     <td className={styles.tableCell}>
-                      {order.number || order.id}
+                      {order.orderNo || order.orderID}
                     </td>
                     <td className={styles.tableCell}>
-                      {formatDate(order.createdAt || order.date)}
+                      {formatDate(order.orderDate)}
                     </td>
+                    <td className={styles.tableCell}>{order.itemCount || 0}</td>
                     <td className={styles.tableCell}>
-                      {(order.items && order.items.length) ||
-                        order.itemCount ||
-                        0}
-                    </td>
-                    <td className={styles.tableCell}>
-                      {order.total ? `$${order.total.toFixed(2)}` : order.total}
+                      {order.totalAmount
+                        ? `$${order.totalAmount.toFixed(2)}`
+                        : "N/A"}
                     </td>
                     <td className={styles.tableCell}>
                       <span
                         className={`${styles.statusBadge} ${
-                          order.status === "completed"
+                          order.orderStatus === "completed"
                             ? styles.statusCompleted
-                            : order.status === "pending"
+                            : order.orderStatus === "pending" ||
+                              order.orderStatus === "Pending"
                             ? styles.statusPending
                             : styles.statusCancelled
                         }`}
                       >
-                        {order.status || "unknown"}
+                        {order.orderStatus || "unknown"}
                       </span>
                     </td>
                     <td className={styles.tableCell}>
@@ -135,16 +134,18 @@ const MyOrder = () => {
                           View
                         </button>
                         <button
-                          onClick={() => handleCancel(order.id)}
+                          onClick={() => handleCancel(order.orderID)}
                           disabled={
-                            processingId === order.id ||
-                            order.status === "cancelled"
+                            processingId === order.orderID ||
+                            order.orderStatus === "cancelled" ||
+                            order.orderStatus === "Cancelled"
                           }
                           className={`${styles.button} ${styles.buttonCancel}`}
                         >
-                          {processingId === order.id
+                          {processingId === order.orderID
                             ? "Cancelling…"
-                            : order.status === "cancelled"
+                            : order.orderStatus === "cancelled" ||
+                              order.orderStatus === "Cancelled"
                             ? "Cancelled"
                             : "Cancel"}
                         </button>
@@ -187,47 +188,51 @@ const MyOrder = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className={styles.modalTitle}>
-              Order {selectedOrder.number || selectedOrder.id}
+              Order {selectedOrder.orderNo || selectedOrder.orderID}
             </h3>
             <div className={styles.modalInfo}>
               <span className={styles.modalLabel}>Placed:</span>{" "}
-              {formatDate(selectedOrder.createdAt || selectedOrder.date)}
+              {formatDate(selectedOrder.orderDate)}
             </div>
             <div className={styles.modalInfo}>
               <span className={styles.modalLabel}>Status:</span>{" "}
-              {selectedOrder.status}
+              {selectedOrder.orderStatus}
             </div>
             <div className={styles.modalInfo}>
               <span className={styles.modalLabel}>Total:</span>{" "}
-              {selectedOrder.total
-                ? `$${selectedOrder.total}`
-                : selectedOrder.total}
+              {selectedOrder.totalAmount
+                ? `$${selectedOrder.totalAmount}`
+                : "N/A"}
             </div>
 
             <h4 className={styles.modalLabel} style={{ marginTop: 16 }}>
-              Items
+              Order Info
             </h4>
             <ul className={styles.modalItemsList}>
-              {(selectedOrder.items || []).map((it, i) => (
-                <li key={i} className={styles.modalListItem}>
-                  {it.name} × {it.quantity || it.qty || 1}{" "}
-                  {it.price ? `— $${it.price}` : ""}
-                </li>
-              ))}
+              <li className={styles.modalListItem}>
+                <strong>Order No:</strong> {selectedOrder.orderNo}
+              </li>
+              <li className={styles.modalListItem}>
+                <strong>User:</strong> {selectedOrder.userName}
+              </li>
+              <li className={styles.modalListItem}>
+                <strong>Items:</strong> {selectedOrder.itemCount || 0}
+              </li>
             </ul>
 
             <div className={styles.modalActions}>
               <button onClick={closeModal} className={styles.button}>
                 Close
               </button>
-              {selectedOrder.status !== "cancelled" && (
-                <button
-                  onClick={() => handleCancel(selectedOrder.id)}
-                  className={`${styles.button} ${styles.buttonCancel}`}
-                >
-                  Cancel Order
-                </button>
-              )}
+              {selectedOrder.orderStatus !== "cancelled" &&
+                selectedOrder.orderStatus !== "Cancelled" && (
+                  <button
+                    onClick={() => handleCancel(selectedOrder.orderID)}
+                    className={`${styles.button} ${styles.buttonCancel}`}
+                  >
+                    Cancel Order
+                  </button>
+                )}
             </div>
           </div>
         </div>
