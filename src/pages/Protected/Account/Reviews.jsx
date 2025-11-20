@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Reviews.module.css";
-import { axiosWithAuth } from "../../../utils/helpers";
+import { reviewsAPI } from "../../../utils/api";
+import { useSelector } from "react-redux";
 
 const StarRating = ({ value = 0 }) => {
   return (
@@ -21,6 +22,7 @@ const Reviews = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const reduxUser = useSelector((s) => s.auth?.user);
 
   useEffect(() => {
     let cancelled = false;
@@ -28,18 +30,29 @@ const Reviews = () => {
       setLoading(true);
       setError(null);
       try {
-        // TODO: Uncomment when backend implements /api/reviews endpoint
-        // const response = await axiosWithAuth.get("api/reviews");
-        // if (!cancelled) {
-        //   setReviews(response.data.data || response.data);
-        // }
-
-        // Temporarily use empty data
+        // get userId from Redux
+        const userIdFromRedux = reduxUser?.userId || reduxUser?.id || null;
+        const response = await reviewsAPI.getAllReviews(userIdFromRedux);
         if (!cancelled) {
-          setReviews([]);
+          // Handle response - could be array or object with data property
+          const payload = Array.isArray(response.data)
+            ? response.data
+            : response.data?.data || response.data;
+          setReviews(Array.isArray(payload) ? payload : []);
         }
       } catch (err) {
-        if (!cancelled) setError(err.message || "Failed to load reviews");
+        if (!cancelled) {
+          // If backend returns 405 Method Not Allowed it means GET /reviews
+          // is not implemented — treat as "no reviews" instead of showing
+          // a hard error in the UI.
+          if (err?.response?.status === 405) {
+            // Treat as no reviews available
+            setReviews([]);
+            setError(null);
+          } else {
+            setError(err.message || "Failed to load reviews");
+          }
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -52,9 +65,9 @@ const Reviews = () => {
 
   const handleDelete = async (id) => {
     try {
-      // TODO: Uncomment when backend implements DELETE /api/reviews/{id} endpoint
-      // await axiosWithAuth.delete(`api/reviews/${id}`);
-      alert("Review deletion endpoint not yet implemented on backend.");
+      await reviewsAPI.deleteReview(id);
+      setReviews((prev) => prev.filter((r) => r.id !== id));
+      alert("Review deleted successfully");
     } catch (err) {
       alert("Failed to delete review: " + (err.message || err));
     }

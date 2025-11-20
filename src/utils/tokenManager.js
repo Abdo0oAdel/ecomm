@@ -8,17 +8,17 @@ let onTokensClearedCallback = null;
 // Helper function to decode JWT token (without verification - for client-side only)
 const decodeJWT = (token) => {
   try {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
     const jsonPayload = decodeURIComponent(
       atob(base64)
-        .split('')
-        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
     );
     return JSON.parse(jsonPayload);
   } catch (error) {
-    console.error('Error decoding JWT:', error);
+    // decoding failed — silently return null
     return null;
   }
 };
@@ -31,7 +31,10 @@ export const tokenManager = {
   },
 
   // Get tokens
-  getAccessToken: () => localStorage.getItem(ACCESS_TOKEN_KEY),
+  getAccessToken: () => {
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    return token;
+  },
   getRefreshToken: () => localStorage.getItem(REFRESH_TOKEN_KEY),
 
   // Remove tokens
@@ -51,7 +54,10 @@ export const tokenManager = {
 
   // Check if tokens exist
   hasTokens: () => {
-    return !!(localStorage.getItem(ACCESS_TOKEN_KEY) && localStorage.getItem(REFRESH_TOKEN_KEY));
+    return !!(
+      localStorage.getItem(ACCESS_TOKEN_KEY) &&
+      localStorage.getItem(REFRESH_TOKEN_KEY)
+    );
   },
 
   // Extract user info from access token
@@ -67,10 +73,32 @@ export const tokenManager = {
     }
 
     const user = {
-      userId: payload.userId || payload.UserId || payload.sub || payload.id || payload.nameid || payload.unique_name,
-      email: payload.email || payload.Email || payload.userEmail || payload.UserEmail,
-      firstName: payload.firstName || payload.FirstName || payload.userFirstName || payload.UserFirstName || payload.given_name || payload.firstname,
-      lastName: payload.lastName || payload.LastName || payload.userLastName || payload.UserLastName || payload.family_name || payload.lastname,
+      userId:
+        payload.userId ||
+        payload.UserId ||
+        payload.sub ||
+        payload.id ||
+        payload.nameid ||
+        payload.unique_name,
+      email:
+        payload.email ||
+        payload.Email ||
+        payload.userEmail ||
+        payload.UserEmail,
+      firstName:
+        payload.firstName ||
+        payload.FirstName ||
+        payload.userFirstName ||
+        payload.UserFirstName ||
+        payload.given_name ||
+        payload.firstname,
+      lastName:
+        payload.lastName ||
+        payload.LastName ||
+        payload.userLastName ||
+        payload.UserLastName ||
+        payload.family_name ||
+        payload.lastname,
     };
 
     // Validate we have minimal required data

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Cancellation.module.css";
-import { axiosWithAuth } from "../../../utils/helpers";
+import { ordersAPI } from "../../../utils/api";
 
 const Cancellation = () => {
   const [cancelledOrders, setCancelledOrders] = useState([]);
@@ -13,22 +13,19 @@ const Cancellation = () => {
       setLoading(true);
       setError(null);
       try {
-        // TODO: Uncomment when backend implements /api/orders?status=cancelled endpoint
-        // const response = await axiosWithAuth.get(
-        //   "api/orders?status=cancelled"
-        // );
-        // if (!cancelled) {
-        //   const payload = response.data;
-        //   setCancelledOrders(payload.data || payload);
-        // }
-
-        // Temporarily use empty data
+        const response = await ordersAPI.getCancelledOrders();
         if (!cancelled) {
-          setCancelledOrders([]);
+          // Handle response - could be array or object with data property
+          const payload = Array.isArray(response.data)
+            ? response.data
+            : response.data?.data || response.data;
+          setCancelledOrders(Array.isArray(payload) ? payload : []);
         }
       } catch (err) {
-        if (!cancelled)
+        if (!cancelled) {
+          console.error("Error loading cancelled orders:", err);
           setError(err.message || "Failed to load cancelled orders");
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
