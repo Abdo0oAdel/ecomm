@@ -23,6 +23,11 @@ const MyOrder = () => {
           const payload = Array.isArray(response.data)
             ? response.data
             : response.data?.data || response.data;
+          console.log("🔍 Orders API Response:", {
+            response,
+            payload,
+            firstOrder: payload[0],
+          });
           setOrders(Array.isArray(payload) ? payload : []);
         }
       } catch (err) {

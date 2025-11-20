@@ -19,6 +19,11 @@ const Cancellation = () => {
           const payload = Array.isArray(response.data)
             ? response.data
             : response.data?.data || response.data;
+          console.log("🔍 Cancelled Orders API Response:", {
+            response,
+            payload,
+            firstOrder: payload[0],
+          });
           setCancelledOrders(Array.isArray(payload) ? payload : []);
         }
       } catch (err) {
