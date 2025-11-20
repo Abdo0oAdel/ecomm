@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./MyOrder.module.css";
-import { axiosWithAuth } from "../../../utils/helpers";
+import { ordersAPI } from "../../../utils/api";
 
 const MyOrder = () => {
   const [orders, setOrders] = useState([]);
@@ -17,22 +17,18 @@ const MyOrder = () => {
       setLoading(true);
       setError(null);
       try {
-        // TODO: Uncomment when backend implements /api/orders endpoint
-        // const response = await axiosWithAuth.get(
-        //   `api/orders?page=${page}&limit=${pageSize}`
-        // );
-        // if (!cancelled) {
-        //   const payload = response.data;
-        //   setOrders(payload.data || payload);
-        // }
-
-        // Temporarily use empty data
+        const response = await ordersAPI.getAllOrders(page, pageSize);
         if (!cancelled) {
-          setOrders([]);
-          setError(null);
+          // Handle response - could be array or object with data property
+          const payload = Array.isArray(response.data)
+            ? response.data
+            : response.data?.data || response.data;
+          setOrders(Array.isArray(payload) ? payload : []);
         }
       } catch (err) {
-        if (!cancelled) setError(err.message || "Failed to load orders");
+        if (!cancelled) {
+          setError(err.message || "Failed to load orders");
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -42,7 +38,6 @@ const MyOrder = () => {
       cancelled = true;
     };
   }, [page]);
-
   function formatDate(iso) {
     try {
       return new Date(iso).toLocaleString();
@@ -55,9 +50,12 @@ const MyOrder = () => {
     if (!confirm("Cancel this order? This action may be irreversible.")) return;
     setProcessingId(orderId);
     try {
-      // TODO: Uncomment when backend implements DELETE /api/orders/{id} endpoint
-      // await axiosWithAuth.delete(`api/orders/${orderId}`);
-      alert("Order cancellation endpoint not yet implemented on backend.");
+      await ordersAPI.cancelOrder(orderId);
+      // optimistic UI: remove or mark cancelled
+      setOrders((prev) =>
+        prev.map((o) => (o.id === orderId ? { ...o, status: "cancelled" } : o))
+      );
+      alert("Order cancelled successfully");
     } catch (err) {
       alert("Failed to cancel order: " + (err.message || err));
     } finally {

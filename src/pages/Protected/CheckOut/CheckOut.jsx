@@ -78,40 +78,39 @@ const CheckOut = () => {
     dispatch(checkoutActions.updateField({ field: name, value }));
   };
 
-      const handleSubmit = async (e) => {
-      e.preventDefault();
-      const orderData = {
-        billingDetails: formData,
-        items: cartItems,
-        paymentMethod: selectedPayment,
-        couponCode,
-        subtotal,
-        shipping,
-        total,
-        user,
-      };
-      console.log("Order data:", orderData);
-      try {
-        await placeOrder(orderData);
-        Swal.fire({
-          icon: "success",
-          title: "Order Placed!",
-          text: "Your order has been placed successfully.",
-          timer: 2000,
-          showConfirmButton: false,
-        });
-        dispatch(cartActions.clearCart());
-        dispatch(checkoutActions.clearCheckoutData());
-        navigate("/");
-      } catch (error) {
-        console.error("Failed to place order:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Order Failed",
-          text: error.message || "There was an issue placing your order.",
-        });
-      }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const orderData = {
+      billingDetails: formData,
+      items: cartItems,
+      paymentMethod: selectedPayment,
+      couponCode,
+      subtotal,
+      shipping,
+      total,
+      user,
     };
+    try {
+      await placeOrder(orderData);
+      Swal.fire({
+        icon: "success",
+        title: "Order Placed!",
+        text: "Your order has been placed successfully.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      dispatch(cartActions.clearCart());
+      dispatch(checkoutActions.clearCheckoutData());
+      navigate("/");
+    } catch (error) {
+      console.error("Failed to place order:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Order Failed",
+        text: error.message || "There was an issue placing your order.",
+      });
+    }
+  };
   return (
     <main className={styles.checkoutContainer}>
       <div className={styles.maxWidthContainer}>
@@ -280,7 +279,9 @@ const CheckOut = () => {
                 <button
                   type="button"
                   className={styles.couponButton}
-                  onClick={() => console.log("Apply coupon:", couponCode)}
+                  onClick={() => {
+                    /* apply coupon handler placeholder */
+                  }}
                 >
                   Apply Coupon
                 </button>
