@@ -31,7 +31,10 @@ export const authAPI = {
       return result.data;
     } catch (error) {
       if (error.response?.data) {
-        const errorMsg = error.response.data.message || error.response.data.errors?.[0] || "Login failed";
+        const errorMsg =
+          error.response.data.message ||
+          error.response.data.errors?.[0] ||
+          "Login failed";
         throw new Error(errorMsg);
       }
       throw error;
@@ -45,7 +48,8 @@ export const authAPI = {
       const result = response.data;
 
       if (!result.success) {
-        const errorMsg = result.message || result.errors?.[0] || "Registration failed";
+        const errorMsg =
+          result.message || result.errors?.[0] || "Registration failed";
         throw new Error(errorMsg);
       }
 
@@ -53,7 +57,10 @@ export const authAPI = {
       return result.data;
     } catch (error) {
       if (error.response?.data) {
-        const errorMsg = error.response.data.message || error.response.data.errors?.[0] || "Registration failed";
+        const errorMsg =
+          error.response.data.message ||
+          error.response.data.errors?.[0] ||
+          "Registration failed";
         throw new Error(errorMsg);
       }
       throw error;
@@ -70,7 +77,8 @@ export const authAPI = {
       const result = response.data;
 
       if (!result.success) {
-        const errorMsg = result.message || result.errors?.[0] || "Refresh failed";
+        const errorMsg =
+          result.message || result.errors?.[0] || "Refresh failed";
         throw new Error(errorMsg);
       }
 
@@ -78,7 +86,10 @@ export const authAPI = {
       return result.data;
     } catch (error) {
       if (error.response?.data) {
-        const errorMsg = error.response.data.message || error.response.data.errors?.[0] || "Refresh failed";
+        const errorMsg =
+          error.response.data.message ||
+          error.response.data.errors?.[0] ||
+          "Refresh failed";
         throw new Error(errorMsg);
       }
       throw error;
@@ -132,7 +143,6 @@ export const cartAPI = {
   },
 };
 
-
 // Wishlist API calls (RESTful, matches Swagger)
 export const wishlistAPI = {
   // GET /Wishlist
@@ -173,12 +183,11 @@ export const checkoutAPI = {
       })),
     };
 
-    console.log("Placing order with transformed data:", transformedOrder);
     try {
       const response = await axiosWithAuth.post("/orders", transformedOrder);
       return response.data;
     } catch (error) {
-      console.error("Error placing order:", error.response || error);
+      // propagate error
       throw error;
     }
   },
@@ -186,10 +195,58 @@ export const checkoutAPI = {
 
 // Address API calls
 export const addressAPI = {
-    getAddress: async (userId) => {
-        return axiosWithAuth.get(`/Addresses/${userId}`);
-    }
+  getAddress: async (userId) => {
+    return axiosWithAuth.get(`/Addresses/${userId}`);
+  },
 };
 
+// Orders API calls
+export const ordersAPI = {
+  getAllOrders: async (page = 1, limit = 10) => {
+    return axiosWithAuth.get(`/orders?page=${page}&limit=${limit}`);
+  },
+
+  getOrder: async (orderId) => {
+    return axiosWithAuth.get(`/orders/${orderId}`);
+  },
+
+  cancelOrder: async (orderId) => {
+    return axiosWithAuth.delete(`/orders/${orderId}`);
+  },
+
+  getCancelledOrders: async () => {
+    return axiosWithAuth.get(`/orders?status=cancelled`);
+  },
+};
+
+// Reviews API calls
+export const reviewsAPI = {
+  getAllReviews: async (productId) => {
+    if (!productId) return { data: [] }; // cannot fetch without productId
+
+    try {
+      const res = await axiosWithAuth.get(`/Reviews/product/${productId}`);
+      return res;
+    } catch (err) {
+      const status = err?.response?.status;
+      if ([400, 404, 405].includes(status)) {
+        return { data: [] }; // treat as no reviews
+      }
+      throw err; // propagate other errors
+    }
+  },
+
+  getReview: async (reviewId) => {
+    return axiosWithAuth.get(`/Reviews/${reviewId}`);
+  },
+
+  deleteReview: async (reviewId) => {
+    return axiosWithAuth.delete(`/Reviews/${reviewId}`);
+  },
+
+  createReview: async (reviewData) => {
+    return axiosWithAuth.post(`/Reviews`, reviewData);
+  },
+};
 
 export default authAPI;

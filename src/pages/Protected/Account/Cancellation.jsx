@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Cancellation.module.css";
-import { axiosWithAuth } from "../../../utils/helpers";
+import { ordersAPI } from "../../../utils/api";
 
 const Cancellation = () => {
   const [cancelledOrders, setCancelledOrders] = useState([]);
@@ -13,22 +13,19 @@ const Cancellation = () => {
       setLoading(true);
       setError(null);
       try {
-        // TODO: Uncomment when backend implements /api/orders?status=cancelled endpoint
-        // const response = await axiosWithAuth.get(
-        //   "api/orders?status=cancelled"
-        // );
-        // if (!cancelled) {
-        //   const payload = response.data;
-        //   setCancelledOrders(payload.data || payload);
-        // }
-
-        // Temporarily use empty data
+        const response = await ordersAPI.getCancelledOrders();
         if (!cancelled) {
-          setCancelledOrders([]);
+          // Handle response - could be array or object with data property
+          const payload = Array.isArray(response.data)
+            ? response.data
+            : response.data?.data || response.data;
+          setCancelledOrders(Array.isArray(payload) ? payload : []);
         }
       } catch (err) {
-        if (!cancelled)
+        if (!cancelled) {
+          console.error("Error loading cancelled orders:", err);
           setError(err.message || "Failed to load cancelled orders");
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -64,49 +61,35 @@ const Cancellation = () => {
       {!loading && cancelledOrders.length > 0 && (
         <div className={styles.ordersGrid}>
           {cancelledOrders.map((order) => (
-            <div key={order.id} className={styles.orderCard}>
+            <div key={order.orderID} className={styles.orderCard}>
               <div className={styles.orderHeader}>
                 <div>
                   <div className={styles.orderNumber}>
-                    Order #{order.number || order.id}
+                    Order #{order.orderNo || order.orderID}
                   </div>
                   <div className={styles.orderDate}>
-                    {formatDate(order.createdAt || order.date)}
+                    {formatDate(order.orderDate)}
                   </div>
                 </div>
-                <div className={styles.statusBadge}>Cancelled</div>
+                <div className={styles.statusBadge}>
+                  {order.orderStatus || "Cancelled"}
+                </div>
               </div>
 
               <div className={styles.orderDetails}>
                 <div className={styles.detailRow}>
-                  <span className={styles.label}>Items:</span>
-                  <span>
-                    {(order.items && order.items.length) ||
-                      order.itemCount ||
-                      0}
-                  </span>
+                  <span className={styles.label}>User:</span>
+                  <span>{order.userName || "N/A"}</span>
                 </div>
                 <div className={styles.detailRow}>
                   <span className={styles.label}>Total:</span>
                   <span>
-                    {order.total ? `$${order.total.toFixed(2)}` : order.total}
+                    {order.totalAmount
+                      ? `$${order.totalAmount.toFixed(2)}`
+                      : "N/A"}
                   </span>
                 </div>
               </div>
-
-              {order.items && order.items.length > 0 && (
-                <div className={styles.itemsList}>
-                  <div className={styles.itemsLabel}>Items:</div>
-                  <ul className={styles.items}>
-                    {order.items.map((item, idx) => (
-                      <li key={idx} className={styles.item}>
-                        {item.name} × {item.quantity || item.qty || 1}
-                        {item.price && ` — $${item.price}`}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
             </div>
           ))}
         </div>

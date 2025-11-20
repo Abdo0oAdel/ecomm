@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Reviews.module.css";
-import { axiosWithAuth } from "../../../utils/helpers";
+import { reviewsAPI } from "../../../utils/api";
+import { useSelector } from "react-redux";
 
 const StarRating = ({ value = 0 }) => {
   return (
@@ -21,22 +22,32 @@ const Reviews = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const reduxUser = useSelector((s) => s.auth?.user);
 
   useEffect(() => {
+    if (!reduxUser) return;
+
+    const productId = reduxUser.productID || reduxUser.productId;
+    if (!productId) {
+      setReviews([]);
+      setLoading(false);
+      return;
+    }
+
     let cancelled = false;
     async function loadReviews() {
       setLoading(true);
       setError(null);
       try {
-        // TODO: Uncomment when backend implements /api/reviews endpoint
-        // const response = await axiosWithAuth.get("api/reviews");
-        // if (!cancelled) {
-        //   setReviews(response.data.data || response.data);
-        // }
+        const response = await reviewsAPI.getAllReviews(reduxUser.productID);
+        // Log the raw response
+        console.log("API response:", response);
 
-        // Temporarily use empty data
+        // Log the actual data array
+        console.log("Reviews data:", response.data);
+
         if (!cancelled) {
-          setReviews([]);
+          setReviews(Array.isArray(response.data) ? response.data : []);
         }
       } catch (err) {
         if (!cancelled) setError(err.message || "Failed to load reviews");
@@ -44,17 +55,18 @@ const Reviews = () => {
         if (!cancelled) setLoading(false);
       }
     }
+
     loadReviews();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [reduxUser?.productID]);
 
   const handleDelete = async (id) => {
     try {
-      // TODO: Uncomment when backend implements DELETE /api/reviews/{id} endpoint
-      // await axiosWithAuth.delete(`api/reviews/${id}`);
-      alert("Review deletion endpoint not yet implemented on backend.");
+      await reviewsAPI.deleteReview(id);
+      setReviews((prev) => prev.filter((r) => r.reviewID !== id));
+      alert("Review deleted successfully");
     } catch (err) {
       alert("Failed to delete review: " + (err.message || err));
     }
@@ -76,24 +88,26 @@ const Reviews = () => {
         !error && (
           <ul className={styles.reviewsList}>
             {reviews.map((r) => (
-              <li key={r.id} className={styles.reviewCard}>
+              <li key={r.reviewID} className={styles.reviewCard}>
                 <div className={styles.reviewHeader}>
                   <div>
-                    <div className={styles.productName}>{r.product}</div>
-                    <div className={styles.meta}>{r.date}</div>
+                    <div className={styles.productName}>{r.productID}</div>
+                    <div className={styles.meta}>
+                      {new Date(r.createdAt).toLocaleDateString()}
+                    </div>
                   </div>
                   <div>
                     <StarRating value={r.rating} />
                   </div>
                 </div>
 
-                <p className={styles.reviewText}>{r.text}</p>
+                <p className={styles.reviewText}>{r.comment}</p>
 
                 <div>
                   <button
                     type="button"
                     className={styles.deleteButton}
-                    onClick={() => handleDelete(r.id)}
+                    onClick={() => handleDelete(r.reviewID)}
                   >
                     Delete review
                   </button>

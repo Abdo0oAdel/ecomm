@@ -281,7 +281,9 @@ const CheckOut = () => {
                 <button
                   type="button"
                   className={styles.couponButton}
-                  onClick={() => console.log("Apply coupon:", couponCode)}
+                  onClick={() => {
+                    /* apply coupon handler placeholder */
+                  }}
                 >
                   Apply Coupon
                 </button>

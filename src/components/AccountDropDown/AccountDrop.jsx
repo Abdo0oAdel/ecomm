@@ -4,9 +4,16 @@ import styles from "./AccountDrop.module.css";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+
+import { useSelector } from "react-redux";
+
 const AccountDrop = ({ closeMenu, onLogout }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const user = useSelector((state) => state.auth.user);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isAdmin = isAuthenticated && user?.isAdmin;
 
   return (
     <>
@@ -22,6 +29,18 @@ const AccountDrop = ({ closeMenu, onLogout }) => {
               <FiUser size={24} />
               {t("nav.manageAccount")}
             </li>
+            {/* Admin Dashboard link for admins */}
+            {isAdmin && (
+              <li
+                onClick={() => {
+                  navigate("/admin/AdminDashboard");
+                  closeMenu();
+                }}
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                {t("nav.adminDashboard") || "Admin Dashboard"}
+              </li>
+            )}
             <li
               onClick={() => {
                 navigate("/MyOrder");
@@ -123,7 +142,7 @@ const AccountDrop = ({ closeMenu, onLogout }) => {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M4 12H13.5M6 15L3 12L6 9M11 7V6C11 5.46957 11.2107 4.96086 11.5858 4.58579C11.9609 4.21071 12.4696 4 13 4H18C18.5304 4 19.0391 4.21071 19.4142 4.58579C19.7893 4.96086 20 5.46957 20 6V18C20 18.5304 19.7893 19.0391 19.4142 19.4142C19.0391 19.7893 18.5304 20 18 20H13C12.4696 20 11.9609 19.7893 11.5858 19.4142C11.2107 19.0391 11 18.5304 11 18V17"
+                  d="M4 12H13.5M6 15L3 12L6 9M11 7V6C11 5.46957 11.2107 4.96086 11.5858 4.58579C11.9609 4.21071 12.4696 4 13 4H18C18.5304 4 19.0391 4.21071 19.4142 4.58579C19.7893 4.96086 20 5.46957 20 6V18C20 18.5304 19.7893 19.0391 19.4142 19.4142C19.0391 19.7891 18.5304 20 18 20H13C12.4696 20 11.9609 19.7891 11.5858 19.4142C11.2107 19.0391 11 18.5304 11 18V17"
                   stroke="#FAFAFA"
                   stroke-width="1.5"
                   stroke-linecap="round"
