@@ -42,10 +42,14 @@ const Reviews = () => {
         }
       } catch (err) {
         if (!cancelled) {
-          // If backend returns 405 Method Not Allowed it means GET /reviews
+          // If backend returns 400/404/405 it means reviews endpoint
           // is not implemented — treat as "no reviews" instead of showing
           // a hard error in the UI.
-          if (err?.response?.status === 405) {
+          if (
+            err?.response?.status === 405 ||
+            err?.response?.status === 404 ||
+            err?.response?.status === 400
+          ) {
             // Treat as no reviews available
             setReviews([]);
             setError(null);

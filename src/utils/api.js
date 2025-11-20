@@ -228,6 +228,7 @@ export const reviewsAPI = {
       // common server patterns
       endpoints.push(`/user/reviews`);
       endpoints.push(`/reviews?userId=${userId}`);
+      endpoints.push(`/user/${userId}/reviews`);
     }
     endpoints.push(`/reviews`);
 
@@ -239,7 +240,7 @@ export const reviewsAPI = {
       } catch (err) {
         // If endpoint not implemented or not allowed, try next
         const status = err?.response?.status;
-        if (status === 404 || status === 405) {
+        if (status === 400 || status === 404 || status === 405) {
           lastError = err;
           continue;
         }
@@ -248,7 +249,7 @@ export const reviewsAPI = {
       }
     }
 
-    // If we reach here all endpoints failed with 404/405 — return empty shape
+    // If we reach here all endpoints failed with 400/404/405 — return empty shape
     if (lastError) {
       return { data: [] };
     }
