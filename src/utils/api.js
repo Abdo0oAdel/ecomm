@@ -198,6 +198,11 @@ export const addressAPI = {
   getAddress: async (userId) => {
     return axiosWithAuth.get(`/Addresses/${userId}`);
   },
+  createAddress: async (addressData) => {
+    return axiosWithAuth.post("/Addresses", addressData).then(res => res.data);
+    },
+  updateAddress: async (addressId, addressData) => {
+    return axiosWithAuth.put(`/Addresses/${addressId}`, addressData);
 };
 
 // Orders API calls
