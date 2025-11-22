@@ -212,6 +212,42 @@ export default function Account() {
       // For now, we'll only update the address and password
       // You may need to implement profile updates through a different mechanism
 
+      // Update address if userId is available
+        if (userId) {
+            // According to Swagger: AddressCreateUpdateDto requires:
+            // - userID (integer, required) - PascalCase
+            // - fullAddress (string, maxLength 500)
+            // - city (string, maxLength 100, required)
+            // - country (string, maxLength 100, required)
+
+            let fullAddress = formData.address || "";
+            fullAddress = fullAddress.trim();
+            let city = addressObject?.city || "Unknown";
+            let country = addressObject?.country || "Unknown";
+
+            const addressData = {
+                userID: userId,
+                fullAddress,
+                city,
+                country,
+            };
+
+            console.log("Updating address - addressId:", addressId, "addressData:", addressData);
+
+            let updatedAddress;
+            if (addressId) {
+                // Update existing address
+                updatedAddress = await addressAPI.updateAddress(addressId, addressData);
+            } else {
+                // Create new address
+                updatedAddress = await addressAPI.createAddress(addressData);
+                if (updatedAddress) {
+                    setAddressId(updatedAddress.addressID);
+                }
+            }
+            if (updatedAddress) setAddressObject(updatedAddress);
+        }
+
       // Note: There's no change password endpoint in the API according to Swagger
       // Password changes would need to be handled through a different mechanism
       // For now, we'll skip password updates
