@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./MyOrder.module.css";
 import { ordersAPI } from "../../../utils/api";
 import { useAuth } from "../../../hooks/useAuth";
+import Swal from 'sweetalert2';
 
 const MyOrder = () => {
   const { user } = useAuth();
@@ -34,7 +35,13 @@ const MyOrder = () => {
           const payload = Array.isArray(response.data)
             ? response.data
             : response.data?.data || response.data;
-          setOrders(Array.isArray(payload) ? payload : []);
+          const activeOrders = Array.isArray(payload)
+            ? payload.filter(
+                (order) =>
+                  order.orderStatus?.toLowerCase() !== "cancelled"
+              )
+            : [];
+          setOrders(activeOrders);
         }
       } catch (err) {
         if (!cancelled) {
@@ -58,15 +65,34 @@ const MyOrder = () => {
   }
 
   async function handleCancel(orderId) {
-    if (!confirm("Cancel this order? This action may be irreversible.")) return;
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, cancel it!'
+    });
+    if (!result.isConfirmed) {
+      return;
+    }
     setProcessingId(orderId);
     try {
       await ordersAPI.cancelOrder(orderId);
       // Optimistic UI: remove the cancelled order from the list
       setOrders((prev) => prev.filter((o) => o.orderID !== orderId));
-      alert("Order cancelled successfully");
+      Swal.fire(
+        'Cancelled!',
+        'Your order has been cancelled.',
+        'success'
+      );
     } catch (err) {
-      alert("Failed to cancel order: " + (err.message || err));
+      Swal.fire(
+        'Error!',
+        "Failed to cancel order: " + (err.message || err),
+        'error'
+      );
     } finally {
       setProcessingId(null);
     }
