@@ -20,8 +20,7 @@ const Cancellation = () => {
       setLoading(true);
       setError(null);
       try {
-        // Temporary frontend fix: Fetch all orders and filter by status
-        const response = await ordersAPI.getAllOrders(user.userId, 1, 1000); // Fetch up to 1000 orders
+        const response = await ordersAPI.getCancelledOrders(user.userId);
         if (!cancelled) {
           const payload = Array.isArray(response.data)
             ? response.data

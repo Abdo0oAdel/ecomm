@@ -97,7 +97,7 @@ const MyOrder = () => {
             <table className={styles.table}>
               <thead className={styles.tableHead}>
                 <tr>
-                  <th className={styles.tableHeadCell}>Order #</th>
+                  <th className={styles.tableHeadCell}>Order</th>
                   <th className={styles.tableHeadCell}>Date</th>
                   <th className={styles.tableHeadCell}>Items</th>
                   <th className={styles.tableHeadCell}>Total</th>
