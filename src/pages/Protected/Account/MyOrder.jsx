@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./MyOrder.module.css";
 import { ordersAPI } from "../../../utils/api";
 import { useAuth } from "../../../hooks/useAuth";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 const MyOrder = () => {
   const { user } = useAuth();
@@ -37,8 +37,7 @@ const MyOrder = () => {
             : response.data?.data || response.data;
           const activeOrders = Array.isArray(payload)
             ? payload.filter(
-                (order) =>
-                  order.orderStatus?.toLowerCase() !== "cancelled"
+                (order) => order.orderStatus?.toLowerCase() !== "cancelled"
               )
             : [];
           setOrders(activeOrders);
@@ -66,13 +65,13 @@ const MyOrder = () => {
 
   async function handleCancel(orderId) {
     const result = await Swal.fire({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "You won't be able to revert this!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, cancel it!'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, cancel it!",
     });
     if (!result.isConfirmed) {
       return;
@@ -82,16 +81,12 @@ const MyOrder = () => {
       await ordersAPI.cancelOrder(orderId);
       // Optimistic UI: remove the cancelled order from the list
       setOrders((prev) => prev.filter((o) => o.orderID !== orderId));
-      Swal.fire(
-        'Cancelled!',
-        'Your order has been cancelled.',
-        'success'
-      );
+      Swal.fire("Cancelled!", "Your order has been cancelled.", "success");
     } catch (err) {
       Swal.fire(
-        'Error!',
+        "Error!",
         "Failed to cancel order: " + (err.message || err),
-        'error'
+        "error"
       );
     } finally {
       setProcessingId(null);
@@ -134,9 +129,7 @@ const MyOrder = () => {
               <tbody>
                 {orders.map((order) => (
                   <tr key={order.orderID} className={styles.tableRow}>
-                    <td className={styles.tableCell}>
-                      {order.orderNo || order.orderID}
-                    </td>
+                    <td className={styles.tableCell}>{order.orderID}</td>
                     <td className={styles.tableCell}>
                       {formatDate(order.orderDate)}
                     </td>
@@ -245,7 +238,7 @@ const MyOrder = () => {
             </h4>
             <ul className={styles.modalItemsList}>
               <li className={styles.modalListItem}>
-                <strong>Order No:</strong> {selectedOrder.orderNo}
+                <strong>Order No:</strong> {selectedOrder.orderID}
               </li>
               <li className={styles.modalListItem}>
                 <strong>User:</strong> {selectedOrder.userName}

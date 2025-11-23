@@ -25,7 +25,7 @@ const Cancellation = () => {
           const payload = Array.isArray(response.data)
             ? response.data
             : response.data?.data || response.data;
-          
+
           if (Array.isArray(payload)) {
             const filteredOrders = payload.filter(
               (order) =>
@@ -66,9 +66,13 @@ const Cancellation = () => {
       <h2 className={myOrderStyles.title}>Cancelled Orders</h2>
 
       {loading && (
-        <div className={myOrderStyles.loadingMessage}>Loading cancelled orders…</div>
+        <div className={myOrderStyles.loadingMessage}>
+          Loading cancelled orders…
+        </div>
       )}
-      {error && <div className={myOrderStyles.errorMessage}>Error: {error}</div>}
+      {error && (
+        <div className={myOrderStyles.errorMessage}>Error: {error}</div>
+      )}
 
       {!loading && !error && cancelledOrders.length === 0 && (
         <p className={myOrderStyles.emptyMessage}>No cancelled orders.</p>
@@ -79,7 +83,7 @@ const Cancellation = () => {
           <table className={myOrderStyles.table}>
             <thead className={myOrderStyles.tableHead}>
               <tr>
-                <th className={myOrderStyles.tableHeadCell}>Order #</th>
+                <th className={myOrderStyles.tableHeadCell}>Order</th>
                 <th className={myOrderStyles.tableHeadCell}>Date</th>
                 <th className={myOrderStyles.tableHeadCell}>User</th>
                 <th className={myOrderStyles.tableHeadCell}>Total</th>
@@ -89,9 +93,7 @@ const Cancellation = () => {
             <tbody>
               {cancelledOrders.map((order) => (
                 <tr key={order.orderID} className={myOrderStyles.tableRow}>
-                  <td className={myOrderStyles.tableCell}>
-                    {order.orderNo || order.orderID}
-                  </td>
+                  <td className={myOrderStyles.tableCell}>{order.orderID}</td>
                   <td className={myOrderStyles.tableCell}>
                     {formatDate(order.orderDate)}
                   </td>
