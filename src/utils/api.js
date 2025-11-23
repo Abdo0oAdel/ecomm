@@ -217,11 +217,14 @@ export const ordersAPI = {
   },
 
   cancelOrder: async (orderId) => {
-    return axiosWithAuth.delete(`/orders/user/${orderId}`);
+    return axiosWithAuth.delete(`/orders/user/${orderId}`, {
+      orderStatus: "Cancelled",
+    });
   },
 
-  getCancelledOrders: async () => {
-    return axiosWithAuth.get(`/orders?status=cancelled`);
+  getCancelledOrders: async (userId) => {
+    // Corrected to fetch orders for a specific user
+    return axiosWithAuth.get(`/orders/user/${userId}?status=cancelled`);
   },
 };
 

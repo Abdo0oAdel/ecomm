@@ -62,10 +62,8 @@ const MyOrder = () => {
     setProcessingId(orderId);
     try {
       await ordersAPI.cancelOrder(orderId);
-      // optimistic UI: remove or mark cancelled
-      setOrders((prev) =>
-        prev.map((o) => (o.id === orderId ? { ...o, status: "cancelled" } : o))
-      );
+      // Optimistic UI: remove the cancelled order from the list
+      setOrders((prev) => prev.filter((o) => o.orderID !== orderId));
       alert("Order cancelled successfully");
     } catch (err) {
       alert("Failed to cancel order: " + (err.message || err));
