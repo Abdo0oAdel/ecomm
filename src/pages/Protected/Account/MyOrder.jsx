@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styles from "./MyOrder.module.css";
 import { ordersAPI } from "../../../utils/api";
+import { useAuth } from "../../../hooks/useAuth";
 
 const MyOrder = () => {
+  const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,10 +16,19 @@ const MyOrder = () => {
   useEffect(() => {
     let cancelled = false;
     async function load() {
+      if (!user?.userId) {
+        setLoading(false);
+        setError("User not found. Please log in.");
+        return;
+      }
       setLoading(true);
       setError(null);
       try {
-        const response = await ordersAPI.getAllOrders(page, pageSize);
+        const response = await ordersAPI.getAllOrders(
+          user.userId,
+          page,
+          pageSize
+        );
         if (!cancelled) {
           // Handle response - could be array or object with data property
           const payload = Array.isArray(response.data)
@@ -37,7 +48,7 @@ const MyOrder = () => {
     return () => {
       cancelled = true;
     };
-  }, [page]);
+  }, [page, user]);
   function formatDate(iso) {
     try {
       return new Date(iso).toLocaleString();

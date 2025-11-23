@@ -200,7 +200,7 @@ export const addressAPI = {
   },
   createAddress: async (addressData) => {
     return axiosWithAuth.post("/Addresses", addressData).then(res => res.data);
-    },
+  },
   updateAddress: async (addressId, addressData) => {
     return axiosWithAuth.put(`/Addresses/${addressId}`, addressData);
   },
@@ -208,16 +208,16 @@ export const addressAPI = {
 
 // Orders API calls
 export const ordersAPI = {
-  getAllOrders: async (page = 1, limit = 10) => {
-    return axiosWithAuth.get(`/orders?page=${page}&limit=${limit}`);
+  getAllOrders: async (userId, page = 1, limit = 10) => {
+    return axiosWithAuth.get(`/orders/user/${userId}?page=${page}&limit=${limit}`);
   },
 
   getOrder: async (orderId) => {
-    return axiosWithAuth.get(`/orders/${orderId}`);
+    return axiosWithAuth.get(`/orders/user/${orderId}`);
   },
 
   cancelOrder: async (orderId) => {
-    return axiosWithAuth.delete(`/orders/${orderId}`);
+    return axiosWithAuth.delete(`/orders/user/${orderId}`);
   },
 
   getCancelledOrders: async () => {
