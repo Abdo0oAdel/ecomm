@@ -4,7 +4,6 @@ import AdminSideBar from "../../../components/AdminSideBar/AdminSideBar";
 import ProductList from "./ProductList";
 import ProductModal from "./ProductModal";
 import ProductForm from "./ProductForm";
-import { getProducts, createProduct, updateProduct, deleteProduct, uploadProductImages } from "../../../services/products";
 import styles from "./ProductManagement.module.css";
 import Swal from "sweetalert2";
 
