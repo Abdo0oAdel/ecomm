@@ -1,13 +1,13 @@
 
 import React from "react";
 import styles from "./AdminDashboard.module.css";
-import AdminSideBar from "../../../components/AdminSideBar/AdminSideBar";
+import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 
 
 const AdminDashboard = () => {
     return (
         <div className={styles.adminLayout}>
-            <AdminSideBar />
+            <AdminSidebar />
             <main className={styles.adminMain}>
                 <p>this is AdminDashboard</p>
             </main>

@@ -1,5 +1,5 @@
 import React from "react";
-import AdminSideBar from "../../../components/AdminSideBar/AdminSideBar";
+import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 import useUsers from "../../../hooks/useUsers";
 import Swal from "sweetalert2";
 import { useState } from "react";
@@ -89,7 +89,7 @@ const UserManagement = () => {
 
     return (
         <div className={styles.adminLayout}>
-            <AdminSideBar />
+            <AdminSidebar />
             <main className={styles.adminMain}>
                 <div className={styles.header}>
                     <h2 className={styles.title}>User Management</h2>

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import AdminSideBar from "../../../components/AdminSideBar/AdminSideBar";
+import AdminSidebar from "../../../components/AdminSidebar/AdminSidebar";
 import ProductList from "./ProductList";
 import ProductModal from "./ProductModal";
 import ProductForm from "./ProductForm";
@@ -102,7 +102,7 @@ const ProductManagement = () => {
         <div className="grid grid-cols-1 md:grid-cols-12 min-h-screen w-full">
             {/* Sidebar: 2 columns on md+ */}
             <div className="col-span-1 md:col-span-2 bg-white border-r border-gray-100 w-full h-full flex">
-                <AdminSideBar />
+                <AdminSidebar />
             </div>
             {/* Main content: 10 columns on md+ */}
             <main className="col-span-1 md:col-span-10 px-4 py-6 md:px-8 md:py-10 w-full">
