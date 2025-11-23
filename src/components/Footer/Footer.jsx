@@ -40,6 +40,11 @@ const Footer = () => {
     }
   };
 
+  // Smooth scroll to top handler
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContainer}>
@@ -184,7 +189,7 @@ const Footer = () => {
       </div>
 
       {/* Scroll to Top Button */}
-      <button className={styles.scrollToTop} aria-label="Scroll to top">
+      <button className={styles.scrollToTop} aria-label="Scroll to top" onClick={handleScrollToTop}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path
             d="M12 19V5M5 12L12 5L19 12"

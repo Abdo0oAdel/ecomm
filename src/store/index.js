@@ -19,7 +19,8 @@ const store = configureStore({
         auth: authReducer,
         cart: cartReducer,
         wishlist: wishlistReducer,
-        checkout: checkoutReducer
+        checkout: checkoutReducer,
+        users: (await import("./User/slice.js")).default
     },
     preloadedState: persistedState
 });
