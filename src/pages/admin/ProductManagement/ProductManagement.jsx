@@ -6,7 +6,7 @@ import ProductModal from "./ProductModal";
 import ProductForm from "./ProductForm";
 import styles from "./ProductManagement.module.css";
 import Swal from "sweetalert2";
-import {getProducts} from "../../../services/products.js";
+import { getProducts, createProduct, updateProduct, deleteProduct, uploadProductImages } from "../../../services/products";
 
 const ProductManagement = () => {
     const [products, setProducts] = useState([]);
