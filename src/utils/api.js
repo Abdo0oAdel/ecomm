@@ -203,6 +203,7 @@ export const addressAPI = {
     },
   updateAddress: async (addressId, addressData) => {
     return axiosWithAuth.put(`/Addresses/${addressId}`, addressData);
+  },
 };
 
 // Orders API calls
