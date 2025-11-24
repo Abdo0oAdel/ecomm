@@ -23,13 +23,13 @@ const SignUp = () => {
 
     // Simple validation - in production, you'd validate against your backend
     if (!email || !firstName || !lastName || !phone || !password || !confirmPassword) {
-      setError("Please fill in all fields");
+      setError(t("auth.errors.fillAllFields"));
       return;
     }
 
     // Validate password match
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError(t("auth.errors.passwordsDontMatch"));
       return;
     }
 
@@ -50,10 +50,10 @@ const SignUp = () => {
         // Registration successful, user is logged in and tokens are stored
         navigate("/");
       } else {
-        setError(registerError || "Registration failed. Please try again.");
+        setError(registerError || t("auth.errors.registrationFailed"));
       }
     } catch (err) {
-      setError(err.message || "Registration failed. Please try again.");
+      setError(err.message || t("auth.errors.registrationFailed"));
     }
   };
   return (
@@ -69,7 +69,7 @@ const SignUp = () => {
           <div className={styles.inputForm}>
             <div className={styles.nameInputs}>
               <input
-                placeholder="First Name"
+                placeholder={t("auth.firstName")}
                 type="Text"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
@@ -77,7 +77,7 @@ const SignUp = () => {
                 disabled={loading}
               ></input>
               <input
-                placeholder="Last Name"
+                placeholder={t("auth.lastName")}
                 type="Text"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
@@ -90,7 +90,7 @@ const SignUp = () => {
               id="phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="Phone Number"
+              placeholder={t("auth.phone")}
               required
               disabled={loading}
             />
@@ -117,7 +117,7 @@ const SignUp = () => {
               id="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm Password"
+              placeholder={t("auth.confirmPassword")}
               required
               disabled={loading}
             />
@@ -128,7 +128,7 @@ const SignUp = () => {
               className={styles.signUpButton}
               disabled={loading}
             >
-              {loading ? "Creating Account..." : t("auth.signup")}
+              {loading ? t("auth.creatingAccount") : t("auth.signup")}
             </button>
             <button
               type="button"
@@ -158,7 +158,7 @@ const SignUp = () => {
                   d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
                 ></path>
               </svg>{" "}
-              Sign up with Google
+              {t("auth.signupWithGoogle")}
             </button>
           </div>
         </form>

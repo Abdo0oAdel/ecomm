@@ -24,21 +24,11 @@ const NavBar = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const user = useSelector((state) => state.auth.user);
   const cartItems = useSelector((state) => state.cart.items);
+  const cartCount = useSelector((state) => state.cart.count);
   const wishlistItems = useSelector((state) => state.wishlist.items);
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
-  };
-
-  const getCurrentLanguageLabel = () => {
-    switch (i18n.language) {
-      case "ar":
-        return "العربية";
-      case "fr":
-        return "Français";
-      default:
-        return "English";
-    }
   };
 
   const handleLogout = async () => {
@@ -94,7 +84,7 @@ const NavBar = () => {
             aria-label="Language selector"
           >
             <div className={styles.langCurrent}>
-              {getCurrentLanguageLabel()}{" "}
+              {t("languages." + i18n.language)}{" "}
               <span className={styles.caret}>▾</span>
             </div>
             <ul className={styles.langList}>
@@ -123,14 +113,14 @@ const NavBar = () => {
         <div className={styles.headerContainer}>
           {/* Logo */}
           <Link to="/" className={styles.logo}>
-            <h1>Zenon</h1>
+            <h1>{t("nav.logo")}</h1>
           </Link>
 
           {/* Hamburger Menu Button - Mobile Only */}
           <button
             className={styles.hamburger}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
+            aria-label={t("nav.toggleMenu")}
           >
             {mobileMenuOpen ? (
               <svg
@@ -171,7 +161,7 @@ const NavBar = () => {
               <button
                 className={styles.closeNav}
                 onClick={() => setMobileMenuOpen(false)}
-                aria-label="Close menu"
+                aria-label={t("nav.closeMenu")}
               >
                 <FiX size={20} />
               </button>
@@ -239,7 +229,7 @@ const NavBar = () => {
                 placeholder={t("nav.searchPlaceholder")}
                 className={styles.searchInput}
               />
-              <button className={styles.searchButton} aria-label="Search">
+              <button className={styles.searchButton} aria-label={t("nav.search")}>
                 <svg
                   width="24"
                   height="24"
@@ -260,8 +250,8 @@ const NavBar = () => {
               <button
                 className={styles.iconButton}
                 onClick={() => navigate("/wishlist")}
-                aria-label="Wishlist"
-                title="Wishlist"
+                aria-label={t("nav.wishlist")}
+                title={t("nav.wishlist")}
               >
                 <FiHeart size={20} />
                 {wishlistItems.length > 0 && (
@@ -273,12 +263,12 @@ const NavBar = () => {
               <button
                 className={styles.iconButton}
                 onClick={() => navigate("/cart")}
-                aria-label="Cart"
-                title="Cart"
+                aria-label={t("nav.cart")}
+                title={t("nav.cart")}
               >
                 <FiShoppingCart size={20} />
-                {cartItems.length > 0 && (
-                  <span className={styles.badge}>{cartItems.length}</span>
+                {(cartCount > 0 || cartItems.length > 0) && (
+                  <span className={styles.badge}>{cartCount ?? cartItems.length}</span>
                 )}
               </button>
 
@@ -289,7 +279,7 @@ const NavBar = () => {
                       userMenuOpen ? styles.active : ""
                     }`}
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    aria-label="User Menu"
+                    aria-label={t("nav.userMenu")}
                   >
                     <svg
                       width="24"
@@ -315,7 +305,7 @@ const NavBar = () => {
                 <button
                   className={styles.iconButton}
                   onClick={() => navigate("/login")}
-                  aria-label="Login"
+                  aria-label={t("nav.login")}
                 >
                   <svg
                     width="24"

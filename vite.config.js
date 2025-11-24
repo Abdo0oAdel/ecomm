@@ -7,13 +7,4 @@ export default defineConfig({
   plugins: [
       react(),
       tailwindcss(),],
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://depiproject.runasp.net',
-        changeOrigin: true,
-        secure: false,
-      }
-    }
-  }
 })

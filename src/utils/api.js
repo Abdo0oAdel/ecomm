@@ -31,7 +31,10 @@ export const authAPI = {
       return result.data;
     } catch (error) {
       if (error.response?.data) {
-        const errorMsg = error.response.data.message || error.response.data.errors?.[0] || "Login failed";
+        const errorMsg =
+          error.response.data.message ||
+          error.response.data.errors?.[0] ||
+          "Login failed";
         throw new Error(errorMsg);
       }
       throw error;
@@ -45,7 +48,8 @@ export const authAPI = {
       const result = response.data;
 
       if (!result.success) {
-        const errorMsg = result.message || result.errors?.[0] || "Registration failed";
+        const errorMsg =
+          result.message || result.errors?.[0] || "Registration failed";
         throw new Error(errorMsg);
       }
 
@@ -53,7 +57,10 @@ export const authAPI = {
       return result.data;
     } catch (error) {
       if (error.response?.data) {
-        const errorMsg = error.response.data.message || error.response.data.errors?.[0] || "Registration failed";
+        const errorMsg =
+          error.response.data.message ||
+          error.response.data.errors?.[0] ||
+          "Registration failed";
         throw new Error(errorMsg);
       }
       throw error;
@@ -70,7 +77,8 @@ export const authAPI = {
       const result = response.data;
 
       if (!result.success) {
-        const errorMsg = result.message || result.errors?.[0] || "Refresh failed";
+        const errorMsg =
+          result.message || result.errors?.[0] || "Refresh failed";
         throw new Error(errorMsg);
       }
 
@@ -78,7 +86,10 @@ export const authAPI = {
       return result.data;
     } catch (error) {
       if (error.response?.data) {
-        const errorMsg = error.response.data.message || error.response.data.errors?.[0] || "Refresh failed";
+        const errorMsg =
+          error.response.data.message ||
+          error.response.data.errors?.[0] ||
+          "Refresh failed";
         throw new Error(errorMsg);
       }
       throw error;
@@ -132,22 +143,118 @@ export const cartAPI = {
   },
 };
 
-// Wishlist API calls
+// Wishlist API calls (RESTful, matches Swagger)
 export const wishlistAPI = {
+  // GET /Wishlist
   getWishlist: async () => {
-    return axiosWithAuth.get("/wishlist");
+    return axiosWithAuth.get("/Wishlist");
   },
 
-  addToWishlist: async (item) => {
-    return axiosWithAuth.post("/wishlist", item);
+  // POST /Wishlist/{productId}
+  addToWishlist: async (productId) => {
+    return axiosWithAuth.post(`/Wishlist/${productId}`);
   },
 
-  removeFromWishlist: async (itemId) => {
-    return axiosWithAuth.delete(`/wishlist/${itemId}`);
+  // DELETE /Wishlist/{productId}
+  removeFromWishlist: async (productId) => {
+    return axiosWithAuth.delete(`/Wishlist/${productId}`);
   },
 
+  // DELETE /Wishlist
   clearWishlist: async () => {
-    return axiosWithAuth.delete("/wishlist");
+    return axiosWithAuth.delete("/Wishlist");
+  },
+
+  // GET /Wishlist/{productId}
+  getWishlistItem: async (productId) => {
+    return axiosWithAuth.get(`/Wishlist/${productId}`);
+  },
+};
+
+// Checkout API calls
+export const checkoutAPI = {
+  placeOrder: async (orderData) => {
+    const { items, user } = orderData;
+    const transformedOrder = {
+      userId: user?.userId,
+      orderItems: items.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      })),
+    };
+
+    try {
+      const response = await axiosWithAuth.post("/orders", transformedOrder);
+      return response.data;
+    } catch (error) {
+      // propagate error
+      throw error;
+    }
+  },
+};
+
+// Address API calls
+export const addressAPI = {
+  getAddress: async (userId) => {
+    return axiosWithAuth.get(`/Addresses/${userId}`);
+  },
+  createAddress: async (addressData) => {
+    return axiosWithAuth.post("/Addresses", addressData).then(res => res.data);
+  },
+  updateAddress: async (addressId, addressData) => {
+    return axiosWithAuth.put(`/Addresses/${addressId}`, addressData);
+  },
+};
+
+// Orders API calls
+export const ordersAPI = {
+  getAllOrders: async (userId, page = 1, limit = 10) => {
+    return axiosWithAuth.get(`/orders/user/${userId}?page=${page}&limit=${limit}`);
+  },
+
+  getOrder: async (orderId) => {
+    return axiosWithAuth.get(`/orders/user/${orderId}`);
+  },
+
+  cancelOrder: async (orderId) => {
+    return axiosWithAuth.delete(`/orders/${orderId}`, {
+      orderStatus: "Cancelled",
+    });
+  },
+
+  getCancelledOrders: async (userId) => {
+    // Corrected to fetch orders for a specific user
+    return axiosWithAuth.get(`/orders/user/${userId}?status=cancelled`);
+  },
+};
+
+// Reviews API calls
+export const reviewsAPI = {
+  getAllReviews: async (productId) => {
+    if (!productId) return { data: [] }; // cannot fetch without productId
+
+    try {
+      const res = await axiosWithAuth.get(`/Reviews/product/${productId}`);
+      return res;
+    } catch (err) {
+      const status = err?.response?.status;
+      if ([400, 404, 405].includes(status)) {
+        return { data: [] }; // treat as no reviews
+      }
+      throw err; // propagate other errors
+    }
+  },
+
+  getReview: async (reviewId) => {
+    return axiosWithAuth.get(`/Reviews/${reviewId}`);
+  },
+
+  deleteReview: async (reviewId) => {
+    return axiosWithAuth.delete(`/Reviews/${reviewId}`);
+  },
+
+  createReview: async (reviewData) => {
+    return axiosWithAuth.post(`/Reviews`, reviewData);
   },
 };
 

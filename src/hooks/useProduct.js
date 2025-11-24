@@ -11,7 +11,12 @@ export const useProduct = (id) => {
     setLoading(true);
     getProductById(id)
       .then((data) => {
-        setProduct(data);
+        // Map API response to ensure isInStock and stock are present
+        setProduct({
+          ...data,
+          isInStock: data.isInStock,
+          stock: data.stock,
+        });
         setError(null);
       })
       .catch((err) => {

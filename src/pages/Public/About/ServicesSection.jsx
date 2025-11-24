@@ -1,21 +1,20 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export default function ServicesSection() {
+  const { t } = useTranslation();
   const services = [
     {
       icon: "fa-truck-fast",
-      title: "FREE AND FAST DELIVERY",
-      description: "Free delivery for all orders over $140",
+      key: "delivery",
     },
     {
       icon: "fa-headset",
-      title: "24/7 CUSTOMER SERVICE",
-      description: "Friendly 24/7 customer support",
+      key: "service",
     },
     {
       icon: "fa-shield-halved",
-      title: "MONEY BACK GUARANTEE",
-      description: "We return money within 30 days",
+      key: "guarantee",
     },
   ];
 
@@ -40,11 +39,11 @@ export default function ServicesSection() {
 
               {/* Title */}
               <h3 className="text-lg font-semibold text-black mb-2 uppercase tracking-wide">
-                {service.title}
+                {t(`serviceFeatures.${service.key}.title`)}
               </h3>
 
               {/* Description */}
-              <p className="text-sm text-gray-600">{service.description}</p>
+              <p className="text-sm text-gray-600">{t(`serviceFeatures.${service.key}.description`)}</p>
             </div>
           ))}
         </div>

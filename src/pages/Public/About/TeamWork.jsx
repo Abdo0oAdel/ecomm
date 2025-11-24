@@ -3,14 +3,15 @@ import personOne from "../../../assets/imgs/team-1.png";
 import persontow from "../../../assets/imgs/team-2.png";
 import persontheree from "../../../assets/imgs/team-3.png";
 import styles from "./About.module.css";
+import { useTranslation } from "react-i18next";
 
 const TeamWork = () => {
+  const { t } = useTranslation();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const teamMembers = [
     {
-      name: "Tom Cruise",
-      title: "Founder & Chairman",
+      key: "tom",
       image: personOne,
       social: {
         twitter: "#",
@@ -19,8 +20,7 @@ const TeamWork = () => {
       },
     },
     {
-      name: "Emma Watson",
-      title: "Managing Director",
+      key: "emma",
       image: persontow,
       social: {
         twitter: "#",
@@ -29,8 +29,7 @@ const TeamWork = () => {
       },
     },
     {
-      name: "Will Smith",
-      title: "Product Designer",
+      key: "will",
       image: persontheree,
       social: {
         twitter: "#",
@@ -51,14 +50,14 @@ const TeamWork = () => {
             <div className="w-full h-auto bg-gray-100 rounded-sm mb-4 overflow-hidden  aspect-square">
               <img
                 src={member.image}
-                alt={member.name}
+                alt={t(`team.${member.key}.name`)}
                 className="w-full h-auto object-cover"
               />
             </div>
 
             {/* Name and Title */}
-            <h3 className="text-2xl font-medium mb-1">{member.name}</h3>
-            <p className="text-gray-600 mb-4">{member.title}</p>
+            <h3 className="text-2xl font-medium mb-1">{t(`team.${member.key}.name`)}</h3>
+            <p className="text-gray-600 mb-4">{t(`team.${member.key}.title`)}</p>
 
             {/* Social Icons */}
             <div className="flex gap-4">

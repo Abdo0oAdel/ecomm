@@ -1,6 +1,9 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const ShippingMap = () => {
+  const { t } = useTranslation();
+
   const orderData = {
     orderId: "ZMJ82D9",
     trackingId: "23458039",
@@ -11,25 +14,25 @@ const ShippingMap = () => {
   const orderSteps = [
     {
       id: 1,
-      title: "1- Order Confirmed",
+      title: t("shippingMap.orderConfirmed"),
       icon: "fa-clipboard-check",
       color: "text-blue-500",
     },
     {
       id: 2,
-      title: "2- Order Shipped",
+      title: t("shippingMap.orderShipped"),
       icon: "fa-boxes-packing",
       color: "text-yellow-500",
     },
     {
       id: 3,
-      title: "3- Out for Delivery",
+      title: t("shippingMap.outForDelivery"),
       icon: "fa-truck-arrow-right",
       color: "text-cyan-500",
     },
     {
       id: 4,
-      title: "4- Order Delivered",
+      title: t("shippingMap.orderDelivered"),
       icon: "fa-house-chimney",
       color: "text-green-500",
     },
@@ -56,10 +59,10 @@ const ShippingMap = () => {
           onClick={handleGoHome}
           className="text-gray-300 mx-1 cursor-pointer hover:text-gray-500"
         >
-          Home
+          {t("shippingMap.home")}
         </span>
         <span className="text-gray-400"> / </span>
-        <span className="mx-1 text-black">Order Tracker</span>
+        <span className="mx-1 text-black">{t("shippingMap.orderTracker")}</span>
       </div>
 
       <div className="min-h-screen bg-white">
@@ -68,7 +71,7 @@ const ShippingMap = () => {
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 pb-6 border-b border-gray-200">
               <div className="text-center lg:text-left">
                 <h1 className="text-2xl sm:text-3xl font-bold text-red-500">
-                  Exclusive Store
+                  {t("shippingMap.exclusiveStore")}
                 </h1>
               </div>
               {/* Order Info */}
@@ -76,7 +79,7 @@ const ShippingMap = () => {
                 <div className="flex items-center gap-2 flex-wrap">
                   <i className="fas fa-cart-shopping text-red-500 text-xl"></i>
                   <p className="text-base sm:text-lg font-medium text-gray-900">
-                    Order ID:{" "}
+                    {t("shippingMap.orderId")}:{" "}
                     <span className="text-red-500 font-bold">
                       #{orderData.orderId}
                     </span>
@@ -86,7 +89,7 @@ const ShippingMap = () => {
                 <div className="flex flex-col sm:flex-row gap-3 text-sm">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-gray-700">
-                      Expected Arrival
+                      {t("shippingMap.expectedArrival")}
                     </span>
                     <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium">
                       {orderData.expectedArrival}
@@ -94,7 +97,7 @@ const ShippingMap = () => {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-gray-700">
-                      Tracking ID
+                      {t("shippingMap.trackingId")}
                     </span>
                     <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium">
                       {orderData.trackingId}
@@ -174,7 +177,7 @@ const ShippingMap = () => {
                 onClick={handleGoHome}
                 className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded font-medium transition-colors"
               >
-                Back to Home
+                {t("shippingMap.backToHome")}
               </button>
             </div>
           </div>

@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
-import styles from "./Account.module.css";
+import styles from "./MyOrder.module.css";
+import { ordersAPI } from "../../../utils/api";
+import { useAuth } from "../../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const MyOrder = () => {
+  const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,30 +17,35 @@ const MyOrder = () => {
   useEffect(() => {
     let cancelled = false;
     async function load() {
+      if (!user?.userId) {
+        setLoading(false);
+        setError("User not found. Please log in.");
+        return;
+      }
       setLoading(true);
       setError(null);
       try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(
-          `/api/user/orders?page=${page}&limit=${pageSize}`,
-          {
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-          }
+        const response = await ordersAPI.getAllOrders(
+          user.userId,
+          page,
+          pageSize
         );
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(text || `${res.status} ${res.statusText}`);
-        }
-        const json = await res.json();
         if (!cancelled) {
-          // expect server to return { orders: [...], total: number } or just [...]
-          const payload = Array.isArray(json)
-            ? { orders: json, total: json.length }
-            : json;
-          setOrders(payload.orders || payload);
+          // Handle response - could be array or object with data property
+          const payload = Array.isArray(response.data)
+            ? response.data
+            : response.data?.data || response.data;
+          const activeOrders = Array.isArray(payload)
+            ? payload.filter(
+                (order) => order.orderStatus?.toLowerCase() !== "cancelled"
+              )
+            : [];
+          setOrders(activeOrders);
         }
       } catch (err) {
-        if (!cancelled) setError(err.message || "Failed to load orders");
+        if (!cancelled) {
+          setError(err.message || "Failed to load orders");
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -45,8 +54,7 @@ const MyOrder = () => {
     return () => {
       cancelled = true;
     };
-  }, [page]);
-
+  }, [page, user]);
   function formatDate(iso) {
     try {
       return new Date(iso).toLocaleString();
@@ -56,27 +64,30 @@ const MyOrder = () => {
   }
 
   async function handleCancel(orderId) {
-    if (!confirm("Cancel this order? This action may be irreversible.")) return;
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, cancel it!",
+    });
+    if (!result.isConfirmed) {
+      return;
+    }
     setProcessingId(orderId);
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`/api/orders/${orderId}`, {
-        method: "DELETE", // adjust to your API (PATCH/PUT with { status: 'cancelled' } etc.)
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-      });
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `${res.status} ${res.statusText}`);
-      }
-      // optimistic UI: remove or mark cancelled
-      setOrders((prev) =>
-        prev.map((o) => (o.id === orderId ? { ...o, status: "cancelled" } : o))
-      );
+      await ordersAPI.cancelOrder(orderId);
+      // Optimistic UI: remove the cancelled order from the list
+      setOrders((prev) => prev.filter((o) => o.orderID !== orderId));
+      Swal.fire("Cancelled!", "Your order has been cancelled.", "success");
     } catch (err) {
-      alert("Failed to cancel order: " + (err.message || err));
+      Swal.fire(
+        "Error!",
+        "Failed to cancel order: " + (err.message || err),
+        "error"
+      );
     } finally {
       setProcessingId(null);
     }
@@ -91,118 +102,82 @@ const MyOrder = () => {
   }
 
   return (
-    <div style={{ padding: 16 }}>
-      <h2>My Orders</h2>
+    <div className={styles.container}>
+      <h2 className={styles.title}>My Orders</h2>
 
-      {loading && <div>Loading orders…</div>}
-      {error && <div style={{ color: "red" }}>Error: {error}</div>}
+      {loading && <div className={styles.loadingMessage}>Loading orders…</div>}
+      {error && <div className={styles.errorMessage}>Error: {error}</div>}
 
-      {!loading && !error && orders.length === 0 && <div>No orders found.</div>}
+      {!loading && !error && orders.length === 0 && (
+        <div className={styles.emptyMessage}>No orders found.</div>
+      )}
 
       {!loading && orders.length > 0 && (
         <>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
+          <div className={styles.tableWrapper}>
+            <table className={styles.table}>
+              <thead className={styles.tableHead}>
                 <tr>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #ddd",
-                      padding: 8,
-                    }}
-                  >
-                    Order #
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #ddd",
-                      padding: 8,
-                    }}
-                  >
-                    Date
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #ddd",
-                      padding: 8,
-                    }}
-                  >
-                    Items
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #ddd",
-                      padding: 8,
-                    }}
-                  >
-                    Total
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #ddd",
-                      padding: 8,
-                    }}
-                  >
-                    Status
-                  </th>
-                  <th
-                    style={{
-                      textAlign: "left",
-                      borderBottom: "1px solid #ddd",
-                      padding: 8,
-                    }}
-                  >
-                    Actions
-                  </th>
+                  <th className={styles.tableHeadCell}>Order</th>
+                  <th className={styles.tableHeadCell}>Date</th>
+                  <th className={styles.tableHeadCell}>Items</th>
+                  <th className={styles.tableHeadCell}>Total</th>
+                  <th className={styles.tableHeadCell}>Status</th>
+                  <th className={styles.tableHeadCell}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {orders.map((order) => (
-                  <tr
-                    key={order.id}
-                    style={{ borderBottom: "1px solid #f0f0f0" }}
-                  >
-                    <td style={{ padding: 8 }}>{order.number || order.id}</td>
-                    <td style={{ padding: 8 }}>
-                      {formatDate(order.createdAt || order.date)}
+                  <tr key={order.orderID} className={styles.tableRow}>
+                    <td className={styles.tableCell}>{order.orderID}</td>
+                    <td className={styles.tableCell}>
+                      {formatDate(order.orderDate)}
                     </td>
-                    <td style={{ padding: 8 }}>
-                      {(order.items && order.items.length) ||
-                        order.itemCount ||
-                        0}
+                    <td className={styles.tableCell}>{order.itemCount || 0}</td>
+                    <td className={styles.tableCell}>
+                      {order.totalAmount
+                        ? `$${order.totalAmount.toFixed(2)}`
+                        : "N/A"}
                     </td>
-                    <td style={{ padding: 8 }}>
-                      {order.total ? `$${order.total.toFixed(2)}` : order.total}
-                    </td>
-                    <td style={{ padding: 8 }}>{order.status || "unknown"}</td>
-                    <td style={{ padding: 8 }}>
-                      <button
-                        onClick={() => handleView(order)}
-                        style={{ marginRight: 8 }}
+                    <td className={styles.tableCell}>
+                      <span
+                        className={`${styles.statusBadge} ${
+                          order.orderStatus === "completed"
+                            ? styles.statusCompleted
+                            : order.orderStatus === "pending" ||
+                              order.orderStatus === "Pending"
+                            ? styles.statusPending
+                            : styles.statusCancelled
+                        }`}
                       >
-                        View
-                      </button>
-                      <button
-                        onClick={() => handleCancel(order.id)}
-                        disabled={
-                          processingId === order.id ||
-                          order.status === "cancelled"
-                        }
-                        style={{
-                          opacity: order.status === "cancelled" ? 0.6 : 1,
-                        }}
-                      >
-                        {processingId === order.id
-                          ? "Cancelling…"
-                          : order.status === "cancelled"
-                          ? "Cancelled"
-                          : "Cancel"}
-                      </button>
+                        {order.orderStatus || "unknown"}
+                      </span>
+                    </td>
+                    <td className={styles.tableCell}>
+                      <div className={styles.actionButtons}>
+                        <button
+                          onClick={() => handleView(order)}
+                          className={styles.button}
+                        >
+                          View
+                        </button>
+                        <button
+                          onClick={() => handleCancel(order.orderID)}
+                          disabled={
+                            processingId === order.orderID ||
+                            order.orderStatus === "cancelled" ||
+                            order.orderStatus === "Cancelled"
+                          }
+                          className={`${styles.button} ${styles.buttonCancel}`}
+                        >
+                          {processingId === order.orderID
+                            ? "Cancelling…"
+                            : order.orderStatus === "cancelled" ||
+                              order.orderStatus === "Cancelled"
+                            ? "Cancelled"
+                            : "Cancel"}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -210,15 +185,21 @@ const MyOrder = () => {
             </table>
           </div>
 
-          <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+          <div className={styles.pagination}>
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
+              className={styles.paginationButton}
             >
               Prev
             </button>
-            <span style={{ alignSelf: "center" }}>Page {page}</span>
-            <button onClick={() => setPage((p) => p + 1)}>Next</button>
+            <span className={styles.paginationInfo}>Page {page}</span>
+            <button
+              onClick={() => setPage((p) => p + 1)}
+              className={styles.paginationButton}
+            >
+              Next
+            </button>
           </div>
         </>
       )}
@@ -227,59 +208,59 @@ const MyOrder = () => {
         <div
           role="dialog"
           aria-modal="true"
-          style={{
-            position: "fixed",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "rgba(0,0,0,0.4)",
-            zIndex: 9999,
-          }}
+          className={styles.modalOverlay}
           onClick={closeModal}
         >
           <div
+            className={styles.modalContent}
             onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "#fff",
-              padding: 20,
-              maxWidth: 700,
-              width: "90%",
-              borderRadius: 6,
-            }}
           >
-            <h3>Order {selectedOrder.number || selectedOrder.id}</h3>
-            <div style={{ marginBottom: 8 }}>
-              Placed:{" "}
-              {formatDate(selectedOrder.createdAt || selectedOrder.date)}
+            <h3 className={styles.modalTitle}>
+              Order {selectedOrder.orderNo || selectedOrder.orderID}
+            </h3>
+            <div className={styles.modalInfo}>
+              <span className={styles.modalLabel}>Placed:</span>{" "}
+              {formatDate(selectedOrder.orderDate)}
             </div>
-            <div style={{ marginBottom: 8 }}>
-              Status: {selectedOrder.status}
+            <div className={styles.modalInfo}>
+              <span className={styles.modalLabel}>Status:</span>{" "}
+              {selectedOrder.orderStatus}
             </div>
-            <div style={{ marginBottom: 8 }}>
-              Total:{" "}
-              {selectedOrder.total
-                ? `$${selectedOrder.total}`
-                : selectedOrder.total}
+            <div className={styles.modalInfo}>
+              <span className={styles.modalLabel}>Total:</span>{" "}
+              {selectedOrder.totalAmount
+                ? `$${selectedOrder.totalAmount}`
+                : "N/A"}
             </div>
 
-            <h4>Items</h4>
-            <ul>
-              {(selectedOrder.items || []).map((it, i) => (
-                <li key={i}>
-                  {it.name} × {it.quantity || it.qty || 1}{" "}
-                  {it.price ? `— $${it.price}` : ""}
-                </li>
-              ))}
+            <h4 className={styles.modalLabel} style={{ marginTop: 16 }}>
+              Order Info
+            </h4>
+            <ul className={styles.modalItemsList}>
+              <li className={styles.modalListItem}>
+                <strong>Order No:</strong> {selectedOrder.orderID}
+              </li>
+              <li className={styles.modalListItem}>
+                <strong>User:</strong> {selectedOrder.userName}
+              </li>
+              <li className={styles.modalListItem}>
+                <strong>Items:</strong> {selectedOrder.itemCount || 0}
+              </li>
             </ul>
 
-            <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-              <button onClick={closeModal}>Close</button>
-              {selectedOrder.status !== "cancelled" && (
-                <button onClick={() => handleCancel(selectedOrder.id)}>
-                  Cancel Order
-                </button>
-              )}
+            <div className={styles.modalActions}>
+              <button onClick={closeModal} className={styles.button}>
+                Close
+              </button>
+              {selectedOrder.orderStatus !== "cancelled" &&
+                selectedOrder.orderStatus !== "Cancelled" && (
+                  <button
+                    onClick={() => handleCancel(selectedOrder.orderID)}
+                    className={`${styles.button} ${styles.buttonCancel}`}
+                  >
+                    Cancel Order
+                  </button>
+                )}
             </div>
           </div>
         </div>

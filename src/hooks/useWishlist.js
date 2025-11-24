@@ -9,12 +9,12 @@ export const useWishlist = () => {
 
   const addToWishlist = async (item) => {
     try {
-      // Optimistically update UI
-      dispatch(wishlistActions.addToWishlist(item));
-
-      // Sync with backend if authenticated
       if (isAuthenticated) {
-        await wishlistAPI.addToWishlist(item);
+        await wishlistAPI.addToWishlist(item.id);
+        // Re-fetch wishlist from backend to ensure UI is in sync
+        await fetchWishlist();
+      } else {
+        dispatch(wishlistActions.addToWishlist(item));
       }
     } catch (error) {
       console.error('Error adding to wishlist:', error);
@@ -24,10 +24,7 @@ export const useWishlist = () => {
 
   const removeFromWishlist = async (itemId) => {
     try {
-      // Optimistically update UI
       dispatch(wishlistActions.removeFromWishlist(itemId));
-
-      // Sync with backend if authenticated
       if (isAuthenticated) {
         await wishlistAPI.removeFromWishlist(itemId);
       }
@@ -39,10 +36,7 @@ export const useWishlist = () => {
 
   const clearWishlist = async () => {
     try {
-      // Optimistically update UI
       dispatch(wishlistActions.clearWishlist());
-
-      // Sync with backend if authenticated
       if (isAuthenticated) {
         await wishlistAPI.clearWishlist();
       }
@@ -56,12 +50,69 @@ export const useWishlist = () => {
     dispatch(wishlistActions.moveAllToBag());
   };
 
+  // Toggle wishlist: add if not present, remove if present
+  const toggleWishlist = async (item) => {
+    const exists = items.some((i) => i.id === item.id);
+    if (exists) {
+      await removeFromWishlist(item.id);
+    } else {
+      await addToWishlist(item);
+    }
+  };
+
+  // Fetch wishlist from backend and update Redux
+  const fetchWishlist = async () => {
+    try {
+      const response = await wishlistAPI.getWishlist();
+      // Axios wraps the response in .data
+      const data = response.data || response;
+      const rawItems = Array.isArray(data) ? data : data.items || [];
+
+      // Fetch product details for each wishlist item to get image and more
+      const itemsWithDetails = await Promise.all(
+        rawItems.map(async (item) => {
+          try {
+            // Dynamically import getProductById to avoid circular deps
+            const { getProductById } = await import('../services/products');
+            const product = await getProductById(item.productId);
+            return {
+              id: item.productId,
+              name: item.productName,
+              currentPrice: item.price,
+              image: product.imageURL || product.image || '',
+              originalPrice: product.originalPrice,
+              discount: product.discount,
+              isInStock: product.isInStock,
+              stock: product.stock,
+              rating: product.rating,
+              reviews: product.reviews,
+              // Add more fields as needed
+            };
+          } catch (e) {
+            // fallback if product fetch fails
+            return {
+              id: item.productId,
+              name: item.productName,
+              currentPrice: item.price,
+              image: '',
+            };
+          }
+        })
+      );
+      dispatch(wishlistActions.setWishlist(itemsWithDetails));
+    } catch (error) {
+      console.error('Error fetching wishlist:', error);
+    }
+  };
+
   return {
     items,
     addToWishlist,
     removeFromWishlist,
     clearWishlist,
     moveAllToBag,
+    toggleWishlist,
+    fetchWishlist,
   };
 };
 

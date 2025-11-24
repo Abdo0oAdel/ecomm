@@ -1,6 +1,8 @@
 import { useRoutes } from "react-router-dom";
 
+
 import ProtectedRoute from "./ProtectedRoute";
+import AdminRoute from "./AdminRoute";
 import PublicLayout from "../layout/PublicLayout";
 import ProtectedLayout from "../layout/ProtectedLayout";
 
@@ -23,12 +25,18 @@ import Account from "../pages/Protected/Account/Account";
 import Cancellation from "../pages/Protected/Account/Cancellation";
 import Reviews from "../pages/Protected/Account/Reviews";
 import MyOrder from "../pages/Protected/Account/MyOrder";
+
 import Error from "../pages/Error/Error";
 import ShippingMap from "../pages/Protected/ShippingMap/ShippingMap";
+
+import AdminDashboard from "../pages/admin/AdminDashboard/AdminDashboard";
+import UserManagement from "../pages/admin/UserManagement/UserManagement";
+import ProductManagement from "../pages/admin/ProductManagement/ProductManagement";
 
 const routes = [
   {
     element: <PublicLayout />,
+    errorElement: <Error />,
     children: [
       { path: "/", element: <Home /> },
       { path: "/about", element: <About /> },
@@ -47,6 +55,7 @@ const routes = [
   },
   {
     element: <ProtectedLayout />,
+    errorElement: <Error />,
     children: [
       {
         path: "/cart",
@@ -106,9 +115,36 @@ const routes = [
       },
     ],
   },
+    // Admin routes
   {
-    path: "*",
-    element: <Error />,
+    element: <ProtectedLayout />,
+    errorElement: <Error />,
+    children: [
+      {
+        path: "/admin/AdminDashboard",
+        element: (
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/admin/UserManagement",
+        element: (
+          <AdminRoute>
+            <UserManagement />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/admin/ProductManagement",
+        element: (
+          <AdminRoute>
+            <ProductManagement />
+          </AdminRoute>
+        ),
+      },
+    ],
   },
 ];
 

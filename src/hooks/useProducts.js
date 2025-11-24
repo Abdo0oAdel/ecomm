@@ -22,6 +22,7 @@ const mapProduct = (p) => {
     isNew: new Date(p.createdAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     category: p.categoryName,
     isInStock: p.isInStock,
+    stock: p.stock,
     description: p.description,
   };
 };
