@@ -3,6 +3,7 @@ import styles from "./MyOrder.module.css";
 import { ordersAPI } from "../../../utils/api";
 import { useAuth } from "../../../hooks/useAuth";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const MyOrder = () => {
   const { user } = useAuth();
@@ -13,6 +14,7 @@ const MyOrder = () => {
   const pageSize = 10;
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [processingId, setProcessingId] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let cancelled = false;
@@ -101,6 +103,10 @@ const MyOrder = () => {
     setSelectedOrder(null);
   }
 
+  const handleViewShipping = (orderId) => {
+    navigate(`/shipping-map/${orderId}`);
+  };
+
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>My Orders</h2>
@@ -156,10 +162,10 @@ const MyOrder = () => {
                     <td className={styles.tableCell}>
                       <div className={styles.actionButtons}>
                         <button
-                          onClick={() => handleView(order)}
+                          onClick={() => handleViewShipping(order.orderID)}
                           className={styles.button}
                         >
-                          View
+                          View Shipping
                         </button>
                         <button
                           onClick={() => handleCancel(order.orderID)}
@@ -234,7 +240,7 @@ const MyOrder = () => {
             </div>
 
             <h4 className={styles.modalLabel} style={{ marginTop: 16 }}>
-              Order Info
+              Order Details
             </h4>
             <ul className={styles.modalItemsList}>
               <li className={styles.modalListItem}>

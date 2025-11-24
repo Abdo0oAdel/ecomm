@@ -49,7 +49,6 @@ const routes = [
       { path: "/login", element: <Login /> },
       { path: "/signup", element: <SignUp /> },
       { path: "/support", element: <Support /> },
-      { path: "/ShippingMap", element: <ShippingMap /> },
       { path: "/*", element: <Error /> },
     ],
   },
@@ -110,6 +109,14 @@ const routes = [
         element: (
           <ProtectedRoute>
             <MyOrder />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/shipping-map/:id",
+        element: (
+          <ProtectedRoute>
+            <ShippingMap />
           </ProtectedRoute>
         ),
       },
