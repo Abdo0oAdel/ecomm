@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { addressAPI } from "../../../utils/api.js";
+import { changeUserPassword  } from "../../../services/users.js";
 
 export default function Account() {
   const { t } = useTranslation();
@@ -248,16 +249,29 @@ export default function Account() {
             if (updatedAddress) setAddressObject(updatedAddress);
         }
 
-      // Note: There's no change password endpoint in the API according to Swagger
-      // Password changes would need to be handled through a different mechanism
-      // For now, we'll skip password updates
-      // if (isChangingPassword) {
-      //   await userAPI.changePassword(
-      //     formData.currentPassword,
-      //     formData.newPassword
-      //   );
-      // }
+        // ----- CHANGE PASSWORD -----
+        if (isChangingPassword) {
+            if (!userId) {
+                setError("User ID not found. Please login again.");
+                return;
+            }
 
+            try {
+                const result =  await changeUserPassword({
+                    userID: userId,                       // correct key
+                    currentPassword: formData.currentPassword,
+                    newPassword: formData.newPassword,
+                });
+                console.log("Password updated:", result);
+                setSuccess(t("account.success.passwordUpdated"));
+            } catch (err) {
+                console.error("Password change error:", err);
+                setError(err.response?.data?.message || t("account.errors.updatePassword"));
+                return;
+            }
+        }
+
+    /*
       // Clear password fields after successful update
       setFormData({
         ...formData,
@@ -265,6 +279,8 @@ export default function Account() {
         newPassword: "",
         confirmPassword: "",
       });
+    */
+
 
       setSuccess(t("account.success.profileUpdated"));
       setError(null);
