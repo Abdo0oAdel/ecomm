@@ -226,10 +226,22 @@ const NavBar = () => {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    if (searchQuery.trim()) navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+                  }
+                }}
                 placeholder={t("nav.searchPlaceholder")}
                 className={styles.searchInput}
               />
-              <button className={styles.searchButton} aria-label={t("nav.search")}>
+              <button
+                className={styles.searchButton}
+                aria-label={t("nav.search")}
+                onClick={() => {
+                  if (searchQuery.trim()) navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+                }}
+              >
                 <svg
                   width="24"
                   height="24"
