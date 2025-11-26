@@ -199,7 +199,9 @@ export const addressAPI = {
     return axiosWithAuth.get(`/Addresses/${userId}`);
   },
   createAddress: async (addressData) => {
-    return axiosWithAuth.post("/Addresses", addressData).then(res => res.data);
+    return axiosWithAuth
+      .post("/Addresses", addressData)
+      .then((res) => res.data);
   },
   updateAddress: async (addressId, addressData) => {
     return axiosWithAuth.put(`/Addresses/${addressId}`, addressData);
@@ -209,7 +211,9 @@ export const addressAPI = {
 // Orders API calls
 export const ordersAPI = {
   getAllOrders: async (userId, page = 1, limit = 10) => {
-    return axiosWithAuth.get(`/orders/user/${userId}?page=${page}&limit=${limit}`);
+    return axiosWithAuth.get(
+      `/orders/user/${userId}?page=${page}&limit=${limit}`
+    );
   },
 
   getOrder: async (orderId) => {
@@ -230,32 +234,44 @@ export const ordersAPI = {
 
 // Reviews API calls
 export const reviewsAPI = {
-  getAllReviews: async (productId) => {
-    if (!productId) return { data: [] }; // cannot fetch without productId
-
+  getUserReviews: async () => {
     try {
-      const res = await axiosWithAuth.get(`/Reviews/product/${productId}`);
+      const res = await axiosWithAuth.get("/User");
       return res;
     } catch (err) {
       const status = err?.response?.status;
+
       if ([400, 404, 405].includes(status)) {
-        return { data: [] }; // treat as no reviews
+        return { data: [] };
       }
-      throw err; // propagate other errors
+
+      throw err;
     }
   },
 
-  getReview: async (reviewId) => {
-    return axiosWithAuth.get(`/Reviews/${reviewId}`);
+  getProductReviews: async (productId) => {
+    if (!productId) return { data: [] };
+
+    try {
+      return await axiosWithAuth.get(`/Reviews/product/${productId}`);
+    } catch (err) {
+      const status = err?.response?.status;
+      if ([400, 404, 405].includes(status)) {
+        return { data: [] };
+      }
+      throw err;
+    }
   },
 
-  deleteReview: async (reviewId) => {
-    return axiosWithAuth.delete(`/Reviews/${reviewId}`);
-  },
+  getReview: async (id) => axiosWithAuth.get(`/Reviews/${id}`),
 
-  createReview: async (reviewData) => {
-    return axiosWithAuth.post(`/Reviews`, reviewData);
-  },
+  deleteReview: async (id) => axiosWithAuth.delete(`/Reviews/${id}`),
+
+  createReview: async (reviewData) =>
+    axiosWithAuth.post("/Reviews", reviewData),
+
+  updateReview: async (id, reviewData) =>
+    axiosWithAuth.put(`/Reviews/${id}`, reviewData),
 };
 
 export default authAPI;
