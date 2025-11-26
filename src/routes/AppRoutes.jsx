@@ -17,6 +17,7 @@ import Privacy from "../pages/Public/Privacy/Privacy";
 import Support from "../pages/Public/Support/Support";
 import Products from "../pages/Public/Products/Products";
 import ProductDetails from "../pages/Public/ProductDetails/ProductDetails";
+import QRScanner from "../pages/Public/QRScanner/QRScanner";
 
 import Cart from "../pages/Protected/Cart/Cart";
 import Wishlist from "../pages/Protected/Wishlist/Wishlist";
@@ -49,6 +50,7 @@ const routes = [
       { path: "/login", element: <Login /> },
       { path: "/signup", element: <SignUp /> },
       { path: "/support", element: <Support /> },
+      { path: "/qrscanner", element: <QRScanner /> },
       { path: "/ShippingMap", element: <ShippingMap /> },
       { path: "/*", element: <Error /> },
     ],
