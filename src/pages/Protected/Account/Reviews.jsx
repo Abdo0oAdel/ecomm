@@ -19,54 +19,44 @@ const StarRating = ({ value = 0 }) => {
 };
 
 const Reviews = () => {
+  const user = useSelector((state) => state.user?.user || state.user || state.auth?.user || null);// ⬅ GET LOGGED USER
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const reduxUser = useSelector((s) => s.auth?.user);
 
   useEffect(() => {
-    if (!reduxUser) return;
-
-    const productId = reduxUser.productID || reduxUser.productId;
-    if (!productId) {
-      setReviews([]);
-      setLoading(false);
-      return;
-    }
+    if (!user?.id) return; 
 
     let cancelled = false;
+
     async function loadReviews() {
       setLoading(true);
       setError(null);
-      try {
-        const response = await reviewsAPI.getAllReviews(reduxUser.productID);
-        // Log the raw response
-        console.log("API response:", response);
 
-        // Log the actual data array
-        console.log("Reviews data:", response.data);
+      try {
+        const res = await reviewsAPI.getUserReviews(user.id);
 
         if (!cancelled) {
-          setReviews(Array.isArray(response.data) ? response.data : []);
+          setReviews(Array.isArray(res.data) ? res.data : []);
         }
       } catch (err) {
-        if (!cancelled) setError(err.message || "Failed to load reviews");
+        if (!cancelled) {
+          setError(err.response?.data || err.message || "Failed to load reviews");
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
 
     loadReviews();
-    return () => {
-      cancelled = true;
-    };
-  }, [reduxUser?.productID]);
+    return () => (cancelled = true);
+  }, [user]);
 
   const handleDelete = async (id) => {
     try {
       await reviewsAPI.deleteReview(id);
       setReviews((prev) => prev.filter((r) => r.reviewID !== id));
-      alert("Review deleted successfully");
+      alert("Review deleted");
     } catch (err) {
       alert("Failed to delete review: " + (err.message || err));
     }
@@ -77,45 +67,46 @@ const Reviews = () => {
       <h1 className={styles.title}>My Reviews</h1>
 
       {loading && <div className={styles.emptyMessage}>Loading reviews…</div>}
+
       {error && (
-        <div style={{ color: "#c33", padding: "20px" }}>Error: {error}</div>
+        <div style={{ color: "#c33", padding: "20px" }}>
+          Error: {String(error)}
+        </div>
       )}
 
-      {!loading && !error && reviews.length === 0 ? (
+      {!loading && !error && reviews.length === 0 && (
         <p className={styles.emptyMessage}>You haven't left any reviews yet.</p>
-      ) : (
-        !loading &&
-        !error && (
-          <ul className={styles.reviewsList}>
-            {reviews.map((r) => (
-              <li key={r.reviewID} className={styles.reviewCard}>
-                <div className={styles.reviewHeader}>
-                  <div>
-                    <div className={styles.productName}>{r.productID}</div>
-                    <div className={styles.meta}>
-                      {new Date(r.createdAt).toLocaleDateString()}
-                    </div>
-                  </div>
-                  <div>
-                    <StarRating value={r.rating} />
-                  </div>
-                </div>
+      )}
 
-                <p className={styles.reviewText}>{r.comment}</p>
-
+      {!loading && !error && reviews.length > 0 && (
+        <ul className={styles.reviewsList}>
+          {reviews.map((r) => (
+            <li key={r.reviewID} className={styles.reviewCard}>
+              <div className={styles.reviewHeader}>
                 <div>
-                  <button
-                    type="button"
-                    className={styles.deleteButton}
-                    onClick={() => handleDelete(r.reviewID)}
-                  >
-                    Delete review
-                  </button>
+                  <div className={styles.productName}>
+                    Product ID: {r.productID}
+                  </div>
+                  <div className={styles.meta}>
+                    {new Date(r.createdAt).toLocaleDateString()}
+                  </div>
                 </div>
-              </li>
-            ))}
-          </ul>
-        )
+
+                <StarRating value={r.rating} />
+              </div>
+
+              <p className={styles.reviewText}>{r.comment}</p>
+
+              <button
+                type="button"
+                className={styles.deleteButton}
+                onClick={() => handleDelete(r.reviewID)}
+              >
+                Delete review
+              </button>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
