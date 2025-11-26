@@ -115,6 +115,14 @@ const routes = [
           </ProtectedRoute>
         ),
       },
+      {
+        path: "/shipping-map/:id",
+        element: (
+          <ProtectedRoute>
+            <ShippingMap />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
     // Admin routes

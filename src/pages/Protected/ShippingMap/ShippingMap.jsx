@@ -1,15 +1,39 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useShipping } from "../../../hooks/useShipping.js";
+import Error from "../../Error/Error.jsx";
 
 const ShippingMap = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
-  const orderData = {
-    orderId: "ZMJ82D9",
-    trackingId: "23458039",
-    expectedArrival: "01/05/2024",
-    currentStatus: 2, // 1: Confirmed, 2: Shipped, 3: Out for Delivery, 4: Delivered
-  };
+  // In a real application, you would get the shippingId from URL parameters, e.g.:
+  // const { id: shippingId } = useParams();
+  const shippingId = 1; // Hardcoded for demonstration. Replace with dynamic ID.
+
+  const {
+    shippingDetails: fetchedShippingData,
+    loading,
+    error,
+  } = useShipping(shippingId);
+
+  // Use the first item from fetchedShippingData if available, otherwise use a default structure
+  const orderData =
+    fetchedShippingData && fetchedShippingData.length > 0
+      ? {
+          orderId: fetchedShippingData[0].id.toString(), // Assuming id exists and using it as orderId
+          trackingId: fetchedShippingData[0].trackingNumber || "N/A", // Assuming a trackingNumber field
+          expectedArrival: fetchedShippingData[0].expectedDeliveryDate || "N/A", // Assuming expectedDeliveryDate
+          currentStatus: fetchedShippingData[0].status || 1, // Assuming a status field, default to 1
+          // Map other fields from fetchedShippingData[0] to orderData as needed
+        }
+      : {
+          orderId: "N/A",
+          trackingId: "N/A",
+          expectedArrival: "N/A",
+          currentStatus: 1, // Default status
+        };
 
   const orderSteps = [
     {
@@ -46,8 +70,22 @@ const ShippingMap = () => {
   };
 
   const handleGoHome = () => {
-    window.location.href = "/";
+    navigate("/");
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading shipping data...
+      </div>
+    );
+  }
+
+  if (error) {
+    //return <div className="min-h-screen flex items-center justify-center text-red-500">Error: {error.message}</div>;
+    return <Error error={error.message} />;
+  }
+
   return (
     <>
       <link

@@ -9,8 +9,7 @@ const Error = ({ error, errorInfo, resetError }) => {
     if (resetError) resetError();
     navigate("/");
   };
-  const message =
-    error?.message || "Your visited page not found. You may go home page.";
+  const message = error || "Your visited page not found. You may go home page.";
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
