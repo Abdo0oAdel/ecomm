@@ -15,7 +15,7 @@ const api = axios.create({
 export const authAPI = {
   login: async (userEmail, userPassword) => {
     try {
-      const response = await api.post("/Authentication/login", {
+      const response = await api.post("/api/Authentication/login", {
         userEmail,
         userPassword,
       });
@@ -43,7 +43,7 @@ export const authAPI = {
 
   register: async (userData) => {
     try {
-      const response = await api.post("/Authentication/register", userData);
+      const response = await api.post("/api/Authentication/register", userData);
 
       const result = response.data;
 
@@ -70,7 +70,7 @@ export const authAPI = {
   // Exchange refresh token for a new access token
   refresh: async (refreshToken) => {
     try {
-      const response = await api.post("/Authentication/refresh-token", {
+      const response = await api.post("/api/Authentication/refresh-token", {
         refreshToken,
       });
 
@@ -102,7 +102,7 @@ export const authAPI = {
       return { success: true };
     }
     try {
-      const response = await api.post("/Authentication/revoke-token", {
+      const response = await api.post("/api/Authentication/revoke-token", {
         refreshToken,
       });
       return response.data;
@@ -112,34 +112,34 @@ export const authAPI = {
   },
 
   getProfile: async () => {
-    return axiosWithAuth.get("/auth/me");
+    return axiosWithAuth.get("/api/auth/me");
   },
 
   updateProfile: async (userData) => {
-    return axiosWithAuth.put("/auth/me", userData);
+    return axiosWithAuth.put("/api/auth/me", userData);
   },
 };
 
 // Cart API calls
 export const cartAPI = {
   getCart: async () => {
-    return axiosWithAuth.get("/cart");
+    return axiosWithAuth.get("/api/cart");
   },
 
   addToCart: async (item) => {
-    return axiosWithAuth.post("/cart", item);
+    return axiosWithAuth.post("/api/cart", item);
   },
 
   updateQuantity: async (itemId, quantity) => {
-    return axiosWithAuth.put(`/cart/${itemId}`, { quantity });
+    return axiosWithAuth.put(`/api/cart/${itemId}`, { quantity });
   },
 
   removeFromCart: async (itemId) => {
-    return axiosWithAuth.delete(`/cart/${itemId}`);
+    return axiosWithAuth.delete(`/api/cart/${itemId}`);
   },
 
   clearCart: async () => {
-    return axiosWithAuth.delete("/cart");
+    return axiosWithAuth.delete("/api/cart");
   },
 };
 
@@ -147,27 +147,27 @@ export const cartAPI = {
 export const wishlistAPI = {
   // GET /Wishlist
   getWishlist: async () => {
-    return axiosWithAuth.get("/Wishlist");
+    return axiosWithAuth.get("/api/Wishlist");
   },
 
   // POST /Wishlist/{productId}
   addToWishlist: async (productId) => {
-    return axiosWithAuth.post(`/Wishlist/${productId}`);
+    return axiosWithAuth.post(`/api/Wishlist/${productId}`);
   },
 
   // DELETE /Wishlist/{productId}
   removeFromWishlist: async (productId) => {
-    return axiosWithAuth.delete(`/Wishlist/${productId}`);
+    return axiosWithAuth.delete(`/api/Wishlist/${productId}`);
   },
 
   // DELETE /Wishlist
   clearWishlist: async () => {
-    return axiosWithAuth.delete("/Wishlist");
+    return axiosWithAuth.delete("/api/Wishlist");
   },
 
   // GET /Wishlist/{productId}
   getWishlistItem: async (productId) => {
-    return axiosWithAuth.get(`/Wishlist/${productId}`);
+    return axiosWithAuth.get(`/api/Wishlist/${productId}`);
   },
 };
 
@@ -184,7 +184,7 @@ export const checkoutAPI = {
     };
 
     try {
-      const response = await axiosWithAuth.post("/orders/checkout", transformedOrder);
+      const response = await axiosWithAuth.post("/api/orders/checkout", transformedOrder);
       return response.data;
     } catch (error) {
       // propagate error
@@ -196,15 +196,15 @@ export const checkoutAPI = {
 // Address API calls
 export const addressAPI = {
   getAddress: async (userId) => {
-    return axiosWithAuth.get(`/Addresses/${userId}`);
+    return axiosWithAuth.get(`/api/Addresses/${userId}`);
   },
   createAddress: async (addressData) => {
     return axiosWithAuth
-      .post("/Addresses", addressData)
+      .post("/api/Addresses", addressData)
       .then((res) => res.data);
   },
   updateAddress: async (addressId, addressData) => {
-    return axiosWithAuth.put(`/Addresses/${addressId}`, addressData);
+    return axiosWithAuth.put(`/api/Addresses/${addressId}`, addressData);
   },
 };
 
@@ -212,23 +212,23 @@ export const addressAPI = {
 export const ordersAPI = {
   getAllOrders: async (userId, page = 1, limit = 10) => {
     return axiosWithAuth.get(
-      `/orders/user/${userId}?page=${page}&limit=${limit}`
+      `/api/orders/user/${userId}?page=${page}&limit=${limit}`
     );
   },
 
   getOrder: async (orderId) => {
-    return axiosWithAuth.get(`/orders/user/${orderId}`);
+    return axiosWithAuth.get(`/api/orders/user/${orderId}`);
   },
 
   cancelOrder: async (orderId) => {
-    return axiosWithAuth.delete(`/orders/${orderId}`, {
+    return axiosWithAuth.delete(`/api/orders/${orderId}`, {
       orderStatus: "Cancelled",
     });
   },
 
   getCancelledOrders: async (userId) => {
     // Corrected to fetch orders for a specific user
-    return axiosWithAuth.get(`/orders/user/${userId}?status=cancelled`);
+    return axiosWithAuth.get(`/api/orders/user/${userId}?status=cancelled`);
   },
 };
 
@@ -240,11 +240,9 @@ export const reviewsAPI = {
       return res;
     } catch (err) {
       const status = err?.response?.status;
-
       if ([400, 404, 405].includes(status)) {
         return { data: [] };
       }
-
       throw err;
     }
   },
@@ -253,7 +251,7 @@ export const reviewsAPI = {
     if (!productId) return { data: [] };
 
     try {
-      return await axiosWithAuth.get(`/Reviews/product/${productId}`);
+      return await axiosWithAuth.get(`/api/Reviews/product/${productId}`);
     } catch (err) {
       const status = err?.response?.status;
       if ([400, 404, 405].includes(status)) {
@@ -263,15 +261,15 @@ export const reviewsAPI = {
     }
   },
 
-  getReview: async (id) => axiosWithAuth.get(`/Reviews/${id}`),
+  getReview: async (id) => axiosWithAuth.get(`/api/Reviews/${id}`),
 
-  deleteReview: async (id) => axiosWithAuth.delete(`/Reviews/${id}`),
+  deleteReview: async (id) => axiosWithAuth.delete(`/api/Reviews/${id}`),
 
   createReview: async (reviewData) =>
-    axiosWithAuth.post("/Reviews", reviewData),
+    axiosWithAuth.post("/api/Reviews", reviewData),
 
   updateReview: async (id, reviewData) =>
-    axiosWithAuth.put(`/Reviews/${id}`, reviewData),
+    axiosWithAuth.put(`/api/Reviews/${id}`, reviewData),
 };
 
 export default authAPI;

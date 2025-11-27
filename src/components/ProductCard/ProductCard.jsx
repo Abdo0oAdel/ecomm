@@ -46,11 +46,13 @@ const ProductCard = ({
     >
       <div className={styles.productImageContainer}>
         <Link to={`/products/${product.id}`} state={{ product }}>
-          <img
-            src={product.image}
-            alt={product.name}
-            className={styles.productImage}
-          />
+          {product.image && 
+            <img
+              src={product.image}
+              alt={product.name}
+              className={styles.productImage}
+            />
+          }
         </Link>
 
         {/* Discount/New Badge */}

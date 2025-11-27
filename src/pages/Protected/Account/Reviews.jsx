@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Reviews.module.css";
 import { reviewsAPI } from "../../../utils/api";
+import { getProductById } from "../../../services/products";
 import { useSelector } from "react-redux";
 
 const StarRating = ({ value = 0 }) => {
@@ -25,19 +26,35 @@ const Reviews = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!user?.id) return; 
-
     let cancelled = false;
-
     async function loadReviews() {
       setLoading(true);
       setError(null);
-
       try {
-        const res = await reviewsAPI.getUserReviews(user.id);
-
+        const res = await reviewsAPI.getUserReviews();
+        const reviewsArr = Array.isArray(res.data) ? res.data : [res.data];
+        // Fetch product info for each review
+        const reviewsWithProduct = await Promise.all(
+          reviewsArr.map(async (review) => {
+            try {
+              const productRes = await getProductById(review.productID);
+              const product = productRes.data || productRes;
+              return {
+                ...review,
+                productInfo: {
+                  name: product.productName || product.name || "N/A",
+                  price: product.price,
+                  image: product.imageURL,
+                  totalReviews: product.totalReviews || product.reviews?.length || 0,
+                },
+              };
+            } catch (e) {
+              return { ...review, productInfo: null };
+            }
+          })
+        );
         if (!cancelled) {
-          setReviews(Array.isArray(res.data) ? res.data : []);
+          setReviews(reviewsWithProduct);
         }
       } catch (err) {
         if (!cancelled) {
@@ -47,10 +64,9 @@ const Reviews = () => {
         if (!cancelled) setLoading(false);
       }
     }
-
     loadReviews();
     return () => (cancelled = true);
-  }, [user]);
+  }, []);
 
   const handleDelete = async (id) => {
     try {
@@ -85,18 +101,18 @@ const Reviews = () => {
               <div className={styles.reviewHeader}>
                 <div>
                   <div className={styles.productName}>
-                    Product ID: {r.productID}
+                    {r.productInfo?.image && (
+                      <img src={r.productInfo.image} alt={r.productInfo.name} style={{width:40,height:40,objectFit:'cover',marginRight:8,borderRadius:4}} />
+                    )}
+                    <strong>{r.productInfo?.name || `Product ID: ${r.productID}`}</strong>
                   </div>
                   <div className={styles.meta}>
-                    {new Date(r.createdAt).toLocaleDateString()}
+                    {new Date(r.createdAt).toLocaleDateString()} | Price: {r.productInfo?.price ?? 'N/A'} | Reviews: {r.productInfo?.totalReviews ?? 'N/A'}
                   </div>
                 </div>
-
                 <StarRating value={r.rating} />
               </div>
-
               <p className={styles.reviewText}>{r.comment}</p>
-
               <button
                 type="button"
                 className={styles.deleteButton}
