@@ -95,10 +95,6 @@ const MyOrder = () => {
     }
   }
 
-  function handleView(order) {
-    setSelectedOrder(order);
-  }
-
   function closeModal() {
     setSelectedOrder(null);
   }
@@ -139,7 +135,7 @@ const MyOrder = () => {
                     <td className={styles.tableCell}>
                       {formatDate(order.orderDate)}
                     </td>
-                    <td className={styles.tableCell}>{order.itemCount || 0}</td>
+                    <td className={styles.tableCell}>{order.orderNo || 0}</td>
                     <td className={styles.tableCell}>
                       {order.totalAmount
                         ? `$${order.totalAmount.toFixed(2)}`

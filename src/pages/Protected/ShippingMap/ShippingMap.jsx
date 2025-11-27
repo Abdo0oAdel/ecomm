@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useShipping } from "../../../hooks/useShipping.js";
 import Error from "../../Error/Error.jsx";
 
@@ -9,31 +9,42 @@ const ShippingMap = () => {
   const navigate = useNavigate();
 
   // In a real application, you would get the shippingId from URL parameters, e.g.:
-  // const { id: shippingId } = useParams();
-  const shippingId = 1; // Hardcoded for demonstration. Replace with dynamic ID.
-
+  const { id: shippingId } = useParams();
   const {
     shippingDetails: fetchedShippingData,
     loading,
     error,
   } = useShipping(shippingId);
 
-  // Use the first item from fetchedShippingData if available, otherwise use a default structure
-  const orderData =
-    fetchedShippingData && fetchedShippingData.length > 0
-      ? {
-          orderId: fetchedShippingData[0].id.toString(), // Assuming id exists and using it as orderId
-          trackingId: fetchedShippingData[0].trackingNumber || "N/A", // Assuming a trackingNumber field
-          expectedArrival: fetchedShippingData[0].expectedDeliveryDate || "N/A", // Assuming expectedDeliveryDate
-          currentStatus: fetchedShippingData[0].status || 1, // Assuming a status field, default to 1
-          // Map other fields from fetchedShippingData[0] to orderData as needed
-        }
-      : {
-          orderId: "N/A",
-          trackingId: "N/A",
-          expectedArrival: "N/A",
-          currentStatus: 1, // Default status
-        };
+  const formatDate = (dateString) => {
+    if (!dateString || dateString === "N/A") {
+      return "N/A";
+    }
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return dateString;
+      }
+      const options = { day: "numeric", month: "long", year: "numeric" };
+      return date.toLocaleDateString("EG", options);
+    } catch (error) {
+      return dateString;
+    }
+  };
+
+  const orderData = fetchedShippingData
+    ? {
+        orderId: fetchedShippingData.shippingID || "N/A",
+        trackingId: fetchedShippingData.trackingNumber || "N/A",
+        expectedArrival: formatDate(fetchedShippingData.estimatedDelivery),
+        currentStatus: fetchedShippingData.status || 1,
+      }
+    : {
+        orderId: "N/A",
+        trackingId: "N/A",
+        expectedArrival: "N/A",
+        currentStatus: 1, // Default status
+      };
 
   const orderSteps = [
     {

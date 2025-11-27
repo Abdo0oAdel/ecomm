@@ -45,9 +45,9 @@
   border-radius: 4px;
   margin-top: 16px;
   font-size: 14px;
-  border-left: 4px solid #DB4444;
+  border-left: 4px solid #db4444;
 }
-.inputForm{
+.inputForm {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -55,23 +55,25 @@
   height: 104px;
   margin-bottom: 40px;
 }
-.inputForm input{
+.inputForm input {
   width: 100%;
   border: none;
   border-bottom: 1px solid #515151;
   padding: 10px 0px;
   outline: none;
 }
-.inputForm input::placeholder{
-  font-family: 'Poppins', sans-serif;
+.inputForm input::placeholder {
+  font-family: "Poppins", sans-serif;
   size: 16px;
   line-height: 26px;
   font-weight: 400;
 }
 .formButtons {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: stretch !important;
+  align-content: space-between !important;
   width: 100%;
 }
 .formButtons .loginButton {
@@ -257,7 +259,7 @@ html[dir="rtl"] .loginForm h2 {
 
 html[dir="rtl"] .errorMessage {
   border-left: none;
-  border-right: 4px solid #DB4444;
+  border-right: 4px solid #db4444;
   text-align: right;
 }
 
