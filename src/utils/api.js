@@ -184,7 +184,7 @@ export const checkoutAPI = {
     };
 
     try {
-      const response = await axiosWithAuth.post("/orders", transformedOrder);
+      const response = await axiosWithAuth.post("/orders/checkout", transformedOrder);
       return response.data;
     } catch (error) {
       // propagate error
