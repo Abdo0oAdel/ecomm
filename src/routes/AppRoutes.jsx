@@ -33,6 +33,7 @@ import ShippingMap from "../pages/Protected/ShippingMap/ShippingMap";
 import AdminDashboard from "../pages/admin/AdminDashboard/AdminDashboard";
 import UserManagement from "../pages/admin/UserManagement/UserManagement";
 import ProductManagement from "../pages/admin/ProductManagement/ProductManagement";
+import OrderManagement from "../pages/admin/OrderManagement/OrderManagement.jsx";
 
 const routes = [
   {
@@ -153,6 +154,14 @@ const routes = [
             <ProductManagement />
           </AdminRoute>
         ),
+      },
+      {
+         path: "/admin/OrderManagement",
+         element: (
+           <AdminRoute>
+             <OrderManagement />
+           </AdminRoute>
+         ),
       },
     ],
   },

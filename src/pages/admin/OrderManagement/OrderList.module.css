@@ -1,0 +1,49 @@
+.tableWrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+.table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.th, .td {
+    border: 1px solid #e5e7eb;
+    padding: 0.5rem 1rem;
+    text-align: left;
+}
+.th {
+    background: #f3f4f6;
+    font-weight: 600;
+}
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+.editBtn {
+    background: #facc15;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    transition: background 0.2s;
+    border: none;
+    cursor: pointer;
+}
+.editBtn:hover {
+    background: #eab308;
+}
+.deleteBtn {
+    background: #ef4444;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    transition: background 0.2s;
+    border: none;
+    cursor: pointer;
+}
+.deleteBtn:hover {
+    background: #dc2626;
+}
