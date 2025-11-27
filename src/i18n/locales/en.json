@@ -98,9 +98,11 @@
     "submit": "Submit",
     "cancel": "Cancel",
     "signupWithGoogle": "Sign up with Google",
+    "loginWithGoogle": "Login with Google",
     "creatingAccount": "Creating Account...",
     "errors": {
       "enterCredentials": "Please enter both email and password",
+      "passwordInvalid": "Password does not meet requirements",
       "loginFailed": "Login failed. Please try again.",
       "invalidCredentials": "Invalid email or password",
       "fillAllFields": "Please fill in all fields",

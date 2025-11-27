@@ -73,9 +73,11 @@
     "submit": "Soumettre",
     "cancel": "Annuler",
     "signupWithGoogle": "S'inscrire avec Google",
+    "loginWithGoogle": "Connectez-vous avec Google",
     "creatingAccount": "Création du compte...",
     "errors": {
       "enterCredentials": "Veuillez saisir votre e-mail et votre mot de passe",
+      "passwordInvalid": "Le mot de passe ne répond pas aux exigences",
       "loginFailed": "La connexion a échoué. Veuillez réessayer.",
       "invalidCredentials": "E-mail ou mot de passe invalide",
       "fillAllFields": "Veuillez remplir tous les champs",
