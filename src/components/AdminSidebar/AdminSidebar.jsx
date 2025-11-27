@@ -6,6 +6,7 @@ const links = [
   { label: "Dashboard", path: "/admin/AdminDashboard" },
   { label: "User Management", path: "/admin/UserManagement" },
   { label: "Product Management", path: "/admin/ProductManagement" },
+  { label: "Order Management", path: "/admin/OrderManagement" },
 ];
 
 const AdminSidebar = () => {
