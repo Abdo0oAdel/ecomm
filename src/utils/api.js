@@ -67,6 +67,35 @@ export const authAPI = {
     }
   },
 
+  // GOOGLE LOGIN (new)
+  googleLogin: async (idToken) => {
+    try {
+      if (!idToken) throw new Error("Google idToken is required");
+      const response = await api.post("/api/Authentication/google-login", {
+        idToken,
+      });
+
+      const result = response.data;
+
+      if (!result.success) {
+        const errorMsg =
+          result.message || result.errors?.[0] || "Google login failed";
+        throw new Error(errorMsg);
+      }
+
+      return result.data; // should contain accessToken/refreshToken/user
+    } catch (error) {
+      if (error.response?.data) {
+        const errorMsg =
+          error.response.data.message ||
+          error.response.data.errors?.[0] ||
+          "Google login failed";
+        throw new Error(errorMsg);
+      }
+      throw error;
+    }
+  },
+
   // Exchange refresh token for a new access token
   refresh: async (refreshToken) => {
     try {
@@ -184,7 +213,10 @@ export const checkoutAPI = {
     };
 
     try {
-      const response = await axiosWithAuth.post("/api/orders/checkout", transformedOrder);
+      const response = await axiosWithAuth.post(
+        "/api/orders/checkout",
+        transformedOrder
+      );
       return response.data;
     } catch (error) {
       // propagate error

@@ -70,10 +70,11 @@
 }
 .formButtons {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
 }
 .formButtons .loginButton {
-  width: 143px;
   height: 56px;
   background-color: #db4444;
   color: #ffffff;
@@ -106,6 +107,27 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
+}
+.formButtons .signUpGoogleButton {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 56px;
+  border: 1px solid #646464;
+  border-radius: 4px;
+  color: #000000;
+  font-family: "Poppins", sans-serif;
+  size: 16px;
+  line-height: 26px;
+  font-weight: 400;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.formButtons .signUpGoogleButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 .formButtons .forgotPassword:hover {
   transform: scale(1.05);
