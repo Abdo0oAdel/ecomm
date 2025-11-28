@@ -28,3 +28,39 @@
 	gap: 2rem;
 	margin-top: 1rem;
 }
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+.pagination button {
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+}
+
+.pagination button:disabled {
+    background: var(--color-border);
+    cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+    background: var(--color-accent-hover);
+}
+
+.pagination span {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    margin: 0 0.5rem;
+}

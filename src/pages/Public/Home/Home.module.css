@@ -1252,3 +1252,36 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.paginationControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid var(--color-border);
+}
+
+.paginationControls button {
+  background: var(--color-accent);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.paginationControls button:disabled {
+  background: var(--color-border);
+  cursor: not-allowed;
+}
+
+.paginationControls button:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+
+.paginationControls span {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-primary);
+}

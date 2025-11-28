@@ -8,6 +8,9 @@ const HeroSection = ({
   selectedCategory,
   setSelectedCategory,
   products,
+  sidebarCategoryPage,
+  setSidebarCategoryPage,
+  totalSidebarCategoryPages,
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -26,6 +29,14 @@ const HeroSection = ({
     hoverTimeoutRef.current = setTimeout(() => {
       setHoveredCategory(null);
     }, 120); // 120ms delay
+  };
+
+  const handlePrevPage = () => {
+    setSidebarCategoryPage((prev) => Math.max(prev - 1, 0));
+  };
+
+  const handleNextPage = () => {
+    setSidebarCategoryPage((prev) => Math.min(prev + 1, totalSidebarCategoryPages - 1));
   };
 
   return (
@@ -79,6 +90,15 @@ const HeroSection = ({
               );
             })}
           </ul>
+           <div className={styles.paginationControls}>
+            <button onClick={handlePrevPage} disabled={sidebarCategoryPage === 0}>
+              {t('Previous')}
+            </button>
+            <span>{`${sidebarCategoryPage + 1} / ${totalSidebarCategoryPages}`}</span>
+            <button onClick={handleNextPage} disabled={sidebarCategoryPage === totalSidebarCategoryPages - 1}>
+              {t('Next')}
+            </button>
+          </div>
         </div>
 
         {/* Main Banner */}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import useProducts from "../../../hooks/useProducts";
 import ProductCard from "../../../components/ProductCard/ProductCard";
 import styles from "./Product.module.css";
@@ -6,30 +6,47 @@ import { useWishlist } from "../../../hooks/useWishlist";
 import useCart from "../../../hooks/useCart";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Products = () => {
-		const { products, loading, error } = useProducts();
+	const { products, loading, error } = useProducts();
 	const { items: wishlist, toggleWishlist } = useWishlist();
 	const { handleAddToCart } = useCart();
+	const { t } = useTranslation();
 	const navigate = useNavigate();
-		const location = useLocation();
+	const location = useLocation();
 
-		// read `search` query param and filter products client-side
-		const params = new URLSearchParams(location.search);
-		const searchQuery = (params.get("search") || "").trim().toLowerCase();
-		const filteredProducts =
-			searchQuery && Array.isArray(products)
-				? products.filter((p) => {
-						const name = (p.name || "").toLowerCase();
-						const desc = (p.description || "").toLowerCase();
-						const category = (p.category || "").toLowerCase();
-						return (
-							name.includes(searchQuery) ||
-							desc.includes(searchQuery) ||
-							category.includes(searchQuery)
-						);
-					})
-				: products;
+	const [currentPage, setCurrentPage] = useState(1);
+	const [productsPerPage] = useState(12);
+
+	// read `search` query param and filter products client-side
+	const params = new URLSearchParams(location.search);
+	const searchQuery = (params.get("search") || "").trim().toLowerCase();
+	const filteredProducts =
+		searchQuery && Array.isArray(products)
+			? products.filter((p) => {
+					const name = (p.name || "").toLowerCase();
+					const desc = (p.description || "").toLowerCase();
+					const category = (p.category || "").toLowerCase();
+					return (
+						name.includes(searchQuery) ||
+						desc.includes(searchQuery) ||
+						category.includes(searchQuery)
+					);
+			  })
+			: products;
+
+	// Pagination logic
+	const indexOfLastProduct = currentPage * productsPerPage;
+	const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+	const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+	const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+	const paginate = (pageNumber) => {
+		if (pageNumber > 0 && pageNumber <= totalPages) {
+			setCurrentPage(pageNumber);
+		}
+	};
 
 	return (
 		<div className={styles.productsPage}>
@@ -39,22 +56,35 @@ const Products = () => {
 			) : error ? (
 				<div className={styles.error}>Error: {error.message || error.toString()}</div>
 			) : (
-				<div className={styles.productsGrid}>
-					{filteredProducts.length === 0 ? (
-						<div className={styles.noProducts}>No products found.</div>
-					) : (
-						filteredProducts.map((product) => (
-							<ProductCard
-								key={product.id}
-								product={product}
-								onToggleWishlist={() => toggleWishlist(product)}
-								onAddToCart={() => handleAddToCart(product)}
-								onViewDetails={() => navigate(`/products/${product.id}`, { state: { product } })}
-								isWishlisted={wishlist.some(w => w.id === product.id)}
-							/>
-						))
+				<>
+					<div className={styles.productsGrid}>
+						{currentProducts.length === 0 ? (
+							<div className={styles.noProducts}>No products found.</div>
+						) : (
+							currentProducts.map((product) => (
+								<ProductCard
+									key={product.id}
+									product={product}
+									onToggleWishlist={() => toggleWishlist(product)}
+									onAddToCart={() => handleAddToCart(product)}
+									onViewDetails={() => navigate(`/products/${product.id}`, { state: { product } })}
+									isWishlisted={wishlist.some(w => w.id === product.id)}
+								/>
+							))
+						)}
+					</div>
+					{totalPages > 1 && (
+						<div className={styles.pagination}>
+							<button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
+								{t('Previous')}
+							</button>
+							<span>{`${currentPage} / ${totalPages}`}</span>
+							<button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages}>
+								{t('Next')}
+							</button>
+						</div>
 					)}
-				</div>
+				</>
 			)}
 		</div>
 	);

@@ -81,6 +81,17 @@ const Home = () => {
     (categoryPage + 1) * CATEGORIES_PER_PAGE
   );
 
+  const SIDEBAR_CATEGORIES_PER_PAGE = 10;
+  const [sidebarCategoryPage, setSidebarCategoryPage] = useState(0);
+
+  const totalSidebarCategoryPages = Math.ceil(
+    sidebarCategories.length / SIDEBAR_CATEGORIES_PER_PAGE
+  );
+  const pagedSidebarCategories = sidebarCategories.slice(
+    sidebarCategoryPage * SIDEBAR_CATEGORIES_PER_PAGE,
+    (sidebarCategoryPage + 1) * SIDEBAR_CATEGORIES_PER_PAGE
+  );
+
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const exploreFilteredProducts = useMemo(() => {
@@ -99,10 +110,13 @@ const Home = () => {
     <div className={styles.home}>
       <HeroSection
         styles={styles}
-        sidebarCategories={sidebarCategories}
+        sidebarCategories={pagedSidebarCategories}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
         products={products}
+        sidebarCategoryPage={sidebarCategoryPage}
+        setSidebarCategoryPage={setSidebarCategoryPage}
+        totalSidebarCategoryPages={totalSidebarCategoryPages}
       />
 
       <FlashSalesSection
