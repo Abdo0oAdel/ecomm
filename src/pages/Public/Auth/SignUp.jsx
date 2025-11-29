@@ -2,15 +2,19 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../../hooks/useAuth";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../../store/Auth/slice";
 import styles from "./SignUp.module.css";
 import loginImage from "../../../assets/imgs/Side Image.svg";
 import { validatePassword } from "../../../utils/authValidators";
 import authAPI from "../../../utils/api";
+import { tokenManager } from "../../../utils/tokenManager";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const SignUp = () => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -72,18 +76,15 @@ const SignUp = () => {
       window.google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
         callback: handleCredentialResponse,
-        ux_mode: "popup", // popup is usually fine for a custom button flow
+        ux_mode: "popup",
       });
 
-      // Optionally render the default Google button into a hidden div to ensure the library is fully wired.
-      // We keep it hidden because you already have a custom SVG button.
       const hiddenContainer = document.getElementById("g_id_hidden");
       if (hiddenContainer && hiddenContainer.children.length === 0) {
         window.google.accounts.id.renderButton(hiddenContainer, {
           theme: "outline",
           size: "large",
         });
-        // don't call prompt() automatically here to avoid auto popups
       }
     } catch (err) {
       console.error("Google SDK init error", err);
@@ -104,11 +105,17 @@ const SignUp = () => {
       // Call your backend endpoint
       const result = await authAPI.googleLogin(idToken);
       if (result?.accessToken)
-        localStorage.setItem("accessToken", result.accessToken);
+        localStorage.setItem("access_token", result.accessToken);
       if (result?.refreshToken)
-        localStorage.setItem("refreshToken", result.refreshToken);
+        localStorage.setItem("refresh_token", result.refreshToken);
       if (result?.user)
         localStorage.setItem("user", JSON.stringify(result.user));
+
+      // Update Redux store with user from token (same as normal flow)
+      const userFromToken = tokenManager.getUserFromToken();
+      if (userFromToken) {
+        dispatch(authActions.login({ user: userFromToken }));
+      }
 
       // navigate to home or wherever
       navigate("/");

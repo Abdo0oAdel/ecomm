@@ -124,8 +124,8 @@ const LogIn = () => {
 
       // Prefer useAuth loginWithTokens helper if available
       // Store tokens & user in localStorage (adjust to your app's pattern)
-      if (accessToken) localStorage.setItem("accessToken", accessToken);
-      if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+      if (accessToken) localStorage.setItem("access_token", accessToken);
+      if (refreshToken) localStorage.setItem("refresh_token", refreshToken);
       if (user) localStorage.setItem("user", JSON.stringify(user));
 
       // load cart/wishlist and then redirect (same as password login)
