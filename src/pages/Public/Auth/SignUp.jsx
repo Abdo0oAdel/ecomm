@@ -5,6 +5,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import styles from "./SignUp.module.css";
 import loginImage from "../../../assets/imgs/Side Image.svg";
 import { validatePassword } from "../../../utils/authValidators";
+import authAPI from "../../../utils/api";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 

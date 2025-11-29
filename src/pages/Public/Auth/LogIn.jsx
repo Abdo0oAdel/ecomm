@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { cartActions } from "../../../store/Cart/slice.js";
 import { wishlistActions } from "../../../store/Wishlist/slice.js";
 import { cartAPI, wishlistAPI } from "../../../utils/api.js";
+import authAPI from "../../../utils/api";
 import styles from "./LogIn.module.css";
 import loginImage from "../../../assets/imgs/Side Image.svg";
 import { validatePassword } from "../../../utils/authValidators";
