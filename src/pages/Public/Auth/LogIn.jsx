@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { cartActions } from "../../../store/Cart/slice.js";
 import { wishlistActions } from "../../../store/Wishlist/slice.js";
 import { cartAPI, wishlistAPI } from "../../../utils/api.js";
+import { tokenManager } from "../../../utils/tokenManager";
 import authAPI from "../../../utils/api";
 import styles from "./LogIn.module.css";
 import loginImage from "../../../assets/imgs/Side Image.svg";
@@ -127,6 +128,12 @@ const LogIn = () => {
       if (accessToken) localStorage.setItem("access_token", accessToken);
       if (refreshToken) localStorage.setItem("refresh_token", refreshToken);
       if (user) localStorage.setItem("user", JSON.stringify(user));
+
+      // Update Redux store with user from token (same as normal flow)
+      const userFromToken = tokenManager.getUserFromToken();
+      if (userFromToken) {
+        dispatch(authActions.login({ user: userFromToken }));
+      }
 
       // load cart/wishlist and then redirect (same as password login)
       await handlePostLoginEffects();
