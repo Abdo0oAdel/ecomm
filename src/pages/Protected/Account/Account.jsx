@@ -316,7 +316,7 @@ export default function Account() {
         <h2>{t("account.myOrders")}</h2>
         <div className={styles.navSection}>
           <Link to="/MyOrder" className={styles.navLink}>
-            {t("account.MyOrders")}
+            {t("account.myOrders")}
           </Link>
           <Link to="/Cancellation" className={styles.navLink}>
             {t("account.myCancellations")}
