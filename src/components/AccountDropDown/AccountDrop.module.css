@@ -41,7 +41,7 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 21px;
-  letter-spacing: 0%;
+  letter-spacing: 0;
   cursor: pointer;
   transition: all 0.3s ease;
 }

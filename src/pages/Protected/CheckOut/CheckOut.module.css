@@ -394,7 +394,12 @@
 
 /* Hide the icon images that look like radio buttons */
 .paymentRadio .paymentIcon {
-  display: none;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  margin-right: 0.5rem;
+  vertical-align: middle;
 }
 
 .paymentLabel {

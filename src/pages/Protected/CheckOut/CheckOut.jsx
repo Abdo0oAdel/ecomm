@@ -1,9 +1,12 @@
+import { useEffect } from "react";
+import { getCart } from "../../../services/cart";
+import { getProductById } from "../../../services/products";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./CheckOut.module.css";
 import { checkoutActions } from "../../../store/CheckOut/slice";
 import { cartActions } from "../../../store/Cart/slice";
-import { placeOrder } from "../../../services/checkout";
+import { placeOrder, createPayPalPayment } from "../../../services/checkout";
 import { clearCartAPI } from "../../../services/cart";
 import Swal from "sweetalert2";
 
@@ -40,20 +43,14 @@ const formFields = [
 // Payment methods data
 const paymentMethods = [
   {
-    id: "bank",
-    label: "Bank",
-    icon: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/M4hj00NDrJ/vka5p9b1_expires_30_days.png",
-    logos: [
-      "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/M4hj00NDrJ/6qoo0wro_expires_30_days.png",
-      "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/M4hj00NDrJ/nxixvogh_expires_30_days.png",
-      "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/M4hj00NDrJ/lrh7x2qp_expires_30_days.png",
-      "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/M4hj00NDrJ/wahj9e5s_expires_30_days.png",
-    ],
+    id: "paypal",
+    label: "PayPal",
+    icon: "https://www.paypalobjects.com/webstatic/icon/pp258.png",
   },
   {
     id: "cash",
     label: "Cash on delivery",
-    icon: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/M4hj00NDrJ/t0m4y8kd_expires_30_days.png",
+    icon: "https://cdn-icons-png.flaticon.com/512/1041/1041916.png", // Example cash icon
   },
 ];
 
@@ -61,6 +58,49 @@ const CheckOut = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
+
+  useEffect(() => {
+    dispatch(checkoutActions.setSelectedPayment('cash'));
+  }, [dispatch]);
+
+  useEffect(() => {
+    async function hydrateCartWithProductDetails() {
+      let itemsToHydrate = cartItems;
+      if (!cartItems || cartItems.length === 0) {
+        try {
+          const data = await getCart();
+          itemsToHydrate = data.items;
+        } catch (err) {
+          itemsToHydrate = [];
+        }
+      }
+      const mappedItems = await Promise.all(
+        (itemsToHydrate || []).map(async (item) => {
+          let productDetails = {};
+          try {
+            const response = await getProductById(item.productId);
+            productDetails = response.data || {};
+          } catch {}
+          return {
+            id: item.productId,
+            name: productDetails.productName || item.productName || '',
+            imageURL: productDetails.imageURL || '',
+            price: item.price,
+            quantity: item.quantity,
+            ...item,
+            categoryID: productDetails.categoryID,
+            categoryName: productDetails.categoryName,
+            sellerName: productDetails.sellerName,
+            description: productDetails.description,
+            stock: productDetails.stock,
+            isInStock: productDetails.isInStock,
+          };
+        })
+      );
+      dispatch(cartActions.setCart(mappedItems));
+    }
+    hydrateCartWithProductDetails();
+  }, [dispatch]);
   const user = useSelector((state) => state.auth.user);
   const { formData, saveInfo, couponCode, selectedPayment } = useSelector(
     (state) => state.checkout
@@ -92,6 +132,18 @@ const CheckOut = () => {
       user,
     };
     try {
+      if (selectedPayment === "paypal") {
+        // Create PayPal payment using service
+        const payment = await createPayPalPayment(user?.userId);
+        const payPalLink = payment?.payment?.paymentDetails?.payPalLink;
+        if (payPalLink) {
+          window.open(payPalLink, "_blank");
+        } else {
+          throw new Error("PayPal link not found");
+        }
+        return;
+      }
+      // Normal order placement for other methods
       await placeOrder(orderData);
       await clearCartAPI();
       Swal.fire({
