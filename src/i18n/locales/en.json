@@ -396,5 +396,16 @@
   "returnDeliveryTitle": "Return Delivery",
   "returnDeliveryText": "Free 30 Days Returns. Details",
   "relatedItems": "Related Items"
+  },
+    "addressBook": {
+    "title": "Address Book",
+    "add": "Add Address",
+    "edit": "Edit",
+    "delete": "Delete",
+    "loading": "Loading addresses...",
+    "empty": "No addresses found.",
+    "confirmDelete": "Are you sure you want to delete this address?",
+    "loadError": "Failed to load addresses",
+    "deleteError": "Failed to delete address"
   }
 }
