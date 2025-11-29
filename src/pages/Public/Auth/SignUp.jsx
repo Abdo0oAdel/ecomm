@@ -103,21 +103,12 @@ const SignUp = () => {
     try {
       // Call your backend endpoint
       const result = await authAPI.googleLogin(idToken);
-
-      // expected: result contains accessToken and refreshToken (adjust to your backend's shape)
-      // Prefer to use useAuth to set user state if available (the hook often provides a method)
-      if (loginWithTokens && typeof loginWithTokens === "function") {
-        // If your useAuth has a helper to set tokens & user state, use it
-        await loginWithTokens(result);
-      } else {
-        // fallback: store tokens directly (adjust keys to your backend)
-        if (result?.accessToken)
-          localStorage.setItem("accessToken", result.accessToken);
-        if (result?.refreshToken)
-          localStorage.setItem("refreshToken", result.refreshToken);
-        if (result?.user)
-          localStorage.setItem("user", JSON.stringify(result.user));
-      }
+      if (result?.accessToken)
+        localStorage.setItem("accessToken", result.accessToken);
+      if (result?.refreshToken)
+        localStorage.setItem("refreshToken", result.refreshToken);
+      if (result?.user)
+        localStorage.setItem("user", JSON.stringify(result.user));
 
       // navigate to home or wherever
       navigate("/");
@@ -128,8 +119,7 @@ const SignUp = () => {
     }
   }
 
-  // When user clicks your custom Google button, open the account chooser / popup
-  // We call request to trigger the popup. If request does not exist in the SDK version, fallback to prompt().
+
   const handleGoogleClick = () => {
     setError("");
     if (

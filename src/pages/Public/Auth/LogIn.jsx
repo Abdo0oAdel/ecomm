@@ -123,14 +123,10 @@ const LogIn = () => {
       const user = payload?.user ?? payload?.userData ?? payload;
 
       // Prefer useAuth loginWithTokens helper if available
-      if (loginWithTokens && typeof loginWithTokens === "function") {
-        await loginWithTokens({ accessToken, refreshToken, user });
-      } else {
-        // minimal fallback: store tokens & user in localStorage (adjust to your app's pattern)
-        if (accessToken) localStorage.setItem("accessToken", accessToken);
-        if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
-        if (user) localStorage.setItem("user", JSON.stringify(user));
-      }
+      // Store tokens & user in localStorage (adjust to your app's pattern)
+      if (accessToken) localStorage.setItem("accessToken", accessToken);
+      if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+      if (user) localStorage.setItem("user", JSON.stringify(user));
 
       // load cart/wishlist and then redirect (same as password login)
       await handlePostLoginEffects();
