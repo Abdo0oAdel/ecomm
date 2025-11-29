@@ -26,6 +26,7 @@ import Account from "../pages/Protected/Account/Account";
 import Cancellation from "../pages/Protected/Account/Cancellation";
 import Reviews from "../pages/Protected/Account/Reviews";
 import MyOrder from "../pages/Protected/Account/MyOrder";
+import AddressBook from "../pages/Protected/Account/AddressBook/AddressBook";
 
 import Error from "../pages/Error/Error";
 import ShippingMap from "../pages/Protected/ShippingMap/ShippingMap";
@@ -124,6 +125,14 @@ const routes = [
           </ProtectedRoute>
         ),
       },
+     {
+       path: "/AddressBook",
+       element: (
+        <ProtectedRoute>
+            <AddressBook />
+        </ProtectedRoute>
+    ),
+    },
     ],
   },
     // Admin routes

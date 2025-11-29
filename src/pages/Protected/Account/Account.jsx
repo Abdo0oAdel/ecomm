@@ -305,7 +305,7 @@ export default function Account() {
           <Link to="#" className={`${styles.navLink} ${styles.navLinkActive}`}>
             {t("account.myProfile")}
           </Link>
-          <Link to="#" className={styles.navLink}>
+          <Link to="/AddressBook" className={styles.navLink}>
             {t("account.addressBook")}
           </Link>
           <Link to="#" className={styles.navLink}>
@@ -324,7 +324,7 @@ export default function Account() {
         </div>
 
         <h2>{t("account.myWishlist")}</h2>
-        <a href="#" className={styles.navLink}>
+        <a href="/Wishlist" className={styles.navLink}>
           {t("account.viewWishlist")}
         </a>
       </aside>

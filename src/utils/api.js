@@ -238,6 +238,9 @@ export const addressAPI = {
   updateAddress: async (addressId, addressData) => {
     return axiosWithAuth.put(`/api/Addresses/${addressId}`, addressData);
   },
+  deleteAddress: async (addressId) => {
+    return axiosWithAuth.delete(`/api/Addresses/${addressId}`);
+  },
 };
 
 // Orders API calls
