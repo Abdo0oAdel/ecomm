@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React,{ useEffect } from "react";
 import { getCart } from "../../../services/cart";
 import { getProductById } from "../../../services/products";
 import { useSelector, useDispatch } from "react-redux";
@@ -10,7 +10,6 @@ import { placeOrder, createPayPalPayment } from "../../../services/checkout";
 import { clearCartAPI } from "../../../services/cart";
 import Swal from "sweetalert2";
 
-import React, { useEffect } from "react";
 import { addressAPI } from "../../../utils/api.js";
 
 // Breadcrumb navigation data
