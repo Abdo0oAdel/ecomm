@@ -76,7 +76,7 @@ export default function AddressModal({ userId, initialData = null, onClose, onSa
         <div className={styles.modalBackdrop}>
             <div className={styles.modal}>
                 <div className={styles.modalHeader}>
-                    <h4>{isEdit ? t("addressModal.editTitle") : t("addressModal.addTitle")}</h4>
+                    <h4>{isEdit ? "Edit Address" : "Add Address"}</h4>
                     <button className={styles.closeBtn} onClick={onClose}>✕</button>
                 </div>
 
@@ -84,39 +84,39 @@ export default function AddressModal({ userId, initialData = null, onClose, onSa
                     {error && <div className={styles.error}>{error}</div>}
 
                     <label className={styles.label}>
-                        {t("addressModal.fullAddress")}
+                        Full Address
                         <input
                             name="fullAddress"
                             value={form.fullAddress}
                             onChange={handleChange}
                             className={styles.input}
                             maxLength={500}
-                            placeholder={t("addressModal.fullAddressPlaceholder")}
+                            placeholder="Enter full address"
                         />
                     </label>
 
                     <label className={styles.label}>
-                        {t("addressModal.city")}
+                        City
                         <input name="city" value={form.city} onChange={handleChange} className={styles.input} maxLength={100} />
                     </label>
 
                     <label className={styles.label}>
-                        {t("addressModal.country")}
+                        Country
                         <input name="country" value={form.country} onChange={handleChange} className={styles.input} maxLength={100} />
                     </label>
 
                     <div className={styles.modalActions}>
                         <button type="button" className={styles.cancelBtn} onClick={onClose} disabled={saving}>
-                            {t("addressModal.cancel")}
+                            Cancel
                         </button>
                         <button type="submit" className={styles.primaryBtn} disabled={saving}>
                             {saving
                                 ? isEdit
-                                    ? t("addressModal.saving")
-                                    : t("addressModal.creating")
+                                    ? "Saving..."
+                                    : "Creating..."
                                 : isEdit
-                                    ? t("addressModal.save")
-                                    : t("addressModal.create")}
+                                    ? "Save Address"
+                                    : "Create Address"}
                         </button>
                     </div>
                 </form>

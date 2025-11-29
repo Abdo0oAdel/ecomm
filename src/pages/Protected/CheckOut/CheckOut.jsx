@@ -133,8 +133,10 @@ const CheckOut = () => {
     };
     try {
       if (selectedPayment === "paypal") {
-        // Create PayPal payment using service
-        const payment = await createPayPalPayment(user?.userId);
+        const orderResponse = await placeOrder(orderData);
+        const orderId = orderResponse?.order?.orderID;
+        if (!orderId) throw new Error("Order ID not found for PayPal payment");
+        const payment = await createPayPalPayment(orderId);
         const payPalLink = payment?.payment?.paymentDetails?.payPalLink;
         if (payPalLink) {
           window.open(payPalLink, "_blank");

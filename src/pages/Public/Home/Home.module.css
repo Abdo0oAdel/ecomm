@@ -661,9 +661,50 @@
   color: var(--color-primary);
 }
 
+
+
 .productsGrid.exploreGrid {
+  display: grid;
   grid-template-columns: repeat(4, 1fr);
-  row-gap: 48px;
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .productsGrid.exploreGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .productsGrid.exploreGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .productsGrid.exploreGrid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    row-gap: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .productsGrid.exploreGrid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    row-gap: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .productsGrid.exploreGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    row-gap: 16px;
+  }
 }
 
 /* tighten product card inside explore to mimic design spacing */
