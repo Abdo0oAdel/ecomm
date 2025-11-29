@@ -10,6 +10,9 @@ import { placeOrder, createPayPalPayment } from "../../../services/checkout";
 import { clearCartAPI } from "../../../services/cart";
 import Swal from "sweetalert2";
 
+import React, { useEffect } from "react";
+import { addressAPI } from "../../../utils/api.js";
+
 // Breadcrumb navigation data
 const breadcrumbItems = [
   { label: "Account", path: "/account" },
@@ -105,6 +108,49 @@ const CheckOut = () => {
   const { formData, saveInfo, couponCode, selectedPayment } = useSelector(
     (state) => state.checkout
   );
+
+ // fill default values for user data 
+ useEffect(() => {
+        const loadAddress = async () => {
+            try {
+                const res = await addressAPI.getAddress(user.userId);
+                if (res && res.data && res.data.length > 0) {
+                    const firstAddress = res.data[0]; // أول عنوان
+                    const fullAddress = firstAddress.fullAddress;
+                    const city = firstAddress.city;
+
+                dispatch(
+                    checkoutActions.updateField({
+                        field: "firstName",
+                        value: user.firstName,
+                    })
+                );
+                dispatch(
+                    checkoutActions.updateField({
+                        field: "email",
+                        value: user.email,
+                    })
+                );
+                dispatch(
+                    checkoutActions.updateField({
+                        field: "streetAddress",
+                        value: fullAddress,
+                    })
+                 );
+                dispatch(
+                    checkoutActions.updateField({
+                        field: "city",
+                        value: city,
+                    })
+                );
+                }
+            } catch (err) {
+                console.error("Error loading address:", err);
+            }
+        };
+        loadAddress();
+    }, [user]);  
+  
 
   // Calculate totals
   const subtotal = cartItems.reduce(
