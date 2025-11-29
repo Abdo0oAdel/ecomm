@@ -1,0 +1,126 @@
+import React, { useEffect, useState } from "react";
+import styles from "./AddressModal.module.css";
+import { addressAPI } from "../../../../utils/api.js";
+import { useTranslation } from "react-i18next";
+
+export default function AddressModal({ userId, initialData = null, onClose, onSaved }) {
+    const { t } = useTranslation();
+    const isEdit = Boolean(initialData);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState(null);
+
+    const [form, setForm] = useState({
+        fullAddress: "",
+        city: "",
+        country: "",
+    });
+
+    useEffect(() => {
+        if (initialData) {
+            setForm({
+                fullAddress: initialData.fullAddress || initialData.address || "",
+                city: initialData.city || "",
+                country: initialData.country || "",
+            });
+        } else {
+            setForm({ fullAddress: "", city: "", country: "" });
+        }
+    }, [initialData]);
+
+    const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(null);
+
+        if (!userId) {
+            setError(t("addressModal.userError"));
+            return;
+        }
+
+        if (!form.city || !form.country) {
+            setError(t("addressModal.cityCountryRequired"));
+            return;
+        }
+
+        setSaving(true);
+        try {
+            const payload = {
+                userID: userId,
+                fullAddress: (form.fullAddress || "").trim(),
+                city: form.city.trim(),
+                country: form.country.trim(),
+            };
+
+            let saved;
+            if (isEdit) {
+                const id = initialData.addressID ?? initialData.id ?? initialData.addressId;
+                const res = await addressAPI.updateAddress(id, payload);
+                saved = res?.data ?? res;
+            } else {
+                const res = await addressAPI.createAddress(payload);
+                saved = res;
+            }
+
+            const normalized = saved?.data ?? saved;
+            onSaved(normalized);
+        } catch (err) {
+            console.error("Address save error:", err);
+            setError(err?.response?.data?.message || err.message || t("addressModal.saveError"));
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    return (
+        <div className={styles.modalBackdrop}>
+            <div className={styles.modal}>
+                <div className={styles.modalHeader}>
+                    <h4>{isEdit ? t("addressModal.editTitle") : t("addressModal.addTitle")}</h4>
+                    <button className={styles.closeBtn} onClick={onClose}>✕</button>
+                </div>
+
+                <form className={styles.modalBody} onSubmit={handleSubmit}>
+                    {error && <div className={styles.error}>{error}</div>}
+
+                    <label className={styles.label}>
+                        {t("addressModal.fullAddress")}
+                        <input
+                            name="fullAddress"
+                            value={form.fullAddress}
+                            onChange={handleChange}
+                            className={styles.input}
+                            maxLength={500}
+                            placeholder={t("addressModal.fullAddressPlaceholder")}
+                        />
+                    </label>
+
+                    <label className={styles.label}>
+                        {t("addressModal.city")}
+                        <input name="city" value={form.city} onChange={handleChange} className={styles.input} maxLength={100} />
+                    </label>
+
+                    <label className={styles.label}>
+                        {t("addressModal.country")}
+                        <input name="country" value={form.country} onChange={handleChange} className={styles.input} maxLength={100} />
+                    </label>
+
+                    <div className={styles.modalActions}>
+                        <button type="button" className={styles.cancelBtn} onClick={onClose} disabled={saving}>
+                            {t("addressModal.cancel")}
+                        </button>
+                        <button type="submit" className={styles.primaryBtn} disabled={saving}>
+                            {saving
+                                ? isEdit
+                                    ? t("addressModal.saving")
+                                    : t("addressModal.creating")
+                                : isEdit
+                                    ? t("addressModal.save")
+                                    : t("addressModal.create")}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}
