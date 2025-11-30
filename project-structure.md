@@ -1,7 +1,7 @@
 # E-Commerce Application - Project Structure
 
 ## Overview
-This is a modern e-commerce web application built with React, Redux, and Vite with secure JWT authentication using HTTP-only cookies.
+This is a modern e-commerce web application built with React, Redux, and Vite.
 
 ## Root Directory
 ```
@@ -17,21 +17,14 @@ ecomm/
 ├── package.json               # Project dependencies and scripts
 ├── README.md                  # Project documentation
 ├── vite.config.js             # Vite bundler configuration
-├── backend/                   # Express backend server
+├── .env                       # Environment variables
 ├── public/                    # Static assets
-└── src/                       # Source code
+├── src/                       # Source code
+├── project-structure.md       # Project structure documentation
+├── swagger.json               # API documentation (Swagger)
+└── vercel.json                # Vercel deployment configuration
 ```
 
-## Backend Directory
-```
-backend/
-├── .env                       # Environment variables (JWT secrets, etc.)
-├── app.js                     # Express application with JWT auth
-├── package.json               # Backend dependencies
-├── users.json                 # User database (JSON file)
-└── middleware/
-    └── auth.js                # Authentication & authorization middleware
-```
 
 ## Public Directory
 ```
@@ -45,180 +38,144 @@ public/
 ### Main Files
 ```
 src/
-├── App.jsx                    # Root application component with auth verification
-└── main.jsx                   # Application entry point
-```
-
-### Assets (`src/assets/`)
-```
-assets/
-├── react.svg                  # React logo
-├── imgs/                      # Image files
-│   ├── image_Sec.jpg          # Section background image
-│   ├── Side Image.svg         # Decorative side image
-│   ├── team-1.png             # Team member photo 1
-│   ├── team-2.png             # Team member photo 2
-│   └── team-3.png             # Team member photo 3
-└── styles/                    # Global styles
-    ├── globals.css            # Global CSS styles
-    ├── mixins.css             # CSS mixins and utilities
-    ├── styles.css             # Main stylesheet
-    ├── rtl.css                # RTL overrides
-    └── variables.css          # CSS variables (colors, spacing, etc.)
-```
-
-### Components (`src/components/`)
-Reusable UI components organized by feature:
-
-```
-components/
-├── Footer/
-│   ├── Footer.jsx             # Footer component
-│   └── Footer.module.css      # Footer styles
-├── NavBar/
-│   ├── NavBar.jsx             # Navigation bar with auth-aware UI
-│   └── NavBar.module.css      # Navigation bar styles (includes user menu)
-├── ProductCard/
-│   ├── ProductCard.jsx        # Product card component
-│   └── ProductCard.module.css # Product card styles
-└── SideBar/
-    ├── SideBar.jsx            # Sidebar component
-    └── SideBar.module.css     # Sidebar styles
-```
-
-### Hooks (`src/hooks/`)
-Custom React hooks found in the repo:
-
-```
-hooks/
-├── useAuth.js                 # Custom authentication hook (Redux integration)
-├── useCart.js                 # Cart helper hook
-└── useWishlist.js             # Wishlist helper hook
-```
-
-### Internationalization (`src/i18n/`)
-Project contains a small i18n setup with locales and usage examples:
-
-```
-i18n/
-├── config.js                  # i18n configuration
-├── ExampleUsage.jsx           # Small example component showing usage
-├── QUICK_REFERENCE.md         # Quick reference (documentation)
-├── README.md                  # i18n notes
-└── locales/
-    ├── ar.json                # Arabic translations
-    ├── en.json                # English translations
-    └── fr.json                # French translations
-```
-
-### Layout (`src/layout/`)
-Layout components for different application sections:
-
-```
-layout/
-├── Layout.module.css          # Layout styles
-├── ProtectedLayout.jsx        # Layout for authenticated routes
-└── PublicLayout.jsx           # Layout for public routes
-```
-
-### Pages (`src/pages/`)
-Page components organized by access level:
-
-#### Error Pages
-```
-pages/Error/
-├── Error.jsx                  # 404 and error page component
-└── Error.module.css           # Error page styles
-```
-
-#### Protected Pages (Require Authentication)
-```
-pages/Protected/
-├── Account/
-│   ├── Account.jsx            # User account management
-│   └── Account.module.css     # Account page styles
-├── Cart/
-│   ├── Cart.jsx               # Shopping cart page
-│   └── Cart.module.css        # Cart page styles
-├── CheckOut/
-│   ├── CheckOut.jsx           # Checkout process page
-│   └── CheckOut.module.css    # Checkout page styles
-└── Wishlist/
-    ├── Wishlist.jsx           # User wishlist page
-    └── Wishlist.module.css    # Wishlist page styles
-```
-
-#### Public Pages (Accessible to All)
-```
-pages/Public/
-├── About/
-│   ├── About.jsx              # About us page
-│   ├── About.module.css       # About page styles
-│   ├── ServicesSection.jsx    # Services section component
-│   ├── StatCard.jsx           # Statistics card component
-│   ├── TeamWork.jsx           # Team section component
-│   └── useCountUpOnVisible.jsx # Count-up animation hook
-├── Auth/
-│   ├── LogIn.jsx              # Login page
-│   ├── LogIn.module.css       # Login page styles
-│   ├── SignUp.jsx             # Sign up page
-│   └── SignUp.module.css      # Sign up page styles
-├── Contact/
-│   ├── Contact.jsx            # Contact us page
-│   └── Contact.module.css     # Contact page styles
-├── FAQ/
-│   ├── FAQ.jsx                # Frequently asked questions
-│   └── FAQ.module.css         # FAQ page styles
-├── Home/
-│   ├── Home.jsx               # Homepage
-│   └── Home.module.css        # Homepage styles
-├── Privacy/
-│   ├── Privacy.jsx            # Privacy policy page
-│   └── Privacy.module.css     # Privacy page styles
-├── ProductDetails/
-│   ├── ProductDetails.jsx     # Product detail page
-│   └── ProductDetails.module.css # Product detail styles
-└── Terms/
-    ├── Terms.jsx              # Terms and conditions page
-    └── Terms.module.css       # Terms page styles
-```
-
-### Routes (`src/routes/`)
-Routing configuration:
-
-```
-routes/
-├── AppRoutes.jsx              # Main application routes
-└── ProtectedRoute.jsx         # Protected route wrapper component
-```
-
-### Store (`src/store/`)
-Redux store configuration and slices:
-
-```
-store/
-├── index.js                   # Redux store configuration
-├── Auth/
-│   ├── reducers.js            # Authentication reducers
-│   └── slice.js               # Authentication slice
-├── Cart/
-│   ├── reducers.js            # Cart reducers
-│   └── slice.js               # Cart slice
-├── Wishlist/
-│   ├── reducers.js            # Wishlist reducers
-│   └── slice.js               # Wishlist slice
-└── Theme/
-    ├── reducers.js            # Theme reducers (light/dark mode)
-    └── slice.js               # Theme slice
-```
-
-### Utils (`src/utils/`)
-Utility functions and API configuration:
-
-```
-utils/
-├── api.js                     # API endpoints and authentication calls
-└── helpers.js                 # Helper functions (HTTP-only cookie support)
+├── App.jsx
+├── main.jsx
+├── assets/
+│   ├── imgs/
+│   └── styles/
+│       ├── globals.css
+│       ├── mixins.css
+│       ├── rtl.css
+│       ├── styles.css
+│       └── variables.css
+├── components/
+│   ├── AccountDropDown/
+│   │   ├── AccountDrop.jsx
+│   │   └── AccountDrop.module.css
+│   ├── AdminSidebar/
+│   │   ├── AdminSidebar.jsx
+│   │   └── AdminSidebar.module.css
+│   ├── Footer/
+│   │   ├── Footer.jsx
+│   │   └── Footer.module.css
+│   ├── NavBar/
+│   │   ├── NavBar.jsx
+│   │   └── NavBar.module.css
+│   ├── ProductCard/
+│   │   ├── ProductCard.jsx
+│   │   └── ProductCard.module.css
+│   └── SideBar/
+│       ├── SideBar.jsx
+│       └── SideBar.module.css
+├── hooks/
+│   ├── useAuth.js
+│   ├── useCart.js
+│   ├── useCategories.js
+│   ├── useCheckout.js
+│   ├── useProduct.js
+│   ├── useProducts.js
+│   ├── useShipping.js
+│   ├── useUsers.js
+│   └── useWishlist.js
+├── i18n/
+│   ├── config.js
+│   ├── ExampleUsage.jsx
+│   ├── QUICK_REFERENCE.md
+│   ├── README.md
+│   └── locales/
+│       ├── ar.json
+│       ├── en.json
+│       └── fr.json
+├── layout/
+│   ├── Layout.module.css
+│   ├── ProtectedLayout.jsx
+│   └── PublicLayout.jsx
+├── pages/
+│   ├── admin/
+│   │   ├── AdminDashboard/
+│   │   │   ├── AdminDashboard.jsx
+│   │   │   └── AdminDashboard.module.css
+│   │   ├── OrderManagement/
+│   │   │   ├── OrderForm.jsx
+│   │   │   ├── OrderForm.module.css
+│   │   │   ├── OrderList.jsx
+│   │   │   ├── OrderList.module.css
+│   │   │   ├── OrderManagement.jsx
+│   │   │   ├── OrderManagement.module.css
+│   │   │   ├── OrderModal.jsx
+│   │   │   └── OrderModal.module.css
+│   │   ├── ProductManagement/
+│   │   │   ├── ProductForm.jsx
+│   │   │   ├── ProductForm.module.css
+│   │   │   ├── ProductList.jsx
+│   │   │   ├── ProductList.module.css
+│   │   │   ├── ProductManagement.jsx
+│   │   │   ├── ProductManagement.module.css
+│   │   │   ├── ProductModal.jsx
+│   │   │   └── ProductModal.module.css
+│   │   ├── UserManagement/
+│   │   │   ├── UserManagement.jsx
+│   │   │   └── UserManagement.module.css
+│   ├── Error/
+│   │   ├── Error.jsx
+│   │   ├── Error.module.css
+│   │   └── ErrorLogic.jsx
+│   ├── Protected/
+│   │   ├── Account/
+│   │   ├── Cart/
+│   │   ├── CheckOut/
+│   │   ├── ShippingMap/
+│   │   └── Wishlist/
+│   ├── Public/
+│   │   ├── About/
+│   │   ├── Auth/
+│   │   ├── Contact/
+│   │   ├── FAQ/
+│   │   ├── Home/
+│   │   ├── Privacy/
+│   │   ├── ProductDetails/
+│   │   ├── Products/
+│   │   ├── QRScanner/
+│   │   ├── Support/
+│   │   └── Terms/
+├── routes/
+│   ├── AdminRoute.jsx
+│   ├── AppRoutes.jsx
+│   └── ProtectedRoute.jsx
+├── services/
+│   ├── api.js
+│   ├── cart.js
+│   ├── categories.js
+│   ├── checkout.js
+│   ├── orders.js
+│   ├── products.js
+│   ├── shipping.js
+│   └── users.js
+├── store/
+│   ├── index.js
+│   ├── Auth/
+│   │   ├── reducers.js
+│   │   └── slice.js
+│   ├── Cart/
+│   │   ├── reducers.js
+│   │   └── slice.js
+│   ├── CheckOut/
+│   │   ├── reducers.js
+│   │   └── slice.js
+│   ├── Theme/
+│   │   ├── reducers.js
+│   │   └── slice.js
+│   ├── User/
+│   │   └── slice.js
+│   └── Wishlist/
+│       ├── reducers.js
+│       └── slice.js
+├── utils/
+│   ├── api.js
+│   ├── authValidators.js
+│   ├── helpers.js
+│   ├── localStorage.js
+│   └── tokenManager.js
 ```
 
 ## Technology Stack
@@ -228,12 +185,6 @@ utils/
 - **Redux Toolkit** - Global state management
 - **React Router** - Client-side routing
 - **Vite** - Build tool and dev server
-
-### Backend
-- **Express** - Node.js web framework
-- **JWT (jsonwebtoken)** - Token-based authentication
-- **bcryptjs** - Password hashing (ready for production)
-- **cookie-parser** - HTTP-only cookie handling
 
 ### Styling
 - **CSS Modules** - Component-scoped styling
@@ -250,17 +201,10 @@ utils/
 ### Development Tools
 - **ESLint** - Code linting
 - **Git** - Version control
-- **Nodemon** - Auto-restart for backend development
 
 ## Key Features
 
 ### Authentication & Security
-- JWT-based authentication with HTTP-only cookies
-- Secure token storage (protected from XSS attacks)
-- Protected routes for authenticated users
-- Role-based authorization (admin/customer)
-- Persistent login sessions
-- Secure logout functionality
 
 ### E-Commerce Functionality
 - Product browsing and details
@@ -268,13 +212,21 @@ utils/
 - Wishlist functionality
 - Checkout process
 - User account management
+- **Admin Dashboard** for managing users, products, and orders
+- **Order Management** (view, update, and process orders)
+- **Product Management** (add, edit, delete products)
+- **User Management** (admin controls for users)
 
-### UI/UX
+### UI/UX & Features
 - Responsive navigation with user dropdown menu
 - Theme switching (light/dark mode)
 - Toast notifications for user feedback
 - Modular component architecture
 - Consistent styling with CSS modules
+- **RTL (Right-to-Left) support** for Arabic and other languages
+- **Shipping Map** for address selection and visualization
+- **QR Scanner** for product and order scanning
+- **Support Page** for customer inquiries
 
 ### Informational Pages
 - About us with team section
@@ -282,6 +234,13 @@ utils/
 - FAQ section
 - Privacy policy
 - Terms and conditions
+
+### E-Commerce Functionality
+- Product browsing and details
+- Shopping cart management
+- Wishlist functionality
+- Checkout process
+- User account management
 
 ## Backend API Structure
 
@@ -309,15 +268,18 @@ utils/
 - `/faq` - FAQ
 - `/privacy` - Privacy Policy
 - `/terms` - Terms & Conditions
+- `/Support` - Support
 - `/login` - Login
 - `/signup` - Sign Up
+- `/products` - Product
 - `/products/:id` - Product Details
 
 ### Protected Routes (Requires Authentication)
 - `/account` - User Account
 - `/cart` - Shopping Cart
-- `/checkout` - Checkout
-- `/wishlist` - Wishlist
+- `/checkout` - Check Out
+- `/ShippingMap` - Shipping Map
+- `/wishlist` - Wish List
 
 ### Error Routes
 - `*` - 404 Error Page
@@ -338,25 +300,19 @@ utils/
 ### State Management
 - **Redux** - All global state (Authentication, Theme, Cart, Wishlist)
 - **Local state** - Component-specific state using useState hook
-- **No Context API** - Removed in favor of Redux for consistency
 
 ### Security Best Practices
-- Tokens stored in HTTP-only cookies (not accessible via JavaScript)
+// ...existing code...
+### Security Best Practices
+- Access, refresh, and revoke tokens are managed via a token manager and stored in localStorage
+- Google OAuth is used for secure signup/signin
 - CORS configured with credentials support
-- SameSite cookie attribute prevents CSRF attacks
 - Secure flag enabled in production (HTTPS only)
 - Password hashing ready for production (bcrypt)
 
 ## Running the Application
 
 ### Development Mode
-
-**Start Backend:**
-```bash
-cd backend
-npm run dev
-```
-Backend runs on: `http://localhost:3001`
 
 **Start Frontend:**
 ```bash
@@ -365,12 +321,10 @@ npm run dev
 Frontend runs on: `http://localhost:5173`
 
 ### Environment Variables
-Backend requires `.env` file:
+Frontend requires `.env` file:
 ```
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-JWT_EXPIRES_IN=7d
-PORT=3001
-NODE_ENV=development
+VITE_API_BASE_URL=https://depiproject.runasp.net
+VITE_GOOGLE_CLIENT_ID=165462429676-5dh45jrog5s8tsr5477u4q99o4somtb7.apps.googleusercontent.com
 ```
 
 ## Documentation Files
@@ -378,5 +332,5 @@ NODE_ENV=development
 
 ---
 
-*Last Updated: November 2, 2025*
-*Architecture: Redux-based state management with HTTP-only cookie authentication*
+*Last Updated: November 30, 2025*
+*Architecture: Redux-based state management. Access, refresh, and revoke tokens are managed via a token manager and stored in localStorage. Google OAuth is used for signup/signin.*
