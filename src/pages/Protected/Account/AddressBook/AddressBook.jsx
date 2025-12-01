@@ -27,7 +27,9 @@ export default function AddressBook() {
             setLoading(true);
             setError(null);
             try {
-                const res = await addressAPI.getAddress(userId);
+              // const res = await addressAPI.getAddress(userId);
+                 const res = await addressAPI.getUserAddress();
+                
                 const list = res?.data?.data ?? res?.data ?? res ?? [];
                 setAddresses(Array.isArray(list) ? list : []);
             } catch (err) {
