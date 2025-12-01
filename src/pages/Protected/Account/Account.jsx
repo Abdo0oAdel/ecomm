@@ -45,7 +45,8 @@ export default function Account() {
         if (userIdNumber && !isNaN(userIdNumber)) {
           try {
             console.log("Fetching addresses for userId:", userIdNumber);
-            const addresses = await addressAPI.getAddress(userIdNumber);
+         // const addresses = await addressAPI.getAddress(userIdNumber);
+            const addresses = await  addressAPI.getUserAddress();
             console.log("Addresses response:", addresses);
             console.log(
               "Addresses type:",
