@@ -112,7 +112,9 @@ const CheckOut = () => {
  useEffect(() => {
         const loadAddress = async () => {
             try {
-                const res = await addressAPI.getAddress(user.userId);
+             // const res = await addressAPI.getAddress(user.userId);
+                const res = await addressAPI.getUserAddress();
+                             
                 if (res && res.data && res.data.length > 0) {
                     const firstAddress = res.data[0]; // أول عنوان
                     const fullAddress = firstAddress.fullAddress;
