@@ -174,10 +174,51 @@ export default function Account() {
     window.location.reload();
   };
 
+  const validateForm = () => {
+        // First Name & Last Name
+        const nameRegex = /^[A-Za-z]+$/;
+
+        if (!formData.firstName.trim()) return "First Name is required";
+        if (!nameRegex.test(formData.firstName)) return "First Name must contain letters only";
+        if (formData.firstName.startsWith(" ")) return "First Name cannot start with a space";
+
+        if (!formData.lastName.trim()) return "Last Name is required";
+        if (!nameRegex.test(formData.lastName)) return "Last Name must contain letters only";
+        if (formData.lastName.startsWith(" ")) return "Last Name cannot start with a space";
+
+        // Address validation
+        const address = formData.address.trim();
+        if (!address) return "Address is required";
+        if (address.startsWith(" ")) return "Address cannot start with a space";
+
+        // Password validation (only if fields filled)
+        if (formData.currentPassword || formData.newPassword || formData.confirmPassword) {
+            if (!formData.currentPassword) return "Current Password is required";
+            if (!formData.newPassword) return "New Password is required";
+
+            if (formData.newPassword === formData.currentPassword) return "New Password must differ from current password";
+            if (!/[A-Z]/.test(formData.newPassword)) return "Password must include at least one uppercase letter";
+            if (!/[a-z]/.test(formData.newPassword)) return "Password must include at least one lowercase letter";
+            if (!/[0-9]/.test(formData.newPassword)) return "Password must include at least one number";
+            if (!/[^A-Za-z0-9]/.test(formData.newPassword)) return "Password must include at least one special character";
+
+            if (!formData.confirmPassword) return "Confirm Password is required";
+            if (formData.newPassword !== formData.confirmPassword) return "Passwords do not match";
+        }
+
+        return null;
+    };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+
+  const validationError = validateForm();
+      if (validationError) {
+          setError(validationError);
+          return;
+    }
 
     // Check if password fields are filled
     const isChangingPassword =
