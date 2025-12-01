@@ -227,6 +227,10 @@ export const checkoutAPI = {
 
 // Address API calls
 export const addressAPI = {
+  getUserAddress: async () => {
+        return axiosWithAuth.get(`/api/Addresses/user`);
+    },
+  
   getAddress: async (userId) => {
     return axiosWithAuth.get(`/api/Addresses/${userId}`);
   },
