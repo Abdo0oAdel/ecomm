@@ -228,9 +228,9 @@ export const checkoutAPI = {
 // Address API calls
 export const addressAPI = {
   getUserAddress: async () => {
-        return axiosWithAuth.get(`/api/Addresses/user`);
-    },
-  
+    return axiosWithAuth.get(`/api/Addresses/user`);
+  },
+
   getAddress: async (userId) => {
     return axiosWithAuth.get(`/api/Addresses/${userId}`);
   },
@@ -251,7 +251,7 @@ export const addressAPI = {
 export const ordersAPI = {
   getAllOrders: async (userId, page = 1, limit = 10) => {
     return axiosWithAuth.get(
-      `/api/orders/user/${userId}?page=${page}&limit=${limit}`
+      `/api/orders/user/orders?page=${page}&limit=${limit}`
     );
   },
 
@@ -267,7 +267,7 @@ export const ordersAPI = {
 
   getCancelledOrders: async (userId) => {
     // Corrected to fetch orders for a specific user
-    return axiosWithAuth.get(`/api/orders/user/${userId}?status=cancelled`);
+    return axiosWithAuth.get(`/api/orders/user/orders?status=cancelled`);
   },
 };
 
