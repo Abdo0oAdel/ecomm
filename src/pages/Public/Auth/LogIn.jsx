@@ -93,16 +93,52 @@ const LogIn = () => {
         wishlistAPI.getWishlist(),
       ]);
 
-      if (cartResponse && typeof cartResponse.totalQuantity === "number") {
-        dispatch(cartActions.setCartCount(cartResponse.totalQuantity));
+      if (cartResponse) {
+        const cartData = cartResponse.data || cartResponse;
+        const cartItems = cartData.cart?.items || cartData.items || [];
+        const totalQuantity = cartData.totalQuantity || cartData.cart?.totalQuantity || cartItems.reduce((sum, item) => sum + (item.quantity || 0), 0);
+
+        dispatch(cartActions.setCart({
+          items: cartItems,
+          totalQuantity: totalQuantity
+        }));
       }
 
-      // adapt based on your API shape
-      if (wishlistResponse?.wishlist) {
-        dispatch(wishlistActions.setWishlist(wishlistResponse.wishlist));
+      if (wishlistResponse) {
+        const data = wishlistResponse.data || wishlistResponse;
+        const rawItems = Array.isArray(data) ? data : data.items || data.wishlist || [];
+
+        const { getProductById } = await import('../../../services/products');
+          const [itemsWithDetails] = await Promise.all([Promise.all(
+              rawItems.map(async (item) => {
+                  try {
+                      const product = await getProductById(item.productId);
+                      return {
+                          id: item.productId,
+                          name: item.productName,
+                          currentPrice: item.price,
+                          image: product.imageURL,
+                          originalPrice: product.originalPrice,
+                          discount: product.discount,
+                          isInStock: product.isInStock,
+                          stock: product.stock,
+                          rating: product.rating,
+                          reviews: product.reviews,
+                      };
+                  } catch (e) {
+                      return {
+                          id: item.productId,
+                          name: item.productName,
+                          currentPrice: item.price,
+                          image: '',
+                      };
+                  }
+              })
+          )]);
+        dispatch(wishlistActions.setWishlist(itemsWithDetails));
       }
     } catch (err) {
-      console.error("❌ LOGIN - Error loading cart/wishlist:", err);
+      // Silently handle errors
     }
   };
 
@@ -203,22 +239,7 @@ const LogIn = () => {
 
       if (success && user) {
         // Load cart and wishlist after login
-        try {
-          const [cartResponse, wishlistResponse] = await Promise.all([
-            cartAPI.getCart(),
-            wishlistAPI.getWishlist(),
-          ]);
-
-          if (cartResponse && typeof cartResponse.totalQuantity === "number") {
-            dispatch(cartActions.setCartCount(cartResponse.totalQuantity));
-          }
-
-          if (wishlistResponse?.wishlist) {
-            dispatch(wishlistActions.setWishlist(wishlistResponse.wishlist));
-          }
-        } catch (err) {
-          console.error("❌ LOGIN - Error loading cart/wishlist:", err);
-        }
+        await handlePostLoginEffects();
 
         // Redirect to intended page or home
         const from = location.state?.from?.pathname || "/";

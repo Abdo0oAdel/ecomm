@@ -56,12 +56,50 @@ const initializeAuth = async () => {
                     wishlistAPI.getWishlist()
                 ]);
 
-                if (cartResponse?.cart) {
-                    store.dispatch(cartActions.setCart(cartResponse.cart));
+                if (cartResponse) {
+                    const cartData = cartResponse.data || cartResponse;
+                    const cartItems = cartData.cart?.items || cartData.items || [];
+                    const totalQuantity = cartData.totalQuantity || cartData.cart?.totalQuantity || cartItems.reduce((sum, item) => sum + (item.quantity || 0), 0);
+
+                    store.dispatch(cartActions.setCart({
+                        items: cartItems,
+                        totalQuantity: totalQuantity
+                    }));
                 }
 
-                if (wishlistResponse?.wishlist) {
-                    store.dispatch(wishlistActions.setWishlist(wishlistResponse.wishlist));
+                if (wishlistResponse) {
+                    const data = wishlistResponse.data || wishlistResponse;
+                    const rawItems = Array.isArray(data) ? data : data.items || data.wishlist || [];
+
+                    // Fetch product details for each wishlist item
+                    const { getProductById } = await import('../services/products');
+                    const itemsWithDetails = await Promise.all(
+                        rawItems.map(async (item) => {
+                            try {
+                                const product = await getProductById(item.productId);
+                                return {
+                                    id: item.productId,
+                                    name: item.productName,
+                                    currentPrice: item.price,
+                                    image: product.imageURL,
+                                    originalPrice: product.originalPrice,
+                                    discount: product.discount,
+                                    isInStock: product.isInStock,
+                                    stock: product.stock,
+                                    rating: product.rating,
+                                    reviews: product.reviews,
+                                };
+                            } catch (e) {
+                                return {
+                                    id: item.productId,
+                                    name: item.productName,
+                                    currentPrice: item.price,
+                                    image: '',
+                                };
+                            }
+                        })
+                    );
+                    store.dispatch(wishlistActions.setWishlist(itemsWithDetails));
                 }
             } catch (error) {
                 // Silently fail - user can still use the app
