@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import styles from "./Footer.module.css";
+import qrCodeImg from "../../assets/imgs/Zenon-qr.png";
 import { FiSend } from "react-icons/fi";
 import {
   FaFacebookF,
@@ -15,85 +16,6 @@ const Footer = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-  // --- QR/App Store/Google Play dynamic data:
-  const [storeData, setStoreData] = useState({
-    qrCode: "",
-    appStore: "",
-    googlePlay: "",
-    appStoreLink: "",
-    googlePlayLink: "",
-  });
-
-  useEffect(() => {
-    let mounted = true;
-
-    // Try a relative endpoint first; fallback to public images if API is not available
-    const endpoint = "/api/store-assets";
-
-    fetch(endpoint)
-      .then((res) => {
-        if (!res.ok) throw new Error("no assets");
-        return res.json();
-      })
-      .then((data) => {
-        if (!mounted) return;
-        setStoreData({
-          qrCode:
-            data.qrCode || "https://via.placeholder.com/80x80?text=QR",
-          appStore:
-            data.appStore ||
-            "https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg",
-          googlePlay:
-            data.googlePlay ||
-            "https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg",
-          appStoreLink: data.appStoreLink || "https://apps.apple.com",
-          googlePlayLink:
-            data.googlePlayLink || "https://play.google.com/store",
-        });
-      })
-      .catch(() => {
-        if (!mounted) return;
-        // Fallback to local/public placeholders
-        setStoreData({
-          qrCode: "https://via.placeholder.com/80x80?text=QR",
-          appStore:
-            "https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg",
-          googlePlay:
-            "https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg",
-          appStoreLink: "https://apps.apple.com",
-          googlePlayLink: "https://play.google.com/store",
-        });
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  // smooth-scroll to in-page anchor if present
-  const handleAnchorClick = (e) => {
-    try {
-      const href = e.currentTarget.getAttribute("href");
-      if (href && href.startsWith("#")) {
-        const id = href.slice(1);
-        const el = document.getElementById(id);
-        if (el) {
-          e.preventDefault();
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }
-    } catch (err) {
-      // fallback to default navigation if any error
-    }
-  };
-
-  const handleProtectedLink = (e, path) => {
-    if (!isAuthenticated) {
-      e.preventDefault();
-      navigate('/login');
-    }
-  };
 
   // Smooth scroll to top handler
   const handleScrollToTop = () => {
@@ -213,46 +135,37 @@ const Footer = () => {
           <h4 className={styles.columnTitle}>{t('footer.downloadApp')}</h4>
           <p className={styles.appText}>{t('footer.saveWith')}</p>
           <div className={styles.qrCode} aria-hidden>
-            <Link to="/qrscanner" onClick={() => {}}>
-              {storeData.qrCode ? (
-                <img
-                  className={styles.qrPlaceholder}
-                  src={storeData.qrCode}
-                  alt="QR Code"
-                />
-              ) : (
-                <div className={styles.qrPlaceholderFallback}>تحميل...</div>
-              )}
+            <Link to="/qrscanner">
+              <img
+                className={styles.qrPlaceholder}
+                src={qrCodeImg}
+                alt="QR Code"
+              />
             </Link>
           </div>
           <div className={styles.appStores}>
             <a
-              href={storeData.googlePlayLink || "#"}
+              href="https://play.google.com/store"
               className={styles.storeLink}
               target="_blank"
               rel="noopener noreferrer"
             >
-              {storeData.googlePlay ? (
-                <img
-                  className={styles.googlePlayImg}
-                  src={storeData.googlePlay}
-                  alt="Google Play"
-                />
-              ) : (
-                <span>Google Play</span>
-              )}
+              <img
+                className={styles.googlePlayImg}
+                src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                alt="Google Play"
+              />
             </a>
             <a
-              href={storeData.appStoreLink || "#"}
+              href="https://apps.apple.com"
               className={styles.storeLink}
               target="_blank"
               rel="noopener noreferrer"
             >
-              {storeData.appStore ? (
-                <img src={storeData.appStore} alt="App Store" />
-              ) : (
-                <span>App Store</span>
-              )}
+              <img 
+                src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" 
+                alt="App Store" 
+              />
             </a>
           </div>
         </div>
