@@ -83,9 +83,9 @@ export const useAuth = () => {
       // Clear tokens from localStorage
       tokenManager.clearTokens();
     } catch (error) {
-      console.error("Logout error:", error);
       // Still clear tokens and state even if API call fails
       tokenManager.clearTokens();
+      // Log for debugging but don't show to user since we're logging out anyway
     } finally {
       // Update Redux state
       dispatch(authActions.logout());

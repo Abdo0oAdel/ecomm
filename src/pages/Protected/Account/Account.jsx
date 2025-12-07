@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { addressAPI } from "../../../utils/api.js";
 import { changeUserPassword  } from "../../../services/users.js";
+import Swal from "sweetalert2";
 
 export default function Account() {
   const { t } = useTranslation();
@@ -44,16 +45,8 @@ export default function Account() {
         let addressText = "";
         if (userIdNumber && !isNaN(userIdNumber)) {
           try {
-            console.log("Fetching addresses for userId:", userIdNumber);
          // const addresses = await addressAPI.getAddress(userIdNumber);
             const addresses = await  addressAPI.getUserAddress();
-            console.log("Addresses response:", addresses);
-            console.log(
-              "Addresses type:",
-              typeof addresses,
-              "Is array:",
-              Array.isArray(addresses)
-            );
 
             // API can return either a single AddressDto object or an array
             // Check for single object first (actual API behavior)
@@ -63,35 +56,27 @@ export default function Account() {
               !Array.isArray(addresses)
             ) {
               // Handle single address object (actual API response)
-              console.log("Single address object:", addresses);
               if (
                 addresses.data &&
                 Array.isArray(addresses.data) &&
                 addresses.data.length > 0
               ) {
                 const extractedAddressId = addresses.data[0].addressID;
-                console.log("Extracted addressID:", extractedAddressId);
                 setAddressObject(addresses.data[0]);
                 setAddressId(extractedAddressId);
                 addressText = addresses.data[0].fullAddress || "";
-                console.log("Address text (fullAddress only):", addressText);
               }
             } else if (Array.isArray(addresses)) {
               // Handle array of addresses (per Swagger spec, but API returns single object)
               if (addresses.length > 0) {
                 // Use the first address
                 const firstAddress = addresses[0];
-                console.log("First address from array:", firstAddress);
 
                 // Store address object and ID for updates
                 const extractedAddressId =
                   firstAddress.addressID ||
                   firstAddress.id ||
                   firstAddress.addressId;
-                console.log(
-                  "Extracted addressID from array:",
-                  extractedAddressId
-                );
                 setAddressObject(firstAddress);
                 setAddressId(extractedAddressId);
 
@@ -100,37 +85,22 @@ export default function Account() {
                   addressText = firstAddress;
                 } else {
                   addressText = firstAddress.fullAddress || "";
-                  console.log("Address text (fullAddress only):", addressText);
                 }
-              } else {
-                console.log("Addresses array is empty");
               }
-            } else {
-              console.log(
-                "Unexpected addresses format:",
-                typeof addresses,
-                addresses
-              );
             }
           } catch (addressError) {
-            console.error("Error loading addresses:", addressError);
-            console.error(
-              "Address error details:",
-              addressError.message,
-              addressError.stack
-            );
             // Don't fail the whole profile load if addresses fail
             setAddressObject(null);
             setAddressId(null);
+            Swal.fire({
+              icon: 'warning',
+              title: 'Address Load Failed',
+              text: 'Unable to load your address. You can add it manually.',
+              timer: 3000,
+              showConfirmButton: false,
+            });
           }
-        } else {
-          console.warn(
-            "No userId available, cannot load addresses. Redux user:",
-            reduxUser
-          );
         }
-
-        console.log("Final addressText before setting form:", addressText);
 
         // Map Redux user data to form data
         setFormData({
@@ -143,8 +113,13 @@ export default function Account() {
           confirmPassword: "",
         });
       } catch (err) {
-        console.error("Error loading profile:", err);
-        setError(err.message || t("account.errors.loadProfile"));
+        const errorMessage = err.message || t("account.errors.loadProfile");
+        setError(errorMessage);
+        Swal.fire({
+          icon: 'error',
+          title: 'Profile Load Failed',
+          text: errorMessage,
+        });
 
         // Fallback to Redux user data
         if (reduxUser) {
@@ -275,8 +250,6 @@ export default function Account() {
                 country,
             };
 
-            console.log("Updating address - addressId:", addressId, "addressData:", addressData);
-
             let updatedAddress;
             if (addressId) {
                 // Update existing address
@@ -304,11 +277,15 @@ export default function Account() {
                     currentPassword: formData.currentPassword,
                     newPassword: formData.newPassword,
                 });
-                console.log("Password updated:", result);
                 setSuccess(t("account.success.passwordUpdated"));
             } catch (err) {
-                console.error("Password change error:", err);
-                setError(err.response?.data?.message || t("account.errors.updatePassword"));
+                const errorMessage = err.response?.data?.message || t("account.errors.updatePassword");
+                setError(errorMessage);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Password Update Failed',
+                    text: errorMessage,
+                });
                 return;
             }
         }
@@ -330,9 +307,14 @@ export default function Account() {
         setSuccess(null);
       }, 5000);
     } catch (err) {
-      console.error("Error updating profile:", err);
-      setError(err.message || t("account.errors.updateProfile"));
+      const errorMessage = err.message || t("account.errors.updateProfile");
+      setError(errorMessage);
       setSuccess(null);
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: errorMessage,
+      });
     } finally {
       setLoading(false);
     }

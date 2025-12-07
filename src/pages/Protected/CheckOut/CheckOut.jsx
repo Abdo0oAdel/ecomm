@@ -82,7 +82,9 @@ const CheckOut = () => {
           try {
             const response = await getProductById(item.productId);
             productDetails = response.data || {};
-          } catch {}
+          } catch {
+            // Silently fail and use empty product details as fallback
+          }
           return {
             id: item.productId,
             name: productDetails.productName || item.productName || '',
@@ -146,11 +148,15 @@ const CheckOut = () => {
                 );
                 }
             } catch (err) {
-                console.error("Error loading address:", err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to Load Address',
+                    text: err.message || 'Unable to load your address. Please enter manually.',
+                });
             }
         };
         loadAddress();
-    }, [user]);  
+    }, [user]);
   
 
   // Calculate totals
@@ -206,11 +212,10 @@ const CheckOut = () => {
       dispatch(checkoutActions.clearCheckoutData());
       navigate("/");
     } catch (error) {
-      console.error("Failed to place order:", error);
       Swal.fire({
         icon: "error",
         title: "Order Failed",
-        text: error.message || "There was an issue placing your order.",
+        text: error.message || "There was an issue placing your order. Please try again.",
       });
     }
   };

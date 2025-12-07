@@ -12,6 +12,7 @@ import authAPI from "../../../utils/api";
 import styles from "./LogIn.module.css";
 import loginImage from "../../../assets/imgs/Side Image.svg";
 import { validatePassword } from "../../../utils/authValidators";
+import Swal from "sweetalert2";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -81,7 +82,13 @@ const LogIn = () => {
         });
       }
     } catch (err) {
-      console.error("Google init error", err);
+      Swal.fire({
+        icon: 'warning',
+        title: 'Google Sign-In Unavailable',
+        text: 'Google login is temporarily unavailable. Please use email/password login.',
+        timer: 4000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -177,9 +184,14 @@ const LogIn = () => {
       const from = location.state?.from?.pathname || "/";
       navigate(from, { replace: true });
     } catch (err) {
-      console.error("Google login failed", err);
       const msg = err?.message || err?.response?.data?.message;
-      setError(msg || t("auth.errors.googleFailed") || "Google login failed");
+      const errorMessage = msg || t("auth.errors.googleFailed") || "Google login failed";
+      setError(errorMessage);
+      Swal.fire({
+        icon: 'error',
+        title: 'Google Login Failed',
+        text: errorMessage,
+      });
     }
   }
 

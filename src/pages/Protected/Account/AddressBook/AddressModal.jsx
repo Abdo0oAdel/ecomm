@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./AddressModal.module.css";
 import { addressAPI } from "../../../../utils/api.js";
 import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
 
 export default function AddressModal({ userId, initialData = null, onClose, onSaved }) {
     const { t } = useTranslation();
@@ -65,8 +66,13 @@ export default function AddressModal({ userId, initialData = null, onClose, onSa
             const normalized = saved?.data ?? saved;
             onSaved(normalized);
         } catch (err) {
-            console.error("Address save error:", err);
-            setError(err?.response?.data?.message || err.message || t("addressModal.saveError"));
+            const errorMessage = err?.response?.data?.message || err.message || t("addressModal.saveError");
+            setError(errorMessage);
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed to Save Address',
+                text: errorMessage,
+            });
         } finally {
             setSaving(false);
         }

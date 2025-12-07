@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { wishlistActions } from '../store/Wishlist/slice';
 import { wishlistAPI } from '../utils/api';
+import Swal from 'sweetalert2';
 
 export const useWishlist = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,11 @@ export const useWishlist = () => {
         dispatch(wishlistActions.addToWishlist(item));
       }
     } catch (error) {
-      console.error('Error adding to wishlist:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to Add to Wishlist',
+        text: error.message || 'Unable to add item to wishlist. Please try again.',
+      });
       throw error;
     }
   };
@@ -29,7 +34,11 @@ export const useWishlist = () => {
         await wishlistAPI.removeFromWishlist(itemId);
       }
     } catch (error) {
-      console.error('Error removing from wishlist:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to Remove from Wishlist',
+        text: error.message || 'Unable to remove item from wishlist. Please try again.',
+      });
       throw error;
     }
   };
@@ -41,7 +50,11 @@ export const useWishlist = () => {
         await wishlistAPI.clearWishlist();
       }
     } catch (error) {
-      console.error('Error clearing wishlist:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to Clear Wishlist',
+        text: error.message || 'Unable to clear wishlist. Please try again.',
+      });
       throw error;
     }
   };
@@ -101,7 +114,11 @@ export const useWishlist = () => {
       );
       dispatch(wishlistActions.setWishlist(itemsWithDetails));
     } catch (error) {
-      console.error('Error fetching wishlist:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to Load Wishlist',
+        text: error.message || 'Unable to load wishlist. Please try again.',
+      });
     }
   };
 

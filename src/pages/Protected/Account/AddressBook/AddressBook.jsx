@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { addressAPI } from "../../../../utils/api.js";
 import { useTranslation } from "react-i18next";
 import { axiosWithAuth } from "../../../../utils/helpers";
+import Swal from "sweetalert2";
 
 export default function AddressBook() {
     const { t } = useTranslation();
@@ -33,9 +34,14 @@ export default function AddressBook() {
                 const list = res?.data?.data ?? res?.data ?? res ?? [];
                 setAddresses(Array.isArray(list) ? list : []);
             } catch (err) {
-                console.error("Failed to load addresses:", err);
-                setError(err?.response?.data?.message || err.message || t("addressBook.loadError"));
+                const errorMessage = err?.response?.data?.message || err.message || t("addressBook.loadError");
+                setError(errorMessage);
                 setAddresses([]);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to Load Addresses',
+                    text: errorMessage,
+                });
             } finally {
                 setLoading(false);
             }
@@ -56,7 +62,17 @@ export default function AddressBook() {
 
     const onDelete = async (addressId) => {
         if (!addressId) return;
-        if (!window.confirm(t("addressBook.confirmDelete"))) return;
+        
+        const result = await Swal.fire({
+            icon: 'warning',
+            title: t("addressBook.confirmDelete"),
+            text: 'Are you sure you want to delete this address?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+        });
+        
+        if (!result.isConfirmed) return;
 
         try {
             if (typeof addressAPI.deleteAddress === "function") {
@@ -65,9 +81,20 @@ export default function AddressBook() {
                 await axiosWithAuth.delete(`/Addresses/${addressId}`);
             }
             setAddresses((prev) => prev.filter((a) => (a.addressID ?? a.id ?? a.addressId) !== addressId));
+            Swal.fire({
+                icon: 'success',
+                title: 'Deleted',
+                text: 'Address deleted successfully.',
+                timer: 1500,
+                showConfirmButton: false,
+            });
         } catch (err) {
-            console.error("Failed to delete address:", err);
-            alert(err?.response?.data?.message || err.message || t("addressBook.deleteError"));
+            const errorMessage = err?.response?.data?.message || err.message || t("addressBook.deleteError");
+            Swal.fire({
+                icon: 'error',
+                title: 'Delete Failed',
+                text: errorMessage,
+            });
         }
     };
 

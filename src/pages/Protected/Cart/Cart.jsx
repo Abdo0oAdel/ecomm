@@ -37,8 +37,11 @@ const Cart = () => {
                 );
                 dispatch(cartActions.setCart({ ...data, items: itemsWithImages }));
             } catch (err) {
-                // Optionally handle error
-                console.error('Failed to fetch cart', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to Load Cart',
+                    text: err.message || 'Unable to load cart. Please try again.',
+                });
             }
         }
         fetchCart();
@@ -96,11 +99,10 @@ const Cart = () => {
                 showConfirmButton: false
             });
         } catch (err) {
-            console.error('Failed to remove cart item', err);
             Swal.fire({
                 icon: 'error',
-                title: 'Remove failed',
-                text: err?.message || 'Failed to remove item from cart',
+                title: 'Remove Failed',
+                text: err?.message || 'Failed to remove item from cart. Please try again.',
             });
         }
     };
@@ -267,11 +269,10 @@ const Cart = () => {
                                             showConfirmButton: false
                                         });
                                     } catch (err) {
-                                        console.error('Failed to update cart', err);
                                         Swal.fire({
                                             icon: 'error',
-                                            title: 'Update failed',
-                                            text: err?.message || 'Failed to update cart',
+                                            title: 'Update Failed',
+                                            text: err?.message || 'Failed to update cart. Please try again.',
                                         });
                                     }
                                 }}

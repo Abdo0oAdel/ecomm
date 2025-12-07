@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import myOrderStyles from "./MyOrder.module.css"; // Import styles from MyOrder
 import { ordersAPI } from "../../../utils/api";
 import { useAuth } from "../../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const Cancellation = () => {
   const { user } = useAuth();
@@ -39,8 +40,13 @@ const Cancellation = () => {
         }
       } catch (err) {
         if (!cancelled) {
-          console.error("Error loading cancelled orders:", err);
-          setError(err.message || "Failed to load cancelled orders");
+          const errorMessage = err.message || "Failed to load cancelled orders";
+          setError(errorMessage);
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed to Load Orders',
+            text: errorMessage,
+          });
         }
       } finally {
         if (!cancelled) setLoading(false);

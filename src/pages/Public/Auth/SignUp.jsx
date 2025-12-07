@@ -9,6 +9,7 @@ import loginImage from "../../../assets/imgs/Side Image.svg";
 import { validatePassword } from "../../../utils/authValidators";
 import authAPI from "../../../utils/api";
 import { tokenManager } from "../../../utils/tokenManager";
+import Swal from "sweetalert2";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -87,7 +88,13 @@ const SignUp = () => {
         });
       }
     } catch (err) {
-      console.error("Google SDK init error", err);
+      Swal.fire({
+        icon: 'warning',
+        title: 'Google Sign-Up Unavailable',
+        text: 'Google sign-up is temporarily unavailable. Please use the registration form.',
+        timer: 4000,
+        showConfirmButton: false,
+      });
     }
   };
 
@@ -120,9 +127,14 @@ const SignUp = () => {
       // navigate to home or wherever
       navigate("/");
     } catch (err) {
-      console.error("Google login failed", err);
       const msg = err?.message || err?.response?.data?.message;
-      setError(msg || t("auth.errors.googleFailed") || "Google login failed");
+      const errorMessage = msg || t("auth.errors.googleFailed") || "Google login failed";
+      setError(errorMessage);
+      Swal.fire({
+        icon: 'error',
+        title: 'Google Sign-Up Failed',
+        text: errorMessage,
+      });
     }
   }
 

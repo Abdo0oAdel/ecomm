@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { cartActions } from '../store/Cart/slice';
 import { addToCart as addToCartAPI, getCart } from '../services/cart';
+import Swal from 'sweetalert2';
 
 export const useCart = () => {
     const [cart, setCart] = useState([]);
@@ -18,8 +19,11 @@ export const useCart = () => {
             dispatch(cartActions.setCart(data));
             setCart(data.items || []);
         } catch (err) {
-            // Optionally show error
-            console.error(err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed to Add to Cart',
+                text: err.message || 'Unable to add item to cart. Please try again.',
+            });
         } finally {
             setAdding(false);
         }

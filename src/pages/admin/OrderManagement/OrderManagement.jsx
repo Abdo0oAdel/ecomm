@@ -31,8 +31,6 @@ const OrderManagement = () => {
     }, []);
 
     const handleEdit = (order) => {
-        console.log(`order`, order)
-
         setEditingOrder(order);
         setModalOpen(true);
     };
@@ -74,8 +72,6 @@ const OrderManagement = () => {
     const handleFormSubmit = async (form) => {
         setLoading(true);
         try {
-            console.log(`editingOrder.id`, editingOrder.orderID);
-
             await updateOrder(editingOrder.orderID, form);
             setModalOpen(false);
             fetchOrders();

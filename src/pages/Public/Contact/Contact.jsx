@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
 
 const Contact = () => {
   const { t } = useTranslation();
@@ -35,9 +36,16 @@ const Contact = () => {
         setSubmitSuccess(true);
         resetForm();
         setTimeout(() => setSubmitSuccess(false), 5000);
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to submit form');
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Submission Failed',
+        text: error.message || 'There was an error submitting your message. Please try again.',
+      });
     } finally {
       setSubmitting(false);
     }
