@@ -4,6 +4,7 @@ import {
   fetchUsers,
   addUser,
   updateUser,
+  updateUserRole,
   deleteUser,
   setSelectedUser,
   clearSelectedUser,
@@ -25,6 +26,7 @@ const useUsers = () => {
 
   const add = (userData) => dispatch(addUser(userData));
   const update = (id, userData) => dispatch(updateUser({ id, userData }));
+  const updateRole = (id, userRole) => dispatch(updateUserRole({ id, userRole }));
   const remove = (id) => dispatch(deleteUser(id));
 
   return {
@@ -36,6 +38,7 @@ const useUsers = () => {
     clearUser,
     add,
     update,
+    updateRole,
     remove,
   };
 };

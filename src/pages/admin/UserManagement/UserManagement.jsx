@@ -7,11 +7,11 @@ import styles from "./UserManagement.module.css";
 
 const UserForm = ({ initialData = {}, onSubmit, onCancel, loading }) => {
     const [form, setForm] = useState({
-        firstName: initialData.firstName || "",
-        lastName: initialData.lastName || "",
-        email: initialData.email || "",
-        role: initialData.role || initialData.userRole || "client",
-        password: "",
+        firstName: initialData.userFirstName || "",
+        lastName: initialData.userlastName || "",
+        email: initialData.userEmail || "",
+        phone: initialData.phone || "",
+        role: initialData.userRole || "client"
     });
 
     const handleChange = (e) => {
@@ -28,15 +28,13 @@ const UserForm = ({ initialData = {}, onSubmit, onCancel, loading }) => {
         <form onSubmit={handleSubmit} className={styles.userForm}>
             <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name" required className={styles.input} />
             <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last Name" required className={styles.input} />
-            <input name="email" value={form.email} onChange={handleChange} placeholder="Email" required type="email" className={styles.input} />
+            <input name="email" value={form.email} onChange={handleChange} placeholder="email" required type="email" className={styles.input} />
+            <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone" required type="tel" className={styles.input} />
             <select name="role" value={form.role} onChange={handleChange} required className={styles.input}>
                 <option value="admin">Admin</option>
                 <option value="seller">Seller</option>
                 <option value="client">Client</option>
             </select>
-            {!initialData.id && (
-                <input name="password" value={form.password} onChange={handleChange} placeholder="Password" required type="password" className={styles.input} />
-            )}
             <div className={styles.formActions}>
                 <button type="submit" disabled={loading} className={styles.saveBtn}>Save</button>
                 <button type="button" onClick={onCancel} className={styles.cancelBtn}>Cancel</button>
@@ -46,7 +44,7 @@ const UserForm = ({ initialData = {}, onSubmit, onCancel, loading }) => {
 };
 
 const UserManagement = () => {
-    const { users, loading, error, add, update, remove, selectUser, selectedUser, clearUser } = useUsers();
+    const { users, loading, error, add, update, updateRole, remove, selectUser, selectedUser, clearUser } = useUsers();
     const [modalOpen, setModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
 
@@ -66,19 +64,32 @@ const UserManagement = () => {
         const result = await Swal.fire({
             icon: "warning",
             title: "Are you sure?",
-            text: `Delete user '${user.email}'?`,
+            text: `Delete user '${user.userEmail}'?`,
             showCancelButton: true,
             confirmButtonText: "Yes, delete!",
             cancelButtonText: "Cancel",
         });
         if (!result.isConfirmed) return;
-        await remove(user.id || user.userId);
+        await remove(user.userID || user.id || user.userId);
         Swal.fire({ icon: "success", title: "Deleted!", text: "User deleted." });
     };
 
     const handleFormSubmit = async (form) => {
         if (editingUser) {
-            await update(editingUser.id || editingUser.userId, form);
+            const userId = editingUser.userID || editingUser.id || editingUser.userId;
+            
+            // Update user details (email, firstName, lastName, phone)
+            await update(userId, {
+                userEmail: form.email,
+                userFirstName: form.firstName,
+                userLastName: form.lastName,
+                userPhone: form.phone
+            });
+            
+            // If role changed, update it separately
+            if (form.role !== editingUser.userRole) {
+                await updateRole(userId, form.role);
+            }
         } else {
             await add(form);
         }
@@ -100,8 +111,10 @@ const UserManagement = () => {
                     <thead>
                         <tr className={styles.tableHeader}>
                             <th className={styles.th}>ID</th>
-                            <th className={styles.th}>Name</th>
+                            <th className={styles.th}>First Name</th>
+                            <th className={styles.th}>Last Name</th>
                             <th className={styles.th}>Email</th>
+                            <th className={styles.th}>phone</th>
                             <th className={styles.th}>Role</th>
                             <th className={styles.th}>Actions</th>
                         </tr>
@@ -113,11 +126,13 @@ const UserManagement = () => {
                             <tr><td colSpan={5} className={styles.tdCenter}>No users found.</td></tr>
                         ) : (
                             users.map((user, idx) => (
-                                <tr key={user.userID || user.id || idx}>
-                                    <td className={styles.td}>{user.userID || user.id}</td>
-                                    <td className={styles.td}>{user.userName || user.firstName || ""}</td>
-                                    <td className={styles.td}>{user.userEmail || user.email}</td>
-                                    <td className={styles.td}>{user.userRole || user.role}</td>
+                                <tr key={user.idx}>
+                                    <td className={styles.td}>{user.userID}</td>
+                                    <td className={styles.td}>{user.userFirstName}</td>
+                                    <td className={styles.td}>{user.userlastName}</td>
+                                    <td className={styles.td}>{user.userEmail}</td>
+                                    <td className={styles.td}>{user.phone}</td>
+                                    <td className={styles.td}>{user.userRole}</td>
                                     <td className={styles.td}>
                                         <div className={styles.actions}>
                                             <button className={styles.editBtn} onClick={() => handleEdit(user)}>Edit</button>

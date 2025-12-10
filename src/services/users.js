@@ -17,7 +17,14 @@ export const createUser = async (userData) => {
 };
 
 export const updateUser = async (id, userData) => {
-  return axiosWithAuth.put(`/api/User/${id}`, userData);
+  // Only send user details, not role
+  const { userEmail, userFirstName, userLastName, userPhone } = userData;
+  return axiosWithAuth.put(`/api/User/${id}`, {
+    userEmail,
+    userFirstName,
+    userLastName,
+    userPhone
+  });
 };
 
 export const deleteUser = async (id) => {
