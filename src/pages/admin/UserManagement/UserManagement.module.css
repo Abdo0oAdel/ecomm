@@ -10,6 +10,12 @@
 	min-height: 100vh;
 }
 
+@media (max-width: 768px) {
+	.adminLayout {
+		grid-template-columns: 1fr;
+	}
+}
+
 .adminMain {
 	flex: 1;
 	padding: 2rem;
@@ -58,6 +64,8 @@
 	background: #fff;
 	border-radius: 8px;
 	box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+	table-layout: fixed;
+	word-wrap: break-word;
 }
 .tableHeader {
 	background: #f3f4f6;

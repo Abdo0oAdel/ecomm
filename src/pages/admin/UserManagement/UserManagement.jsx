@@ -6,160 +6,242 @@ import { useState } from "react";
 import styles from "./UserManagement.module.css";
 
 const UserForm = ({ initialData = {}, onSubmit, onCancel, loading }) => {
-    const [form, setForm] = useState({
-        firstName: initialData.userFirstName || "",
-        lastName: initialData.userlastName || "",
-        email: initialData.userEmail || "",
-        phone: initialData.phone || "",
-        role: initialData.userRole || "client"
-    });
+  const [form, setForm] = useState({
+    firstName: initialData.userFirstName || "",
+    lastName: initialData.userlastName || "",
+    email: initialData.userEmail || "",
+    phone: initialData.phone || "",
+    role: initialData.userRole || "client",
+  });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: value }));
-    };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        onSubmit(form);
-    };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(form);
+  };
 
-    return (
-        <form onSubmit={handleSubmit} className={styles.userForm}>
-            <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name" required className={styles.input} />
-            <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last Name" required className={styles.input} />
-            <input name="email" value={form.email} onChange={handleChange} placeholder="email" required type="email" className={styles.input} />
-            <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone" required type="tel" className={styles.input} />
-            <select name="role" value={form.role} onChange={handleChange} required className={styles.input}>
-                <option value="admin">Admin</option>
-                <option value="seller">Seller</option>
-                <option value="client">Client</option>
-            </select>
-            <div className={styles.formActions}>
-                <button type="submit" disabled={loading} className={styles.saveBtn}>Save</button>
-                <button type="button" onClick={onCancel} className={styles.cancelBtn}>Cancel</button>
-            </div>
-        </form>
-    );
+  return (
+    <form onSubmit={handleSubmit} className={styles.userForm}>
+      <input
+        name="firstName"
+        value={form.firstName}
+        onChange={handleChange}
+        placeholder="First Name"
+        required
+        className={styles.input}
+      />
+      <input
+        name="lastName"
+        value={form.lastName}
+        onChange={handleChange}
+        placeholder="Last Name"
+        required
+        className={styles.input}
+      />
+      <input
+        name="email"
+        value={form.email}
+        onChange={handleChange}
+        placeholder="email"
+        required
+        type="email"
+        className={styles.input}
+      />
+      <input
+        name="phone"
+        value={form.phone}
+        onChange={handleChange}
+        placeholder="Phone"
+        required
+        type="tel"
+        className={styles.input}
+      />
+      <select
+        name="role"
+        value={form.role}
+        onChange={handleChange}
+        required
+        className={styles.input}
+      >
+        <option value="admin">Admin</option>
+        <option value="seller">Seller</option>
+        <option value="client">Client</option>
+      </select>
+      <div className={styles.formActions}>
+        <button type="submit" disabled={loading} className={styles.saveBtn}>
+          Save
+        </button>
+        <button type="button" onClick={onCancel} className={styles.cancelBtn}>
+          Cancel
+        </button>
+      </div>
+    </form>
+  );
 };
 
 const UserManagement = () => {
-    const { users, loading, error, add, update, updateRole, remove, selectUser, selectedUser, clearUser } = useUsers();
-    const [modalOpen, setModalOpen] = useState(false);
-    const [editingUser, setEditingUser] = useState(null);
+  const {
+    users,
+    loading,
+    error,
+    add,
+    update,
+    updateRole,
+    remove,
+    selectUser,
+    selectedUser,
+    clearUser,
+  } = useUsers();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
 
-    const handleAdd = () => {
-        setEditingUser(null);
-        setModalOpen(true);
-        clearUser();
-    };
+  const handleAdd = () => {
+    setEditingUser(null);
+    setModalOpen(true);
+    clearUser();
+  };
 
-    const handleEdit = (user) => {
-        setEditingUser(user);
-        setModalOpen(true);
-        selectUser(user);
-    };
+  const handleEdit = (user) => {
+    setEditingUser(user);
+    setModalOpen(true);
+    selectUser(user);
+  };
 
-    const handleDelete = async (user) => {
-        const result = await Swal.fire({
-            icon: "warning",
-            title: "Are you sure?",
-            text: `Delete user '${user.userEmail}'?`,
-            showCancelButton: true,
-            confirmButtonText: "Yes, delete!",
-            cancelButtonText: "Cancel",
-        });
-        if (!result.isConfirmed) return;
-        await remove(user.userID || user.id || user.userId);
-        Swal.fire({ icon: "success", title: "Deleted!", text: "User deleted." });
-    };
+  const handleDelete = async (user) => {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Are you sure?",
+      text: `Delete user '${user.userEmail}'?`,
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete!",
+      cancelButtonText: "Cancel",
+    });
+    if (!result.isConfirmed) return;
+    await remove(user.userID || user.id || user.userId);
+    Swal.fire({ icon: "success", title: "Deleted!", text: "User deleted." });
+  };
 
-    const handleFormSubmit = async (form) => {
-        if (editingUser) {
-            const userId = editingUser.userID || editingUser.id || editingUser.userId;
-            
-            // Update user details (email, firstName, lastName, phone)
-            await update(userId, {
-                userEmail: form.email,
-                userFirstName: form.firstName,
-                userLastName: form.lastName,
-                userPhone: form.phone
-            });
-            
-            // If role changed, update it separately
-            if (form.role !== editingUser.userRole) {
-                await updateRole(userId, form.role);
-            }
-        } else {
-            await add(form);
-        }
-        setModalOpen(false);
-        setEditingUser(null);
-        clearUser();
-    };
+  const handleFormSubmit = async (form) => {
+    if (editingUser) {
+      const userId = editingUser.userID || editingUser.id || editingUser.userId;
 
-    return (
-        <div className={styles.adminLayout}>
-            <AdminSidebar />
-            <main className={styles.adminMain}>
-                <div className={styles.header}>
-                    <h2 className={styles.title}>User Management</h2>
-                    <button className={styles.addBtn} onClick={handleAdd}>Add User</button>
-                </div>
-                {error && <div className={styles.error}>{error}</div>}
-                <table className={styles.table}>
-                    <thead>
-                        <tr className={styles.tableHeader}>
-                            <th className={styles.th}>ID</th>
-                            <th className={styles.th}>First Name</th>
-                            <th className={styles.th}>Last Name</th>
-                            <th className={styles.th}>Email</th>
-                            <th className={styles.th}>phone</th>
-                            <th className={styles.th}>Role</th>
-                            <th className={styles.th}>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {loading ? (
-                            <tr><td colSpan={5} className={styles.tdCenter}>Loading...</td></tr>
-                        ) : users.length === 0 ? (
-                            <tr><td colSpan={5} className={styles.tdCenter}>No users found.</td></tr>
-                        ) : (
-                            users.map((user, idx) => (
-                                <tr key={user.idx}>
-                                    <td className={styles.td}>{user.userID}</td>
-                                    <td className={styles.td}>{user.userFirstName}</td>
-                                    <td className={styles.td}>{user.userlastName}</td>
-                                    <td className={styles.td}>{user.userEmail}</td>
-                                    <td className={styles.td}>{user.phone}</td>
-                                    <td className={styles.td}>{user.userRole}</td>
-                                    <td className={styles.td}>
-                                        <div className={styles.actions}>
-                                            <button className={styles.editBtn} onClick={() => handleEdit(user)}>Edit</button>
-                                            <button className={styles.deleteBtn} onClick={() => handleDelete(user)}>Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-                {modalOpen && (
-                    <div className={styles.modalOverlay}>
-                        <div className={styles.modalContent}>
-                            <h3 className={styles.modalTitle}>{editingUser ? "Edit User" : "Add User"}</h3>
-                            <UserForm
-                                initialData={editingUser || {}}
-                                onSubmit={handleFormSubmit}
-                                onCancel={() => { setModalOpen(false); setEditingUser(null); clearUser(); }}
-                                loading={loading}
-                            />
-                        </div>
-                    </div>
-                )}
-            </main>
+      // Update user details (email, firstName, lastName, phone)
+      await update(userId, {
+        userEmail: form.email,
+        userFirstName: form.firstName,
+        userLastName: form.lastName,
+        userPhone: form.phone,
+      });
+
+      // If role changed, update it separately
+      if (form.role !== editingUser.userRole) {
+        await updateRole(userId, form.role);
+      }
+    } else {
+      await add(form);
+    }
+    setModalOpen(false);
+    setEditingUser(null);
+    clearUser();
+  };
+
+  return (
+    <div className={styles.adminLayout}>
+      <AdminSidebar />
+      <main className={styles.adminMain}>
+        <div className={styles.header}>
+          <h2 className={styles.title}>User Management</h2>
+          <button className={styles.addBtn} onClick={handleAdd}>
+            Add User
+          </button>
         </div>
-    );
+        {error && <div className={styles.error}>{error}</div>}
+        <table className={styles.table}>
+          <thead>
+            <tr className={styles.tableHeader}>
+              <th className={styles.th}>ID</th>
+              <th className={styles.th}>First Name</th>
+              <th className={styles.th}>Last Name</th>
+              <th className={styles.th}>Email</th>
+              <th className={styles.th}>phone</th>
+              <th className={styles.th}>Role</th>
+              <th className={styles.th}>Edit</th>
+              <th className={styles.th}>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan={5} className={styles.tdCenter}>
+                  Loading...
+                </td>
+              </tr>
+            ) : users.length === 0 ? (
+              <tr>
+                <td colSpan={5} className={styles.tdCenter}>
+                  No users found.
+                </td>
+              </tr>
+            ) : (
+              users.map((user, idx) => (
+                <tr key={user.idx}>
+                  <td className={styles.td}>{user.userID}</td>
+                  <td className={styles.td}>{user.userFirstName}</td>
+                  <td className={styles.td}>{user.userlastName}</td>
+                  <td className={styles.td}>{user.userEmail}</td>
+                  <td className={styles.td}>{user.phone}</td>
+                  <td className={styles.td}>{user.userRole}</td>
+                  <td className={styles.td}>
+                    <div className={styles.actions}>
+                      <button
+                        className={styles.editBtn}
+                        onClick={() => handleEdit(user)}
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  </td>
+                  <td className={styles.td}>
+                    <div className={styles.actions}>
+                      <button
+                        className={styles.deleteBtn}
+                        onClick={() => handleDelete(user)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+        {modalOpen && (
+          <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}>
+              <h3 className={styles.modalTitle}>
+                {editingUser ? "Edit User" : "Add User"}
+              </h3>
+              <UserForm
+                initialData={editingUser || {}}
+                onSubmit={handleFormSubmit}
+                onCancel={() => {
+                  setModalOpen(false);
+                  setEditingUser(null);
+                  clearUser();
+                }}
+                loading={loading}
+              />
+            </div>
+          </div>
+        )}
+      </main>
+    </div>
+  );
 };
 
 export default UserManagement;
