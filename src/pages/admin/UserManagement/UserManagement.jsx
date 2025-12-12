@@ -5,12 +5,13 @@ import Swal from "sweetalert2";
 import { useState } from "react";
 import styles from "./UserManagement.module.css";
 
-const UserForm = ({ initialData = {}, onSubmit, onCancel, loading }) => {
+const UserForm = ({ initialData = {}, onSubmit, onCancel, loading, isEditing }) => {
   const [form, setForm] = useState({
     firstName: initialData.userFirstName || "",
     lastName: initialData.userlastName || "",
     email: initialData.userEmail || "",
     phone: initialData.phone || "",
+    password: "",
     role: initialData.userRole || "client",
   });
 
@@ -51,6 +52,18 @@ const UserForm = ({ initialData = {}, onSubmit, onCancel, loading }) => {
         type="email"
         className={styles.input}
       />
+      {!isEditing && (
+        <input
+          name="password"
+          value={form.password}
+          onChange={handleChange}
+          placeholder="Password (8+ chars, 1 upper, 1 lower, 1 special)"
+          required
+          type="password"
+          minLength={8}
+          className={styles.input}
+        />
+      )}
       <input
         name="phone"
         value={form.phone}
@@ -95,6 +108,7 @@ const UserManagement = () => {
     selectUser,
     selectedUser,
     clearUser,
+    refetch,
   } = useUsers();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
@@ -121,32 +135,43 @@ const UserManagement = () => {
       cancelButtonText: "Cancel",
     });
     if (!result.isConfirmed) return;
-    await remove(user.userID || user.id || user.userId);
+    await remove(user.userID);
     Swal.fire({ icon: "success", title: "Deleted!", text: "User deleted." });
   };
 
   const handleFormSubmit = async (form) => {
-    if (editingUser) {
-      const userId = editingUser.userID || editingUser.id || editingUser.userId;
+    try {
+      if (editingUser) {
+        const userId = editingUser.userID;
 
-      // Update user details (email, firstName, lastName, phone)
-      await update(userId, {
-        userEmail: form.email,
-        userFirstName: form.firstName,
-        userLastName: form.lastName,
-        userPhone: form.phone,
-      });
+        await update(userId, {
+          userEmail: form.email,
+          userFirstName: form.firstName,
+          userLastName: form.lastName,
+          userPhone: form.phone,
+        });
 
-      // If role changed, update it separately
-      if (form.role !== editingUser.userRole) {
-        await updateRole(userId, form.role);
+        if (form.role !== editingUser.userRole) {
+          await updateRole(userId, form.role);
+        }
+
+        await refetch();
+      } else {
+        await add({
+          userEmail: form.email,
+          userPassword: form.password,
+          userFirstName: form.firstName,
+          userLastName: form.lastName,
+          userPhone: form.phone,
+          userRole: form.role,
+        });
       }
-    } else {
-      await add(form);
+      setModalOpen(false);
+      setEditingUser(null);
+      clearUser();
+    } catch (err) {
+      console.error("Error submitting form:", err);
     }
-    setModalOpen(false);
-    setEditingUser(null);
-    clearUser();
   };
 
   return (
@@ -187,7 +212,7 @@ const UserManagement = () => {
                 </td>
               </tr>
             ) : (
-              users.map((user, idx) => {
+              users.map((user) => {
                 const key = user.userID;
                 return (
                   <tr key={key}>
@@ -238,6 +263,7 @@ const UserManagement = () => {
                   clearUser();
                 }}
                 loading={loading}
+                isEditing={!!editingUser}
               />
             </div>
           </div>

@@ -141,7 +141,7 @@ const routes = [
       {
         path: "/admin/AdminDashboard",
         element: (
-          <AdminRoute>
+          <AdminRoute allowedRoles={["admin"]}>
             <AdminDashboard />
           </AdminRoute>
         ),
@@ -149,7 +149,7 @@ const routes = [
       {
         path: "/admin/UserManagement",
         element: (
-          <AdminRoute>
+          <AdminRoute allowedRoles={["admin"]}>
             <UserManagement />
           </AdminRoute>
         ),
@@ -157,7 +157,7 @@ const routes = [
       {
         path: "/admin/ProductManagement",
         element: (
-          <AdminRoute>
+          <AdminRoute allowedRoles={["admin", "seller"]}>
             <ProductManagement />
           </AdminRoute>
         ),
@@ -165,7 +165,7 @@ const routes = [
       {
          path: "/admin/OrderManagement",
          element: (
-           <AdminRoute>
+           <AdminRoute allowedRoles={["admin", "seller"]}>
              <OrderManagement />
            </AdminRoute>
          ),

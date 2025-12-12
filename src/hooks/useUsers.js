@@ -23,6 +23,7 @@ const useUsers = () => {
 
   const selectUser = (user) => dispatch(setSelectedUser(user));
   const clearUser = () => dispatch(clearSelectedUser());
+  const refetch = () => dispatch(fetchUsers());
 
   const add = (userData) => dispatch(addUser(userData));
   const update = (id, userData) => dispatch(updateUser({ id, userData }));
@@ -36,6 +37,7 @@ const useUsers = () => {
     selectedUser,
     selectUser,
     clearUser,
+    refetch,
     add,
     update,
     updateRole,

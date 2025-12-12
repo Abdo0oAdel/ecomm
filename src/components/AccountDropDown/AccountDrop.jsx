@@ -13,7 +13,11 @@ const AccountDrop = ({ closeMenu, onLogout }) => {
 
   const user = useSelector((state) => state.auth.user);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const isAdmin = isAuthenticated && user?.isAdmin;
+  
+  // Check for both admin and seller roles
+  const roleClaimKey = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+  const userRole = user?.[roleClaimKey] || user?.role;
+  const isAdminOrSeller = isAuthenticated && (userRole === "admin" || userRole === "seller");
 
   return (
     <>
@@ -29,16 +33,17 @@ const AccountDrop = ({ closeMenu, onLogout }) => {
               <FiUser size={24} />
               {t("nav.manageAccount")}
             </li>
-            {/* Admin Dashboard link for admins */}
-            {isAdmin && (
+            {isAdminOrSeller && (
               <li
                 onClick={() => {
-                  navigate("/admin/AdminDashboard");
+                  // Navigate to appropriate default page based on role
+                  const defaultPath = userRole === "seller" ? "/admin/ProductManagement" : "/admin/AdminDashboard";
+                  navigate(defaultPath);
                   closeMenu();
                 }}
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                {t("nav.adminDashboard") || "Admin Dashboard"}
+                {"Admin Panel"}
               </li>
             )}
             <li
