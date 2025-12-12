@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import styles from "./ProductForm.module.css";
 import { useTranslation } from "react-i18next";
+import { useCategories } from "../../../hooks/useCategories";
 
 const ProductForm = ({ initialData = {}, onSubmit, onCancel, loading }) => {
   const { t } = useTranslation();
+  const { categories, loading: categoriesLoading } = useCategories();
   // Ensure initialData is always an object
   const safeInitialData = initialData || {};
   const [form, setForm] = useState({
     name: safeInitialData.name || safeInitialData.productName || "",
     description: safeInitialData.description || "",
     price: safeInitialData.price || "",
-    categoryID: safeInitialData.categoryID || "",
+    categoryId: safeInitialData.categoryId || safeInitialData.categoryID || "",
     stock: safeInitialData.stock || "",
-    imageURL: safeInitialData.imageURL || "",
-    sellerName: safeInitialData.sellerName || "",
-    sellerEmail: safeInitialData.sellerEmail || "",
+    imageUrl: safeInitialData.imageUrl || safeInitialData.imageURL || "",
     images: [],
   });
 
@@ -24,7 +24,12 @@ const ProductForm = ({ initialData = {}, onSubmit, onCancel, loading }) => {
   };
 
   const handleImageChange = (e) => {
-    setForm((prev) => ({ ...prev, images: Array.from(e.target.files) }));
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      setForm((prev) => ({ ...prev, images: Array.from(files) }));
+    } else {
+      setForm((prev) => ({ ...prev, images: [] }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -46,31 +51,32 @@ const ProductForm = ({ initialData = {}, onSubmit, onCancel, loading }) => {
           </tr>
           <tr>
             <td className={styles.label}>Price</td>
-            <td><input name="price" type="number" value={form.price} onChange={handleChange} required /></td>
+            <td><input name="price" type="number" step="0.01" value={form.price} onChange={handleChange} required /></td>
           </tr>
           <tr>
             <td className={styles.label}>Stock</td>
             <td><input name="stock" type="number" value={form.stock} onChange={handleChange} required /></td>
           </tr>
           <tr>
-            <td className={styles.label}>Category ID</td>
-            <td><input name="categoryID" value={form.categoryID} onChange={handleChange} required /></td>
+            <td className={styles.label}>Category</td>
+            <td>
+              <select name="categoryId" value={form.categoryId} onChange={handleChange} required disabled={categoriesLoading}>
+                <option value="">{categoriesLoading ? "Loading categories..." : "Select a category"}</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </td>
           </tr>
           <tr>
-            <td className={styles.label}>Seller Name</td>
-            <td><input name="sellerName" value={form.sellerName} onChange={handleChange} /></td>
+            <td className={styles.label}>Image URL (temporary)</td>
+            <td><input name="imageUrl" value={form.imageUrl} onChange={handleChange} placeholder="Temporary URL, will be updated after upload" /></td>
           </tr>
           <tr>
-            <td className={styles.label}>Seller Email</td>
-            <td><input name="sellerEmail" value={form.sellerEmail} onChange={handleChange} /></td>
-          </tr>
-          <tr>
-            <td className={styles.label}>Image URL</td>
-            <td><input name="imageURL" value={form.imageURL} onChange={handleChange} /></td>
-          </tr>
-          <tr>
-            <td className={styles.label}>Images</td>
-            <td><input name="images" type="file" multiple onChange={handleImageChange} /></td>
+            <td className={styles.label}>Product Images</td>
+            <td><input name="images" type="file" multiple accept="image/*" onChange={handleImageChange} /></td>
           </tr>
         </tbody>
       </table>

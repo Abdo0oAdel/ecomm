@@ -69,9 +69,18 @@ export const getProductsByUser = async (userId) => {
 
 export const uploadProductImages = async (productId, images) => {
   try {
+    if (!images || images.length === 0) {
+      throw new Error("No images provided");
+    }
     const formData = new FormData();
-    images.forEach((img) => formData.append("images", img));
-    const response = await axiosWithAuth.post(`/api/Product/${productId}/images`, formData);
+    images.forEach((img) => {
+      formData.append("images", img);
+    });
+    const response = await axiosWithAuth.post(`/api/Product/${productId}/images`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Failed to upload product images');

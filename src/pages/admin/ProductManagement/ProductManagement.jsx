@@ -83,17 +83,40 @@ const ProductManagement = () => {
                 productRes = await updateProduct(editingProduct.productID, form);
                 newProductId = editingProduct.productID;
             } else {
-                productRes = await createProduct(form);
-                // Try to get the product ID from the response
+                const payload = {
+                    categoryId: Number(form.categoryId),
+                    name: form.name,
+                    description: form.description,
+                    price: Number(form.price),
+                    stock: Number(form.stock),
+                    imageUrl: form.imageUrl || "string"
+                };
+                productRes = await createProduct(payload);
                 newProductId = productRes.productID || productRes.id || productRes.data?.productID || productRes.data?.id;
             }
             if (form.images && form.images.length > 0 && newProductId) {
-                await uploadProductImages(newProductId, form.images);
+                try {
+                    await uploadProductImages(newProductId, form.images);
+                } catch (uploadErr) {
+                    throw new Error(`Product created but image upload failed: ${uploadErr.message}`);
+                }
             }
+            await Swal.fire({
+                icon: "success",
+                title: editingProduct ? "Updated!" : "Created!",
+                text: `Product ${editingProduct ? "updated" : "created"} successfully.`,
+                timer: 1500,
+                showConfirmButton: false,
+            });
             setModalOpen(false);
             fetchProducts();
         } catch (err) {
             setError(err.message || "Failed to save product");
+            await Swal.fire({
+                icon: "error",
+                title: "Operation failed",
+                text: err?.message || "Failed to save product",
+            });
         } finally {
             setLoading(false);
         }
@@ -101,11 +124,9 @@ const ProductManagement = () => {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-12 min-h-screen w-full">
-            {/* Sidebar: 2 columns on md+ */}
             <div className="col-span-1 md:col-span-2 bg-white border-r border-gray-100 w-full h-full flex">
                 <AdminSidebar />
             </div>
-            {/* Main content: 10 columns on md+ */}
             <main className="col-span-1 md:col-span-10 px-4 py-6 md:px-8 md:py-10 w-full">
                 <div className={styles.header}>
                     <h2 className={styles.title}>Product Management</h2>

@@ -2052,379 +2052,6 @@
         }
       }
     },
-    "/api/FlashSales": {
-      "get": {
-        "tags": [
-          "FlashSales"
-        ],
-        "summary": "Retrieves all flash sales.",
-        "responses": {
-          "200": {
-            "description": "Returns all flash sales."
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error."
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "FlashSales"
-        ],
-        "summary": "Creates a new flash sale.",
-        "requestBody": {
-          "description": "Flash sale creation payload.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateFlashSaleDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateFlashSaleDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateFlashSaleDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Flash sale created successfully."
-          },
-          "400": {
-            "description": "Invalid request data.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Not authorized.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error."
-          }
-        }
-      }
-    },
-    "/api/FlashSales/{id}": {
-      "get": {
-        "tags": [
-          "FlashSales"
-        ],
-        "summary": "Retrieves a flash sale by ID.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Flash sale ID.",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Flash sale retrieved successfully."
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error."
-          },
-          "404": {
-            "description": "Flash sale not found."
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "FlashSales"
-        ],
-        "summary": "Updates an existing flash sale.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Flash sale ID.",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Updated flash sale data.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateFlashSaleDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateFlashSaleDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateFlashSaleDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Flash sale updated successfully."
-          },
-          "400": {
-            "description": "Invalid request data.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Not authorized.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Flash sale not found.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error."
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "FlashSales"
-        ],
-        "summary": "Deletes a flash sale.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Flash sale ID.",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Flash sale deleted successfully."
-          },
-          "403": {
-            "description": "Not authorized.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Flash sale not found.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error."
-          }
-        }
-      }
-    },
     "/api/orders": {
       "get": {
         "tags": [
@@ -4980,286 +4607,6 @@
         }
       }
     },
-    "/api/Product/{id}/flashsale": {
-      "post": {
-        "tags": [
-          "Product"
-        ],
-        "summary": "Adds a product to a flash sale.",
-        "description": "Only accessible by Admins.  \r\nRequires a valid Flash Sale ID inside the request body.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The ID of the product to add.",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "DTO containing the Flash Sale ID and discount settings.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddProductToFlashSaleRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddProductToFlashSaleRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddProductToFlashSaleRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Product added to flash sale successfully."
-          },
-          "400": {
-            "description": "Invalid input data.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Product or flash sale not found.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized access.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Product/flashsale": {
-      "get": {
-        "tags": [
-          "Product"
-        ],
-        "summary": "Retrieves all products currently assigned to flash sales.",
-        "responses": {
-          "200": {
-            "description": "List of all flash sale products."
-          },
-          "401": {
-            "description": "Unauthorized.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Product/flashsale/{flashSaleId}": {
-      "get": {
-        "tags": [
-          "Product"
-        ],
-        "summary": "Retrieves all products assigned to a specific flash sale.",
-        "parameters": [
-          {
-            "name": "flashSaleId",
-            "in": "path",
-            "description": "The ID of the flash sale.",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Products retrieved successfully."
-          },
-          "404": {
-            "description": "Flash sale not found or contains no products.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Product/{id}/flashsale/{flashSaleId}": {
-      "delete": {
-        "tags": [
-          "Product"
-        ],
-        "summary": "Removes a product from a flash sale.",
-        "description": "Only Admins can perform this action.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Product ID.",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "flashSaleId",
-            "in": "path",
-            "description": "Flash sale ID.",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Product removed successfully."
-          },
-          "404": {
-            "description": "Product was not part of this flash sale.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/Returns": {
       "get": {
         "tags": [
@@ -7433,6 +6780,99 @@
         }
       }
     },
+    "/api/User/UserData": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Retrieves a user Own Data.",
+        "responses": {
+          "200": {
+            "description": "User retrieved successfully.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error."
+          }
+        }
+      }
+    },
     "/api/User/email/{email}": {
       "get": {
         "tags": [
@@ -8406,6 +7846,89 @@
           }
         }
       }
+    },
+    "/api/Wishlist/move-all-to-cart": {
+      "post": {
+        "tags": [
+          "Wishlist"
+        ],
+        "summary": "Move all wishlist items to cart.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/Wishlist/{productId}/move-to-cart": {
+      "post": {
+        "tags": [
+          "Wishlist"
+        ],
+        "summary": "Move specific item from wishlist to cart.",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -8424,42 +7947,6 @@
           "quantity": {
             "maximum": 2147483647,
             "minimum": 1,
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "AddProductToFlashSaleRequest": {
-        "type": "object",
-        "properties": {
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "maxUsers": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "productCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "discountedPrice": {
-            "type": "number",
-            "format": "double"
-          },
-          "stockLimit": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "flashSaleID": {
             "type": "integer",
             "format": "int32"
           }
@@ -8782,39 +8269,6 @@
         },
         "additionalProperties": false
       },
-      "CreateFlashSaleDto": {
-        "required": [
-          "endDate",
-          "startDate",
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "title": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "maxUsers": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "userID": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "CreatePaymentRequestDto": {
         "required": [
           "orderID"
@@ -8991,94 +8445,6 @@
         },
         "additionalProperties": false
       },
-      "FlashSale": {
-        "required": [
-          "userID"
-        ],
-        "type": "object",
-        "properties": {
-          "flashSaleID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "isActive": {
-            "type": "boolean"
-          },
-          "maxUsers": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "userID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
-          },
-          "flashSaleProducts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FlashSaleProduct"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "FlashSaleProduct": {
-        "type": "object",
-        "properties": {
-          "flashSaleProductID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "flashSaleID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "productID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "discountedPrice": {
-            "type": "number",
-            "format": "double"
-          },
-          "originalPrice": {
-            "type": "number",
-            "format": "double"
-          },
-          "stockLimit": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "flashSale": {
-            "$ref": "#/components/schemas/FlashSale"
-          },
-          "product": {
-            "$ref": "#/components/schemas/Product"
-          }
-        },
-        "additionalProperties": false
-      },
       "ForgotPasswordRequest": {
         "required": [
           "email"
@@ -9226,6 +8592,13 @@
           },
           "orderStatus": {
             "type": "string",
+            "nullable": true
+          },
+          "shipments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShippingInfoDTO"
+            },
             "nullable": true
           },
           "orderItems": {
@@ -9400,6 +8773,13 @@
           },
           "orderStatus": {
             "type": "string",
+            "nullable": true
+          },
+          "shipments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShippingInfoDTO"
+            },
             "nullable": true
           }
         },
@@ -9588,13 +8968,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Wishlist"
-            },
-            "nullable": true
-          },
-          "flashSaleProducts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FlashSaleProduct"
             },
             "nullable": true
           },
@@ -10335,32 +9708,23 @@
         },
         "additionalProperties": false
       },
-      "UpdateFlashSaleDto": {
+      "ShippingInfoDTO": {
         "type": "object",
         "properties": {
-          "title": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "isActive": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "maxUsers": {
+          "shippingID": {
             "type": "integer",
-            "format": "int32",
+            "format": "int32"
+          },
+          "companyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "trackingNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingStatus": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -10667,6 +10031,18 @@
             "nullable": true
           },
           "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "userFirstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "userlastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
             "type": "string",
             "nullable": true
           },

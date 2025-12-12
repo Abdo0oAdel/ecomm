@@ -187,8 +187,10 @@ const UserManagement = () => {
                 </td>
               </tr>
             ) : (
-              users.map((user, idx) => (
-                <tr key={user.idx}>
+              users.map((user, idx) => {
+                const key = user.userID;
+                return (
+                  <tr key={key}>
                   <td className={styles.td}>{user.userID}</td>
                   <td className={styles.td}>{user.userFirstName}</td>
                   <td className={styles.td}>{user.userlastName}</td>
@@ -216,7 +218,8 @@ const UserManagement = () => {
                     </div>
                   </td>
                 </tr>
-              ))
+                );
+              })
             )}
           </tbody>
         </table>
