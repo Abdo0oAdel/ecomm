@@ -29,10 +29,10 @@ export const useWishlist = () => {
 
   const removeFromWishlist = async (itemId) => {
     try {
-      dispatch(wishlistActions.removeFromWishlist(itemId));
       if (isAuthenticated) {
         await wishlistAPI.removeFromWishlist(itemId);
       }
+      dispatch(wishlistActions.removeFromWishlist(itemId));
     } catch (error) {
       Swal.fire({
         icon: 'error',
@@ -88,17 +88,19 @@ export const useWishlist = () => {
             // Dynamically import getProductById to avoid circular deps
             const { getProductById } = await import('../services/products');
             const product = await getProductById(item.productId);
+            const prodData = product.data || {};
             return {
               id: item.productId,
               name: item.productName,
               currentPrice: item.price,
-              image: product.imageURL || product.image || '',
-              originalPrice: product.originalPrice,
-              discount: product.discount,
-              isInStock: product.isInStock,
-              stock: product.stock,
-              rating: product.rating,
-              reviews: product.reviews,
+              image: prodData.imageURL || prodData.image || '',
+              originalPrice: prodData.originalPrice,
+              discount: prodData.discount,
+              isInStock: prodData.isInStock,
+              stock: prodData.stock,
+              rating: prodData.rating,
+              reviews: prodData.reviews,
+              category: prodData.category,
               // Add more fields as needed
             };
           } catch (e) {

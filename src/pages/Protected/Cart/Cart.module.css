@@ -184,6 +184,12 @@
   background-color: rgb(249 250 251);
   border-radius: 0.375rem;
   overflow: hidden;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.productImage:hover {
+  opacity: 0.8;
 }
 
 @media (min-width: 640px) {
@@ -211,11 +217,23 @@
   min-width: 0;
 }
 
+.productName a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.productName a:hover .productNameH3 {
+  color: #DB4444;
+  text-decoration: underline;
+}
+
 .productNameH3 {
   font-size: 1rem;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  transition: color 0.2s ease;
 }
 
 @media (min-width: 640px) {

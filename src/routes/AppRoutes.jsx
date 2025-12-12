@@ -9,6 +9,7 @@ import ProtectedLayout from "../layout/ProtectedLayout";
 import Home from "../pages/Public/Home/Home";
 import Login from "../pages/Public/Auth/LogIn";
 import SignUp from "../pages/Public/Auth/SignUp";
+import ForgotPassword from "../pages/Public/Auth/ForgotPassword";
 import About from "../pages/Public/About/About";
 import Contact from "../pages/Public/Contact/Contact";
 import FAQ from "../pages/Public/FAQ/FAQ";
@@ -50,6 +51,7 @@ const routes = [
       { path: "/privacy", element: <Privacy /> },
       { path: "/login", element: <Login /> },
       { path: "/signup", element: <SignUp /> },
+      { path: "/forgot-password", element: <ForgotPassword /> },
       { path: "/support", element: <Support /> },
       { path: "/ShippingMap", element: <ShippingMap /> },
       { path: "/*", element: <Error /> },

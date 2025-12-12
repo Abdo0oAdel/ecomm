@@ -415,6 +415,7 @@ const LogIn = () => {
               type="button"
               className={styles.forgotPassword}
               disabled={loading}
+              onClick={() => navigate("/forgot-password")}
             >
               {" "}
               {t("auth.forgotPassword")}

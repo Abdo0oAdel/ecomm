@@ -10,12 +10,38 @@ export const useProduct = (id) => {
     if (!id) return;
     setLoading(true);
     getProductById(id)
-      .then((data) => {
-        // Map API response to ensure isInStock and stock are present
+      .then((response) => {
+        const prodData = response.data?.data || response.data || response;
+
+        const imageUrls = [];
+        if (prodData.images && Array.isArray(prodData.images)) {
+          prodData.images.forEach(img => {
+            if (img.url) imageUrls.push(img.url);
+          });
+        }
+        if (imageUrls.length === 0 && prodData.imageURL) {
+          imageUrls.push(prodData.imageURL);
+        }
+
         setProduct({
-          ...data,
-          isInStock: data.isInStock,
-          stock: data.stock,
+          id: prodData.productID,
+          name: prodData.productName,
+          productName: prodData.productName,
+          description: prodData.description,
+          price: prodData.price,
+          currentPrice: prodData.price,
+          originalPrice: prodData.price,
+          imageURL: imageUrls[0] || prodData.imageURL,
+          images: imageUrls,
+          category: prodData.categoryName,
+          categoryId: prodData.categoryID,
+          isInStock: prodData.isInStock !== false,
+          stock: prodData.stock,
+          rating: prodData.averageRating || 0,
+          reviews: prodData.totalReviews || 0,
+          colors: prodData.colors || [],
+          sizes: prodData.sizes || [],
+          discount: prodData.discount || 0,
         });
         setError(null);
       })

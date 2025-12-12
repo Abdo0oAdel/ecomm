@@ -100,16 +100,38 @@
     "signupWithGoogle": "Sign up with Google",
     "loginWithGoogle": "Login with Google",
     "creatingAccount": "Creating Account...",
+    "loggingIn": "Logging in...",
+    "forgotPasswordPage": {
+      "title": "Forgot Password",
+      "enterEmail": "Enter your email address to receive an OTP",
+      "sendOtp": "Send OTP",
+      "sendingOtp": "Sending OTP...",
+      "otpSent": "OTP Sent",
+      "otpSentMessage": "An OTP has been sent to your email. Please check your inbox.",
+      "resetPassword": "Reset Password",
+      "enterOtpAndPassword": "Enter the OTP sent to your email and your new password",
+      "otpCode": "OTP Code",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "resettingPassword": "Resetting Password...",
+      "passwordReset": "Password Reset",
+      "passwordResetMessage": "Your password has been reset successfully. You can now log in with your new password."
+    },
+    "passwordRequirements": "Password must:",
     "errors": {
       "enterCredentials": "Please enter both email and password",
+      "enterEmail": "Please enter your email",
       "passwordInvalid": "Password does not meet requirements",
       "loginFailed": "Login failed. Please try again.",
       "invalidCredentials": "Invalid email or password",
       "fillAllFields": "Please fill in all fields",
       "passwordsDontMatch": "Passwords do not match",
-      "registrationFailed": "Registration failed. Please try again."
-    },
-    "loggingIn": "Logging in..."
+      "registrationFailed": "Registration failed. Please try again.",
+      "googleFailed": "Google sign-in failed",
+      "error": "Error",
+      "failedToSendOtp": "Failed to send OTP",
+      "failedToResetPassword": "Failed to reset password"
+    }
   },
   "cart": {
     "title": "Shopping Cart",

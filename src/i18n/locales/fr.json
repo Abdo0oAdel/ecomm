@@ -75,16 +75,38 @@
     "signupWithGoogle": "S'inscrire avec Google",
     "loginWithGoogle": "Connectez-vous avec Google",
     "creatingAccount": "Création du compte...",
+    "loggingIn": "Connexion en cours...",
+    "forgotPasswordPage": {
+      "title": "Mot de passe oublié",
+      "enterEmail": "Entrez votre adresse e-mail pour recevoir un code OTP",
+      "sendOtp": "Envoyer le code OTP",
+      "sendingOtp": "Envoi du code OTP...",
+      "otpSent": "Code OTP envoyé",
+      "otpSentMessage": "Un code OTP a été envoyé à votre e-mail. Veuillez vérifier votre boîte de réception.",
+      "resetPassword": "Réinitialiser le mot de passe",
+      "enterOtpAndPassword": "Entrez le code OTP envoyé à votre e-mail et votre nouveau mot de passe",
+      "otpCode": "Code OTP",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "resettingPassword": "Réinitialisation du mot de passe...",
+      "passwordReset": "Mot de passe réinitialisé",
+      "passwordResetMessage": "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe."
+    },
+    "passwordRequirements": "Le mot de passe doit contenir:",
     "errors": {
       "enterCredentials": "Veuillez saisir votre e-mail et votre mot de passe",
+      "enterEmail": "Veuillez entrer votre adresse e-mail",
       "passwordInvalid": "Le mot de passe ne répond pas aux exigences",
       "loginFailed": "La connexion a échoué. Veuillez réessayer.",
       "invalidCredentials": "E-mail ou mot de passe invalide",
       "fillAllFields": "Veuillez remplir tous les champs",
       "passwordsDontMatch": "Les mots de passe ne correspondent pas",
-      "registrationFailed": "L'inscription a échoué. Veuillez réessayer."
-    },
-    "loggingIn": "Connexion en cours..."
+      "registrationFailed": "L'inscription a échoué. Veuillez réessayer.",
+      "googleFailed": "La connexion Google a échoué",
+      "error": "Erreur",
+      "failedToSendOtp": "Échec de l'envoi du code OTP",
+      "failedToResetPassword": "Échec de la réinitialisation du mot de passe"
+    }
   },
   "cart": {
     "title": "Panier",

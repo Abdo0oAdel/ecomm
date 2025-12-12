@@ -23,11 +23,13 @@ const Cart = () => {
                     (data.items || []).map(async (item) => {
                         try {
                             const product = await getProductById(item.productId);
-                            const prodData = product.data || {};
+                            const prodData = product.data?.data || product.data || {};
                             return {
                                 ...item,
                                 imageURL: prodData.imageURL,
                                 name: prodData.productName || item.productName,
+                                stock: prodData.stock,
+                                isInStock: prodData.isInStock,
                             };
                         } catch (e) {
                             // fallback if product fetch fails
@@ -47,12 +49,27 @@ const Cart = () => {
         fetchCart();
     }, [dispatch]);
 
-    // Only update Redux state (UI) locally
+    // Only update Redux state (UI) locally with stock validation
     const updateQuantity = (productId, delta) => {
         const item = cartItems.find(item => item.productId === productId || item.id === productId);
         if (!item) return;
         const newQuantity = item.quantity + delta;
+
+        // Prevent going below 1
         if (newQuantity < 1) return;
+
+        // Prevent exceeding available stock
+        if (item.stock && newQuantity > item.stock) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Stock Limit Reached',
+                text: `Only ${item.stock} ${item.stock === 1 ? 'item' : 'items'} available in stock.`,
+                timer: 2000,
+                showConfirmButton: false
+            });
+            return;
+        }
+
         dispatch(cartActions.updateQuantity({
             id: productId,
             quantity: newQuantity
@@ -79,11 +96,13 @@ const Cart = () => {
                 (data.items || []).map(async (cartItem) => {
                     try {
                         const product = await getProductById(cartItem.productId);
-                        const prodData = product.data || {};
+                        const prodData = product.data?.data || product.data || {};
                         return {
                             ...cartItem,
                             imageURL: prodData.imageURL,
                             name: prodData.productName || cartItem.productName,
+                            stock: prodData.stock,
+                            isInStock: prodData.isInStock,
                         };
                     } catch (e) {
                         return cartItem;
@@ -166,19 +185,23 @@ const Cart = () => {
                                             </button>
 
                                             {/* Product Image */}
-                                            <figure className={styles.productImage}>
-                                                <img
-                                                    src={item.imageURL}
-                                                    alt={item.productName || item.name}
-                                                    className={styles.productImageImg}
-                                                />
-                                            </figure>
+                                            <Link to={`/products/${item.productId ?? item.id}`} className={styles.productImage}>
+                                                <figure>
+                                                    <img
+                                                        src={item.imageURL}
+                                                        alt={item.productName || item.name}
+                                                        className={styles.productImageImg}
+                                                    />
+                                                </figure>
+                                            </Link>
 
                                             {/* Product Name */}
                                             <header className={styles.productName}>
-                                                <h3 className={styles.productNameH3}>
-                                                    {item.productName || item.name}
-                                                </h3>
+                                                <Link to={`/products/${item.productId ?? item.id}`}>
+                                                    <h3 className={styles.productNameH3}>
+                                                        {item.productName || item.name}
+                                                    </h3>
+                                                </Link>
                                             </header>
                                         </section>
 
@@ -206,11 +229,25 @@ const Cart = () => {
                                                 <button
                                                     onClick={() => updateQuantity(item.productId ?? item.id, 1)}
                                                     className={styles.quantityButton}
+                                                    disabled={item.stock && item.quantity >= item.stock}
                                                     aria-label="Increase quantity"
+                                                    title={item.stock && item.quantity >= item.stock ? `Maximum stock: ${item.stock}` : 'Increase quantity'}
                                                 >
                                                     <i className={`fas fa-plus ${styles.iconSmall}`}></i>
                                                 </button>
                                             </div>
+                                            {item.stock && (
+                                                <span
+                                                    className={styles.stockIndicator}
+                                                    style={{
+                                                        fontSize: '0.75rem',
+                                                        color: item.quantity >= item.stock ? '#DB4444' : '#666',
+                                                        marginTop: '0.25rem'
+                                                    }}
+                                                >
+                                                    {item.quantity >= item.stock ? 'Max stock reached' : `${item.stock} available`}
+                                                </span>
+                                            )}
                                         </div>
 
                                         {/* Subtotal Column */}
@@ -238,6 +275,25 @@ const Cart = () => {
                                 type="button"
                                 onClick={async () => {
                                     try {
+                                        // Validate stock before updating
+                                        const invalidItems = cartItems.filter(item =>
+                                            item.stock && item.quantity > item.stock
+                                        );
+
+                                        if (invalidItems.length > 0) {
+                                            const itemNames = invalidItems.map(item =>
+                                                `${item.name || item.productName} (requested: ${item.quantity}, available: ${item.stock})`
+                                            ).join('\n');
+
+                                            Swal.fire({
+                                                icon: 'warning',
+                                                title: 'Stock Limit Exceeded',
+                                                html: `The following items exceed available stock:<br/><br/>${itemNames.replace(/\n/g, '<br/>')}`,
+                                                confirmButtonText: 'OK'
+                                            });
+                                            return;
+                                        }
+
                                         // Persist all cart item quantities to backend
                                         await Promise.all(
                                             cartItems.map(item =>
@@ -250,10 +306,13 @@ const Cart = () => {
                                             (data.items || []).map(async (cartItem) => {
                                                 try {
                                                     const product = await getProductById(cartItem.productId);
+                                                    const prodData = product.data?.data || product.data || {};
                                                     return {
                                                         ...cartItem,
-                                                        imageURL: product.imageURL,
-                                                        name: product.productName || cartItem.productName,
+                                                        imageURL: prodData.imageURL,
+                                                        name: prodData.productName || cartItem.productName,
+                                                        stock: prodData.stock,
+                                                        isInStock: prodData.isInStock,
                                                     };
                                                 } catch (e) {
                                                     return cartItem;

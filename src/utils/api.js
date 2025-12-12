@@ -140,6 +140,58 @@ export const authAPI = {
     }
   },
 
+  // Forgot password - request OTP
+  forgotPassword: async (email) => {
+    try {
+      const response = await api.post("/api/Authentication/forgot-password", {
+        email,
+      });
+      const result = response.data;
+      if (!result.success) {
+        const errorMsg =
+          result.message || result.errors?.[0] || "Failed to send OTP";
+        throw new Error(errorMsg);
+      }
+      return result;
+    } catch (error) {
+      if (error.response?.data) {
+        const errorMsg =
+          error.response.data.message ||
+          error.response.data.errors?.[0] ||
+          "Failed to send OTP";
+        throw new Error(errorMsg);
+      }
+      throw error;
+    }
+  },
+
+  // Reset password with OTP
+  resetPassword: async (email, otpCode, newPassword) => {
+    try {
+      const response = await api.post("/api/Authentication/reset-password", {
+        email,
+        otpCode,
+        newPassword,
+      });
+      const result = response.data;
+      if (!result.success) {
+        const errorMsg =
+          result.message || result.errors?.[0] || "Failed to reset password";
+        throw new Error(errorMsg);
+      }
+      return result;
+    } catch (error) {
+      if (error.response?.data) {
+        const errorMsg =
+          error.response.data.message ||
+          error.response.data.errors?.[0] ||
+          "Failed to reset password";
+        throw new Error(errorMsg);
+      }
+      throw error;
+    }
+  },
+
   getProfile: async () => {
     return axiosWithAuth.get("/api/auth/me");
   },

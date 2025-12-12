@@ -4,9 +4,10 @@ import { useWishlist } from "../../../hooks/useWishlist";
 import useProducts from "../../../hooks/useProducts";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
-import { wishlistActions } from "../../../store/Wishlist/slice.js";
 import { cartActions } from "../../../store/Cart/slice.js";
 import { useNavigate } from "react-router-dom";
+import { addToCart as addToCartAPI, getCart } from "../../../services/cart";
+import { getProductById } from "../../../services/products";
 import styles from "./Wishlist.module.css";
 import ProductCard from "../../../components/ProductCard/ProductCard";
 import { FiTrash2 } from "react-icons/fi";
@@ -18,6 +19,7 @@ const Wishlist = () => {
     items: wishlistItems,
     fetchWishlist,
     removeFromWishlist,
+    clearWishlist,
   } = useWishlist();
   const { products } = useProducts();
 
@@ -70,17 +72,56 @@ const Wishlist = () => {
     fetchWishlist();
   }, []);
 
-  const handleMoveAllToBag = () => {
-    wishlistItems.forEach((item) => {
-      dispatch(
-        cartActions.addToCart({
-          ...item,
-          price: item.currentPrice,
-          quantity: 1,
+  const handleMoveAllToBag = async () => {
+    if (wishlistItems.length === 0) return;
+
+    try {
+      // Add all items to cart via API
+      await Promise.all(
+        wishlistItems.map((item) => addToCartAPI(item.id || item.productId, 1))
+      );
+
+      // Fetch updated cart and populate with product images and stock
+      const cartData = await getCart();
+      const itemsWithImages = await Promise.all(
+        (cartData.items || []).map(async (cartItem) => {
+          try {
+            const product = await getProductById(cartItem.productId);
+            const prodData = product.data?.data || product.data || {};
+            return {
+              ...cartItem,
+              imageURL: prodData.imageURL,
+              name: prodData.productName || cartItem.productName,
+              stock: prodData.stock,
+              isInStock: prodData.isInStock,
+            };
+          } catch (e) {
+            return cartItem;
+          }
         })
       );
-    });
-    dispatch(wishlistActions.clearWishlist());
+
+      // Update cart in Redux
+      dispatch(cartActions.setCart({ ...cartData, items: itemsWithImages }));
+
+      // Clear wishlist using hook (syncs with backend)
+      await clearWishlist();
+
+      // Show success message
+      Swal.fire({
+        icon: "success",
+        title: "Moved to Cart",
+        text: "All items have been moved to your cart.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Failed to Move Items",
+        text: err?.message || "Failed to move items to cart. Please try again.",
+      });
+    }
   };
 
   const handleRemoveFromWishlist = async (id) => {
@@ -118,14 +159,51 @@ const Wishlist = () => {
       (item) => item.id === id || item.productId === id
     );
     if (!item) return;
+
     try {
+      // Add to cart via API
       await addToCartAPI(id, 1);
-      const cartData = await getCartAPI();
-      dispatch(cartActions.setCart(cartData));
+
+      // Fetch updated cart and populate with product images and stock
+      const cartData = await getCart();
+      const itemsWithImages = await Promise.all(
+        (cartData.items || []).map(async (cartItem) => {
+          try {
+            const product = await getProductById(cartItem.productId);
+            const prodData = product.data?.data || product.data || {};
+            return {
+              ...cartItem,
+              imageURL: prodData.imageURL,
+              name: prodData.productName || cartItem.productName,
+              stock: prodData.stock,
+              isInStock: prodData.isInStock,
+            };
+          } catch (e) {
+            return cartItem;
+          }
+        })
+      );
+
+      // Update cart in Redux
+      dispatch(cartActions.setCart({ ...cartData, items: itemsWithImages }));
+
+      // Remove from wishlist only after successful cart add
       await removeFromWishlist(id);
-      fetchWishlist();
+
+      // Show success message
+      Swal.fire({
+        icon: "success",
+        title: "Added to Cart",
+        text: `${item.name || "Item"} has been moved to your cart.`,
+        timer: 1500,
+        showConfirmButton: false,
+      });
     } catch (err) {
-      // ignore error here; UI handles via toast in other flows
+      Swal.fire({
+        icon: "error",
+        title: "Failed to Add to Cart",
+        text: err?.message || "Failed to add item to cart. Please try again.",
+      });
     }
   };
 
